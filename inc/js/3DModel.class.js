@@ -1,28 +1,37 @@
 class ThreeDModel {
     /**
+     * Usado para abstrair um modelo.
      * @param {HTMLElement} container - Um elemento HTML no qual o modelo será renderizado.
      */
     constructor(container) {
         /**
+         * O elemento HTML no qual o modelo foi renderizado.
          * @public
+         * @property
          * @type {HTMLElement}
          */
         this.container = container;
-        
+
         /**
-         * @typedef {Object.<string, object} SceneList - Chave é o nome da cena 
-         * 
-         */
-        
-        /**
+         * Lista de cenas ou camadas usadas no modelo.
          * @public
-         * @type SceneList
+         * @property
+         * @type {{
+         *     [sceneName: string]: THREE.Scene
+         * }}
          */
         this.scenes = {
             default: new THREE.Scene()
         }
         
+        /**
+         * Lista de cenas ou camadas usadas no modelo.
+         * @public
+         * @property
+         * @type {THREE.WebGLRenderer}
+         */
         this.renderer = new THREE.WebGLRenderer();
+        
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(container.offsetWidth, container.offsetHeight);
         
@@ -32,9 +41,29 @@ class ThreeDModel {
         const aspect = this.renderer.domElement.offsetWidth/this.renderer.domElement.offsetHeight;
         const near = 0.1;
         const far = 1000;
+        
+        /**
+         * A câmera do modelo.
+         * @public
+         * @property
+         * @type {THREE.PerspectiveCamera}
+         */
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         
+        /**
+         * Para poder mover a câmera em volta de um centro.
+         * @public
+         * @property
+         * @type {THREE.OrbitControls}
+         */
         this.orbitControls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+        
+        /**
+         * Para poder mover objetos dentro da cena.
+         * @public
+         * @property
+         * @type {THREE.TransformControls}
+         */
         this.transControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
         
         const x = 0;
@@ -97,13 +126,21 @@ class ThreeDModel {
       
         return this.#deepMerge(target, ...sources);
     } 
-    
+
     /**
+     * Carrega um modelo
      * @public
-     * @param {object} modelJSON          - Objeto JSON do modelo.
-     * @param {object} modelJSON.nomeCena - A cena deve seguir o formato especificado pela biblioteca THREE, 
-     * [aqui](https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4) 
-     * "nomeCena" é o nome e pode ser qualquer valor.
+     * @param {{
+     *     [sceneName: string]: Object
+     * }} modelJSON               - Objeto JSON do modelo.
+     * @param modelJSON.sceneName - Objeto como o especificado pela biblioteca THREE, 
+     * [aqui](https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4), que é 
+     * obtido pelo método ```toJSON```, como em: 
+     * 
+     * ```js
+     * const scene = new THREE.Scene();
+     * const sceneJSON = scene.toJSON();
+     * ```
      * @returns {void}
      */
     loadModel(modelJSON) {
@@ -118,12 +155,17 @@ class ThreeDModel {
     }
     
     /**
+     * Carrega o renderizador
      * @public
-     * @param {object} options - Objeto contendo as propriedades do renderizador.
-     * @param {object} options.parameters - Propriedades do construtor. 
-     * Veja (THREE WebGLRenderer)[https://threejs.org/docs/?q=renderer#api/en/renderers/WebGLRenderer].
-     * @param {object} options.properties - Propriedades definíveis depois do construtor. 
-     * Veja (THREE WebGLRenderer)[https://threejs.org/docs/?q=renderer#api/en/renderers/WebGLRenderer].
+     * 
+     * @param {{
+     *     parameters: Object,
+     *     properties: Object
+     * }} options - Objeto contendo as propriedades do renderizador.
+     * @param options.parameters - Propriedades do construtor. 
+     * Veja [THREE WebGLRenderer](https://threejs.org/docs/?q=renderer#api/en/renderers/WebGLRenderer).
+     * @param options.properties - Propriedades definíveis depois do construtor. 
+     * Veja [THREE WebGLRenderer](https://threejs.org/docs/?q=renderer#api/en/renderers/WebGLRenderer).
      * @returns {void}
      */
     loadRenderer(options) {
@@ -150,23 +192,19 @@ class ThreeDModel {
         
         this.container.appendChild(this.renderer.domElement);
     }
-    
-    /**
-     * @callback animationCallback
-     * @returns {void} 
-     */
-    
+
     /**
      * Inicializa/Anima o modelo, sem ela, quaisquer formas de movimento (como o da câmera)
      * são impossíveis.
      * @public
-     * @param {animationCallback} callback - Um cllback onde você pode codar animações/movimentos.
+     * @param {(model: ThreeDModel) => void} callback - Um cllback onde você pode codar animações/movimentos.
+     * Recebe como parâmetro o modelo.
      */
     animate(callback) {
         const startAnimation = () => {
             requestAnimationFrame(startAnimation);
             
-            callback();
+            callback(this);
             
             Object.entries(this.scenes).forEach(([ name, scene ]) => {
                 this.renderer.render(scene, this.camera);
