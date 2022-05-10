@@ -1,0 +1,56 @@
+.Viewport {
+    
+    $components: ( toolbar, contexts, stats, axes );
+    @each $comp in $components {
+        $i: index($components, $comp);
+        
+        &-#{$comp} {
+            position: absolute;
+            
+            @if $i > 2 {
+                bottom: 10px;    
+            } @else {
+                top: 10px; 
+            }
+            
+            @if $i % 2 == 0 {
+                right: 10px;    
+            } @else {
+                left: 10px;
+            }
+        }
+    }
+    
+    &-toolbar {
+        display: flex;
+        flex-direction: column;
+        
+        background-color: var(--Viewport-toolbar-backgroundColor)
+    }
+    
+    
+    &-contexts {
+        display: flex;
+        
+        &-selector {
+            padding: 2px 25px 2px 2px;
+            border-radius: 3px 0 0 3px;
+        } 
+        
+        &-addCtxBtn {
+            border-radius: 0 3px 3px 0;
+        }
+    }
+    
+    &-stats {
+        font-size: 12px;
+        color: #fff;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    }
+
+
+    &-axes {
+        width: 130px;
+        height: 130px;
+    }
+}

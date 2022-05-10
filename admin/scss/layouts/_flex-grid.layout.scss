@@ -1,0 +1,27 @@
+.FlexGrid {
+    list-style-type: none;
+    padding: 0;
+    
+    &-row {
+        display: flex;
+        padding: 0.5em;
+    }
+    
+    &-col {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        
+        @each $key, $val in ( Left: flex-start, Right: flex-end, Center: center ) {
+            &--align#{$key} {
+                justify-content: $val;
+            }
+        }
+        
+        @for $i from 1 through 12 {
+            &--is#{$i} {
+                flex: $i;
+            }
+        } 
+    }
+}

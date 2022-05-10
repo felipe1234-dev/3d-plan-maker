@@ -1,0 +1,130 @@
+[
+    {
+        "component": "ColorField",
+        "attribute": "color",
+        "label": "Cor"
+    },
+    {
+        "component": "ColorField",
+        "attribute": "groundColor",
+        "label": "Cor do Solo"
+    },
+    {
+        "component": "NumberField2",
+        "attribute": "position",
+        "label": "Posição",
+        "step": "0.01",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField2",
+        "attribute": "rotation",
+        "label": "Rotação",
+        "step": "0.01",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField2",
+        "attribute": "scale",
+        "label": "Escala",
+        "step": "0.01",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "intensidade",
+        "label": "Intensidade",
+        "data_type": "Float",
+        "step": "0.01"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "distance",
+        "label": "Distância",
+        "data_type": "Float",
+        "step": "0.01",
+        "min": "0.00"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "angle",
+        "label": "Ângulo (radianos)",
+        "data_type": "Float",
+        "step": "0.001",
+        "max": "1.571",
+        "min": "0.000"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "angle",
+        "label": "Ângulo (radianos)",
+        "data_type": "Float",
+        "step": "0.001",
+        "max": "1.571",
+        "min": "0.000"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "penumbra",
+        "label": "Penumbra",
+        "data_type": "Float",
+        "step": "0.01",
+        "max": "1.00",
+        "min": "0.00"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "decay",
+        "label": "Decaimento",
+        "data_type": "Float",
+        "step": "0.01",
+        "min": "0.00"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shadowBias",
+        "label": "Viés da Sombra",
+        "data_type": "Float",
+        "step": "0.00001"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shadowBias",
+        "label": "Viés da Sombra",
+        "data_type": "Float",
+        "step": "0.00001"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shadowNormalBias",
+        "label": "Viés Normal da Sombra",
+        "data_type": "Float",
+        "step": "0.01"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shadowNormalBias",
+        "label": "Viés Normal da Sombra",
+        "data_type": "Float",
+        "step": "0.01"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shadowRadius",
+        "label": "Raio da Sombra",
+        "data_type": "Float",
+        "step": "0.01"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "visible",
+        "label": "Visível",
+        "data_type": "Bool"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "frustumCulled",
+        "label": "Frustum Cull",
+        "data_type": "Bool"
+    }
+]

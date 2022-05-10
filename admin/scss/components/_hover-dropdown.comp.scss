@@ -1,0 +1,56 @@
+.Editor .HoverDropdown {
+    position: fixed;
+    display: none;
+    
+    padding: 5px 0;
+    
+    width: 150px;
+    max-height: 50%;
+    
+    z-index: 100;
+    
+    overflow: auto;
+    
+    list-style:none;
+    margin: 0;
+    
+    background-color: var(--HoverDropdown-backgroundColor);
+
+    hr {
+        border-color: #ddd;
+    }
+    
+    &:hover {
+        display: block;
+    }
+
+    &-item {
+        background: none;
+        border: none;
+        font: inherit;
+        outline: inherit;
+        
+        color: #666;
+        background-color: transparent;
+        padding: 5px 10px;
+        margin: 0 !important;
+        width: auto;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+            color: #fff;
+            background-color: #08f;
+            
+            > .HoverDropdown {
+                display: block;
+                left: 150px;
+            }
+        }
+
+        &:active {
+            color: #666;
+            background: transparent;
+        }
+    }
+}

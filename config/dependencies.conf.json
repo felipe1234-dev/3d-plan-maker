@@ -1,0 +1,88 @@
+{
+    "public": {
+        "head": [
+            "libs/threejs-r136/three.js",
+            "libs/threejs-r136/assets/controls/OrbitControls.js",
+            "libs/threejs-r136/assets/controls/TransformControls.js",
+            "libs/fontawesome-v4.7.0/font-awesome-v4.7.0.min.css"
+        ],
+        "footer": [
+            "inc/js/3DModel.class.js",
+            "inc/js/HotSpot.class.js",
+            "inc/js/HotSpotMaterial.class.js",
+            "inc/js/RoomEnvironment.class.js",
+            
+            "public/js/ContextSelector.class.js",
+            
+            "public/scss/_3dmodel.base.scss",
+            "public/scss/_3dmodel.layout.scss"
+        ]
+    },
+    "admin": {
+        "head": [
+            "libs/threejs-r136/three.js",
+            "libs/threejs-r136/assets/controls/OrbitControls.js",
+            "libs/threejs-r136/assets/controls/TransformControls.js",
+            "libs/threejs-r136/assets/loaders/GLTFLoader.js",
+            "libs/threejs-r136/assets/exporters/GLTFExporter.js",
+            "libs/fontawesome-v4.7.0/css/font-awesome-v4.7.0.min.css"
+        ],
+        "footer": [
+            "inc/js/3DModel.class.js",
+            "inc/js/HotSpot.class.js",
+            "inc/js/HotSpotMaterial.class.js",
+            "inc/js/RoomEnvironment.class.js",
+            
+            "admin/js/changes/Color.three.js",
+            "admin/js/changes/Fog.three.js",
+            "admin/js/changes/FogExp2.three.js",
+            "admin/js/changes/Scene.three.js",
+            "admin/js/changes/Texture.three.js",
+            
+            "admin/js/editor/Editor.class.js",
+            "admin/js/editor/Editor.StatTracker.js",
+            "admin/js/editor/Editor.Contexts.js", 
+            "admin/js/editor/Editor.History.js",
+            "admin/js/editor/Editor.Controls.js",
+            "admin/js/editor/Editor.Renderer.js",
+            "admin/js/editor/Editor.Scene.js",
+            "admin/js/editor/Editor.Viewport.js",
+            "admin/js/editor/Editor.Transformer.js",
+            "admin/js/Init.Editor.js",
+            
+            "admin/js/helpers/points.helper.js",
+            "admin/js/helpers/texture-uploader.helper.js",
+            "admin/js/helpers/custom-select-tag.helper.js",
+            
+            "admin/js/dom/Menubar.dom.js",
+            "admin/js/dom/Viewport.dom.js",
+            "admin/js/dom/History.dom.js",
+            "admin/js/dom/ProjectTab.dom.js",
+            "admin/js/dom/SceneTab.dom.js",
+            "admin/js/dom/SettingsTab.dom.js", 
+            "admin/js/dom/ObjectTab.dom.js",
+            "admin/js/dom/GeometryTab.dom.js",
+            "admin/js/dom/MaterialTab.dom.js",
+            "admin/js/dom/BackgroundSelector.dom.js",
+            "admin/js/dom/EnvMapSelector.dom.js",
+            "admin/js/dom/FogSelector.dom.js",
+            "admin/js/dom/jQueryUI.dom.js",
+            "admin/js/dom/Shortcuts.dom.js",
+            "admin/js/Init.dom.js",
+            
+            "admin/scss/base/_root.base.scss",
+            
+            "admin/scss/components/_hover-dropdown.comp.scss",
+            "admin/scss/components/_outliner.comp.scss",
+            "admin/scss/components/_panel.comp.scss",
+            "admin/scss/components/_tabs.comp.scss",
+            
+            "admin/scss/layouts/_editor.layout.scss",
+            "admin/scss/layouts/_menubar.layout.scss",
+            "admin/scss/layouts/_sidebar.layout.scss",
+            "admin/scss/layouts/_viewport.layout.scss",
+            
+            "admin/scss/themes/_light.theme.scss"
+        ]
+    }
+} 

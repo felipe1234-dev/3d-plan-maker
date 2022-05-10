@@ -1,0 +1,50 @@
+<div id="3DModel-<?php echo $post->ID ?>" class="ThreeDModel-Widget">
+
+    <div 
+        class="ThreeDModel-RenderContainer" 
+        style="
+            width: <?php echo $render_props["largura"] ?>; 
+            height: <?php echo $render_props["altura"] ?>;
+        "
+    >
+        <select class="ThreeDModel-ContextSelector">
+            <?php foreach ( $context_names as $context_name ) : ?>
+                <option value="<?php echo $context_name ?>">
+                    <?php echo $context_name ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <!-- Configurações -->
+    <textarea class="ThreeDModel-PostModel">
+        <?php echo wp_unslash($post->post_model); ?>
+    </textarea> 
+    <textarea class="ThreeDModel-PostRenderer">
+        <?php echo wp_unslash($post->post_renderer); ?>
+    </textarea> 
+    
+    <!-- Inicializador -->
+    <script type="text/javascript">
+        jQuery(document).ready(function( $ ) {
+            const $widgetContainer = $("#3DModel-<?php echo $post->ID ?>");
+            const renderContainer  = $widgetContainer.find(".ThreeDModel-RenderContainer")[0];
+            const model = new ThreeDModel(renderContainer);
+                
+            const postModel = JSON.parse( $widgetContainer.find(".ThreeDModel-PostModel").val() );
+            model.loadModel(postModel);
+
+            const postRenderer = JSON.parse( $widgetContainer.find(".ThreeDModel-PostRenderer").val() );
+            model.loadRenderer(postRenderer);
+            
+            model.animate(() => model.orbitControls.update());
+            
+            const $contextSelect  = $widgetContainer.find(".ThreeDModel-ContextSelector");
+            const contextSelector = new ContextSelector(model);
+            console.log(contextSelector)
+            $contextSelect.on("change", function () {
+                contextSelector.select(this.value);
+            });
+        });
+    </script>
+</div>

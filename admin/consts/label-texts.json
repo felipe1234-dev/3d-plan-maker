@@ -1,0 +1,7 @@
+{
+    "translate_shortcut": "Mover",
+    "rotate_shortcut": "Rotacionar",
+    "scale_shortcut": "Escalar",
+    "undo_shortcut": "Desfazer",
+    "redo_shortcut": "Refazer"
+}

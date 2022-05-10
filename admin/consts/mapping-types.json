@@ -1,0 +1,7 @@
+{
+    "None": "Nenhum",
+    "UVMapping": "UV",
+    "CubeMapping": "Cubo",
+    "CubeUVMapping": "Cubo UV",
+    "EquirectangularMapping": "Equirectangular"
+}

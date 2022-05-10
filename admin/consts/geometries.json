@@ -1,0 +1,138 @@
+{
+    "BoxGeometry": {
+        "label": "Cubo",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "width",
+            "height",
+            "depth",
+            "widthSegments",
+            "heightSegments",
+            "depthSegments"
+        ]
+    },
+    "CircleGeometry": {
+        "label": "Círculo",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "radius",
+            "segments",
+            "thetaStart",
+            "thetaLength"
+        ]
+    },
+    "CylinderGeometry": {
+        "label": "Cilindro",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "radiusTop",
+            "radiusBottom",
+            "height",
+            "radialSegments",
+            "heightSegments",
+            "openEnded"
+        ]
+    },
+    "DodecahedronGeometry": {
+        "label": "Dodecaedro",
+        "rows": ["type", "name", "uuid", "radius", "detail"]
+    },
+    "IcosahedronGeometry": {
+        "label": "Icosaedro",
+        "rows": ["type", "name", "uuid", "radius", "detail"]
+    },
+    "LatheGeometry": {
+        "label": "Vaso",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "points",
+            "segments",
+            "phiStart",
+            "phiLength"
+        ]
+    },
+    "OctahedronGeometry": {
+        "label": "Octaedro",
+        "rows": ["type", "name", "uuid", "radius", "detail"]
+    },
+    "PlaneGeometry": {
+        "label": "Plano",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "width",
+            "height",
+            "widthSegments",
+            "heightSegments"
+        ]
+    },
+    "RingGeometry": {
+        "label": "Anel",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "innerRadius",
+            "outerRadius",
+            "thetaSegments",
+            "phiSegments",
+            "thetaStart",
+            "thetaLength"
+        ]
+    },
+    "SphereGeometry": {
+        "label": "Esfera",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "radius",
+            "widthSegments",
+            "heightSegments",
+            "phiStart",
+            "phiLength",
+            "thetaStart",
+            "thetaLength"
+        ]
+    },
+    "TetrahedronGeometry": {
+        "label": "Tetraedro",
+        "rows": ["type", "name", "uuid", "radius", "detail"]
+    },
+    "TorusGeometry": {
+        "label": "Toro",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "radius",
+            "tube",
+            "radialSegments",
+            "tubularSegments",
+            "arc"
+        ]
+    },
+    "TorusKnotGeometry": {
+        "label": "Nó toral",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "radius",
+            "tube",
+            "tubularSegments",
+            "radialSegments",
+            "p",
+            "q"
+        ]
+    }
+}

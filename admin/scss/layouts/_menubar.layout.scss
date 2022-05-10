@@ -1,0 +1,35 @@
+.Editor .Menubar {
+    color: var(--Menubar-textColor);
+    background-color: var(--Menubar-backgroundColor);
+    
+    &-item {
+        float: left;
+        cursor: pointer;
+        padding-right: 8px;
+        
+        &:first-child {
+            margin-left: 5px;
+        }
+        
+        &:last-child {
+            margin-right: 5px;
+        }
+        
+        &-title {
+            display: inline-block;
+            margin: 0;
+            padding: 8px;
+            line-height: 16px;
+        }
+        
+        &:hover > .HoverDropdown {
+            display: block;
+        }
+        
+        &--isRight {
+            float: right;
+            text-align: right;
+            padding-right: 0;
+        }
+    }
+}

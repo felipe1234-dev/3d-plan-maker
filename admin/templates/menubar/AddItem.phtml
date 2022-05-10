@@ -1,0 +1,30 @@
+<div class="Menubar-item">
+    <span class="Menubar-item-title">
+        Adicionar
+    </span>
+
+    <div class="HoverDropdown">
+        <div id="add-hotspot-btn" class="HoverDropdown-item">
+            Hot Spot
+        </div>
+        <div class="HoverDropdown-item">
+            Grupo
+        </div>
+
+        <hr />
+
+        <?php foreach ( $geometries as $geom_name => $geom ) : ?>
+            <div class="HoverDropdown-item" data-geometry="<?php echo $geom_name ?>">
+                <?php echo $geom["label"] ?>
+            </div>
+        <?php endforeach; ?>
+
+        <hr />
+
+        <?php foreach ( $lights as $light_name => $light ) : ?>
+            <div class="HoverDropdown-item" data-light="<?php echo $light_name ?>">
+                <?php echo $light["label"] ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

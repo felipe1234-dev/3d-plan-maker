@@ -1,0 +1,131 @@
+{
+    "HotSpot": {
+        "label": "HotSpot",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "Mesh": {
+        "label": "Malha",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "scale",
+            "shadow",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "AmbientLight": {
+        "label": "Luz ambiente",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "intensity",
+            "color",
+            "shadow",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "DirectionalLight": {
+        "label": "Luz direcional",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "intensity",
+            "shadow",
+            "shadowBias",
+            "shadowRadius",
+            "shadowNormalBias",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "HemisphereLight": {
+        "label": "Luz de Hemisfério",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "intensity",
+            "color",
+            "groundColor",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "PointLight": {
+        "label": "Lâmpada",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "intensity",
+            "color",
+            "distance",
+            "decay",
+            "shadow",
+            "shadowBias",
+            "shadowRadius",
+            "shadowNormalBias",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    },
+    "SpotLight": {
+        "label": "Holofote",
+        "rows": [
+            "type",
+            "name",
+            "uuid",
+            "position",
+            "scale",
+            "rotation",
+            "intensity",
+            "color",
+            "distance",
+            "angle",
+            "penumbra",
+            "decay",
+            "shadow",
+            "shadowBias",
+            "shadowRadius",
+            "shadowNormalBias",
+            "visible",
+            "frustumCulled",
+            "renderOrder"
+        ]
+    }
+}

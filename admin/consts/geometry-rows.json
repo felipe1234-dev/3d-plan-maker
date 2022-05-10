@@ -1,0 +1,158 @@
+[
+    {
+        "component": "NumberField1",
+        "attribute": "width",
+        "label": "Largura",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "height",
+        "label": "Altura",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "depth",
+        "label": "Profundidade",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "detail",
+        "label": "Detalhe",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "segments",
+        "label": "Segmentos",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "widthSegments",
+        "label": "Segmentos de Largura",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "heightSegments",
+        "label": "Segmentos de Altura",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "depthSegments",
+        "label": "Segmentos de Profundidade",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "radialSegments",
+        "label": "Segmentos Radiais",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "thetaSegments",
+        "label": "Segmentos de Teta (Θ)",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "phiSegments",
+        "label": "Segmentos de Fi (ϕ)",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "tubularSegments",
+        "label": "Segmentos Tubulares",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "radius",
+        "label": "Raio",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "radiusTop",
+        "label": "Raio do Topo",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "radiusBottom",
+        "label": "Raio da Base",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "innerRadius",
+        "label": "Raio interno",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "outerRadius",
+        "label": "Raio externo",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "tube",
+        "label": "Raio do Tubo",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "thetaStart",
+        "label": "Começo de Teta (Θ)",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "thetaLength",
+        "label": "Comprimento de Teta (Θ)",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "phiStart",
+        "label": "Começo de Fi (ϕ)",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "phiLength",
+        "label": "Comprimento de Fi (ϕ)",
+        "data_type": "Float"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "openEnded",
+        "label": "Aberto nas Pontas",
+        "data_type": "Bool"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "arc",
+        "label": "Arco",
+        "data_type": "Float"
+    },
+    {    
+        "component": "NumberField1",
+        "attribute": "p",
+        "label": "Nós",
+        "data_type": "Int"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "q",
+        "label": "Dobras",
+        "data_type": "Int"
+    }
+]

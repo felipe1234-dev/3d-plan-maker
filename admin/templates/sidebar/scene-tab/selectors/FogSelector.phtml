@@ -1,0 +1,50 @@
+<div class="Panel-row">
+    <span class="Panel-title">
+        Neblina
+    </span>
+</div>
+
+<div class="Panel-row">
+    <label for="fog-type-selector" class="Panel-text">
+        Tipo
+    </label>
+    <select id="fog-type-selector" autocomplete="off"> 
+        <?php foreach ($fog_types as $value => $label) : ?>
+            <option value="<?php echo $value ?>">
+                <?php echo $label ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</div> 
+
+<div for-select="fog-type-selector" show-when-value-not="None" class="Panel-row" style="display: none;">
+    <label for="fog-color" class="Panel-text">
+        Cor
+    </label>
+    <!-- color -->
+    <input autocomplete="off" type="color" id="fog-color" />
+</div>
+
+<div for-select="fog-type-selector" show-when-value="Linear" class="Panel-row" style="display: none;">
+    <label for="fog-near" class="Panel-text">
+        Perto
+    </label>
+    <!-- near --> 
+    <input autocomplete="off" id="fog-near" type="number" step="0.1" style="width: 15%;" />
+</div>
+
+<div for-select="fog-type-selector" show-when-value="Linear" class="Panel-row" style="display: none;">
+    <label for="fog-far" class="Panel-text">
+        Longe 
+    </label>
+    <!-- far -->
+    <input autocomplete="off" id="fog-far" type="number" step="0.1" style="width: 15%;" />
+</div>
+
+<div for-select="fog-type-selector" show-when-value="Exponential" class="Panel-row" style="display: none;">
+    <label for="fog-density" class="Panel-text">
+        Densidade
+    </label>
+    <!-- density -->
+    <input autocomplete="off" id="fog-density" type="number" step="0.01" style="width: 30%;" />
+</div>

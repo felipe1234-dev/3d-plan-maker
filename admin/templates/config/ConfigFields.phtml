@@ -1,0 +1,28 @@
+<textarea id="post-model" name="post_model" style="display: none;">
+    <?php echo wp_unslash($post->post_model); ?>
+</textarea> 
+
+<textarea id="post-renderer" name="post_renderer" style="display: none;">
+    <?php echo wp_unslash($post->post_renderer); ?>
+</textarea> 
+
+<?php foreach ( $geometries as $geom_name => $geom ) : ?>
+    <?php [ "rows"  => $rows ] = $geom; ?>
+    <textarea id="<?php echo "$geom_name-rows" ?>" style="display: none;">
+        <?php echo json_encode( $rows ) ?>
+    </textarea>
+<?php endforeach; ?> 
+
+<?php foreach ( $objects as $obj_name => $obj ) : ?>
+    <?php [ "rows" => $rows ] = $obj; ?>
+    <textarea id="<?php echo "$obj_name-rows" ?>" style="display: none;">
+        <?php echo json_encode( $rows ) ?>
+    </textarea>
+<?php endforeach; ?>
+
+<?php foreach ( $materials as $mat_name => $mat ) : ?>
+    <?php [ "rows" => $rows ] = $mat; ?>
+    <textarea id="<?php echo "$mat_name-rows" ?>" style="display: none;">
+        <?php echo json_encode( $rows ) ?>
+    </textarea>
+<?php endforeach; ?>

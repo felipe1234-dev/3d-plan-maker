@@ -1,0 +1,28 @@
+$primaryColor: #eee;
+$secondaryColor: #888;
+$tertiaryColor: #ccc; 
+
+.Editor[theme="light"] {
+    --Loader-borderColor: #{$primaryColor};
+    --Loader-borderTopColor: #{$secondaryColor};
+    
+    --Select-textColor: #{$secondaryColor};
+    --Select-backgroundColor: #ddd;
+    
+    --TextInput-textColor: #08f;
+    
+    --Menubar-backgroundColor: #{$primaryColor};
+    --Menubar-textColor: #{$secondaryColor};
+    
+    --HoverDropdown-backgroundColor: #{$primaryColor};
+    
+    --Button-backgroundColor: #ddd;
+    --Button-textColor: #{$secondaryColor};
+    
+    --Panel-textColor: #{$secondaryColor};
+    --Panel-borderTopColor: #{$tertiaryColor};
+    
+    --Viewport-toolbar-backgroundColor: #{$primaryColor};
+    
+    --Sidebar-backgroundColor: #{$primaryColor};
+}

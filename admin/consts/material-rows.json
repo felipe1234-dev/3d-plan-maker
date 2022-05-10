@@ -1,0 +1,379 @@
+[
+    {
+        "component": "OptionsField",
+        "attribute": "side",
+        "label": "Rederizar lado",
+        "options": [
+            {
+                "text": "da frente",
+                "value": "FrontSide"
+            },
+            {
+                "text": "de trás",
+                "value": "BackSide"
+            },
+            {
+                "text": "ambos",
+                "value": "DoubleSide"
+            }
+        ]
+    },
+    {
+        "component": "OptionsField",
+        "attribute": "blending",
+        "label": "Mesclagem",
+        "options": [
+            {
+                "text": "Nenhuma",
+                "value": "NoBlending"
+            },
+            {
+                "text": "Normal",
+                "value": "NormalBlending"
+            },
+            {
+                "text": "Aditiva",
+                "value": "AdditiveBlending"
+            },
+            {
+                "text": "Subtrativa",
+                "value": "SubtractiveBlending"
+            },
+            {
+                "text": "Multiplicar",
+                "value": "MultiplyBlending"
+            }
+        ]
+    },
+    
+    
+    
+    {
+        "component": "ColorField",
+        "attribute": "color",
+        "label": "Cor"
+    },
+    {
+        "component": "ColorField",
+        "attribute": "emissive",
+        "label": "Cor da Emissão"
+    },
+    {
+        "component": "ColorField",
+        "attribute": "specularColor",
+        "label": "Cor Especular"
+    },
+    {
+        "component": "ColorField",
+        "attribute": "attenuationColor",
+        "label": "Cor de Atenuação"
+    },
+    
+    
+    
+    {
+        "component": "NumberField1",
+        "attribute": "emissiveIntensity",
+        "label": "Intensidade da Emissão",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "reflectivity",
+        "label": "Reflexividade",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "roughness",
+        "label": "Aspereza",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "metalness",
+        "label": "Metalicidade",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "clearcoat",
+        "label": "Efeito Verniz",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "clearcoatRoughness",
+        "label": "Aspereza do Verniz",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "transmission",
+        "label": "Transmissão",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "attenuationDistance",
+        "label": "Distância da Atenuação",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "thickness",
+        "label": "Espessura",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "shininess",
+        "label": "Brilho",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "opacity",
+        "label": "Opacidade",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "alphaTest",
+        "label": "Teste Alfa",
+        "data_type": "Float",
+        "max": "1",
+        "min": "0"
+    },
+    
+    
+    
+    {
+        "component": "BooleanField",
+        "attribute": "vertexColors",
+        "label": "Cores dos Vértices"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "flatShading",
+        "label": "Sem sombreamento"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "depthTest",
+        "label": "Teste de Profundidade"
+    },
+    {
+        "component": "BooleanField",
+        "attribute": "depthWrite",
+        "label": "Assinatura de Profundidade"
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "map",
+        "label": "Textura",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "ImageField",
+        "attribute": "envMap",
+        "label": "Mapa de Ambiente",
+        "has_refr": true,
+        "has_types": true
+    },
+    {
+        "component": "ImageField",
+        "attribute": "matcap",
+        "label": "Mapeamento Esférico do Amb.",
+        "has_refr": false,
+        "has_types": false
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "lightMap",
+        "label": "Mapa de Iluminação",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "lightMapIntensity",
+        "label": "Intensidade",
+        "data_type": "Float",
+        "max": "1", 
+        "min": "0"
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "specularMap",
+        "label": "Mapa Especular",
+        "has_refr": false,
+        "has_types": false
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "aoMap",
+        "label": "Mapa de oclusão ambiental",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "aoMapIntensity",
+        "label": "Intensidade",
+        "data_type": "Float",
+        "max": "1", 
+        "min": "0"              
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "emissiveMap",
+        "label": "Mapa de Emissão",
+        "has_refr": false,
+        "has_types": false
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "displacementMap",
+        "label": "Mapa de Deslocamento",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "displacementBias",
+        "label": "Viés",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "displacementScale",
+        "label": "Escala",
+        "data_type": "Float"
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "normalMap",
+        "label": "Mapa Normal",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "normalScale.x",
+        "label": "Escala (x)",
+        "data_type": "Float"
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "normalScale.y",
+        "label": "Escala (y)",
+        "data_type": "Float"
+    },
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "clearcoatNormalMap",
+        "label": "Mapa Normal do Verniz",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "clearcoatNormalScale.x",
+        "label": "Escala (x)",
+        "data_type": "Float"
+        
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "clearcoatNormalScale.y",
+        "label": "Escala (y)",
+        "data_type": "Float"
+    },
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "bumpMap",
+        "label": "Mapa de Bumping",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "NumberField1",
+        "attribute": "bumpScale",
+        "label": "Escala",
+        "data_type": "Float"
+    },
+    
+    
+    
+    {
+        "component": "ImageField",
+        "attribute": "roughnessMap",
+        "label": "Mapa de Aspereza",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "ImageField",
+        "attribute": "metalnessMap",
+        "label": "Mapa da Metalicidade",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "ImageField",
+        "attribute": "gradientMap",
+        "label": "Mapa de Gradiente",
+        "has_refr": false,
+        "has_types": false
+    },
+    {
+        "component": "ImageField",
+        "attribute": "alphaMap",
+        "label": "Mapa Alfa",
+        "has_refr": false,
+        "has_types": false
+    }
+]

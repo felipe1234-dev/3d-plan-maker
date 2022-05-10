@@ -1,0 +1,36 @@
+{
+    "post_type": "3d-plan-maker",
+    "args": {
+        "label": "Criador de Plantas 3D",
+        "labels": {
+            "name": "Plantas 3D",
+            "singular_name": "Planta",
+            "add_new": "Adicionar Nova",
+            "add_new_item": "Adicionar Nova Planta",
+            "edit_item": "Editar Planta",
+            "new_item": "Nova Planta",
+            "view_item": "Ver Planta",
+            "search_items": "Procurar Planta",
+            "not_found": "Nenhuma Planta encontrada",
+            "not_found_in_trash": "Nenhuma Planta encontrada na lixeira",
+            "parent_item_colon": "",
+            "attributes": "Atributos da Planta",
+            "all_items": "Todas as Plantas"
+        },
+        "public": true,
+        "exclude_from_search": true,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "menu_icon": "dashicons-excerpt-view",
+        "query_var": true,
+        "taxonomies": [],
+        "rewrite": {
+            "slug": "3dplan",
+            "with_front": false
+        },
+        "capability_type": "post",
+        "hierarchical": false,
+        "menu_position": null,
+        "supports": ["title"]
+    }
+}

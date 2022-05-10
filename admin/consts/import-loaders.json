@@ -1,0 +1,18 @@
+[
+    {
+        "label": "JSON",
+        "extensions": [ ".json" ]
+    },
+    {
+        "label": "OBJ",
+        "extensions": [ ".obj" ]
+    },
+    {
+        "label": "glTF",
+        "extensions": [ ".gltf", ".glb" ]
+    },
+    {
+        "label": "Rhino 3D",
+        "extensions": [ ".3dm" ]
+    }
+]

@@ -1,0 +1,58 @@
+<?php $scope = "geometry"; ?> 
+
+<div class="Panel-row js-field" id="<?php echo "$scope-type-row" ?>" style="display: none;">
+    <span class="Panel-text">
+        Tipo
+    </span>
+    <span class="Panel-text" data-option="type" data-scope="<?php echo $scope ?>" data-type="String">
+        {{geometryType}}
+    </span>
+</div>
+
+<div class="Panel-row js-field" id="<?php echo "$scope-uuid-row" ?>" style="display: none;">
+    <span class="Panel-text">
+        UUID
+    </span>
+    <input 
+        autocomplete="off" 
+        data-option="uuid" 
+        data-type="String" 
+        data-scope="<?php echo $scope ?>" 
+        disabled 
+    />
+</div>
+
+<div class="Panel-row js-field" id="<?php echo "$scope-name-row" ?>" style="display: none;">
+    <label for="<?php echo "$scope-name-field" ?>" class="Panel-text">
+        Nome
+    </label>
+    <input 
+        id="<?php echo "$scope-name-field" ?>" 
+        type="text"
+        autocomplete="off" 
+        data-option="name" 
+        data-type="String" 
+        data-scope="<?php echo $scope ?>"
+    />
+</div>
+
+<?php foreach ( $geometry_rows as $row ) : 
+    require  __DIR__."/../field-templates/{$row["component"]}.phtml";
+endforeach; ?>
+
+<div class="Panel-row js-field" id="<?php echo "$scope-points-row" ?>" style="display: none;">
+    <span class="Panel-text">
+        Pontos
+    </span>
+    <span style="display: inline-block;">
+        <div id="matrix"></div>
+        <button class="Button" onclick="points.add(event)">
+            +
+        </button>
+        <input 
+            type="hidden" id="<?php echo "$scope-points-field" ?>" 
+            data-scope="<?php echo $scope ?>" data-option="points" 
+            data-type="Array" 
+        />
+    </span>
+</div>

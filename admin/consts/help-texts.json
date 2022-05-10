@@ -1,0 +1,12 @@
+{
+    "deleteSceneBtn": "Excluir a cena selecionada agora.",
+    "newSceneBtn": "Criar uma nova cena vazia - você será redirecionado a ela.",
+    "sceneRenderOrder": "Determina a ordem que as cenas serão renderizadas, um número mais baixo significa que a cena será renderizada primeiro, portanto, ficará atrás das outras cenas. Obs: O Pano de Fundo cobre as cenas atrás.",
+    "opacityFactor": "Um fator que determina o grau de transparência dos objetos fora desta cena, sendo 0 a transparência total do objeto (a cena \"Editor\" não é alterada - pois é reservada para o sistema)",
+    "antialias": "Antialiasing é uma técnica usada em computação gráfica para remover o efeito de aliasing. O efeito de aliasing é o aparecimento de bordas irregulares ou \"serrilhadas\" em uma imagem rasterizada.",
+    "sceneBackground": "Define o fundo usado ao renderizar a cena. Pode ser definido como uma cor, uma textura cobrindo a tela ou equirectangular.",
+    "sceneEnvMap": "Define o mapa de ambiente para todos os objetos da cena (pode ser sobrescrita para um objeto específico em Cena > Material).",
+    "displacementMap": "É uma textura em grayscale que armazena informações de altura (onde mais claro = mais alto) a fim de criar um efeito onde a posição dos pontos na superfície texturizada pareçam deslocados, criando impressão de profundidade. Também chamado de Mapa de Altura.",
+    "emissiveMap": "É um mapa de textura que não recebe iluminação, sendo usado como um efeito de brilho no escuro, mas que não emite luz. Pode ser usado junto com um mapa difuso para criar um efeito de brilho, como runas mágicas em uma espada ou o material aquecido por uma tocha.",
+    "normalMap": "Um Mapa Normal é um mapa de textura que você pode aplicar ao seu modelo para simular mais detalhes gráficos em uma textura do que ela realmente tem. Ele faz isso manipulando como a luz interage com o modelo dando-lhe a aparência que tem mais detalhes do que ele tem."
+}

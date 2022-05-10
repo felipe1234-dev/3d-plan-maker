@@ -1,0 +1,41 @@
+<div class="Menubar-item">
+    <span class="Menubar-item-title">
+        Arquivo
+    </span>
+    
+    <div class="HoverDropdown">
+        <div class="HoverDropdown-item">
+            Importar cena
+        </div>
+        <div class="HoverDropdown-item">
+            Importar objeto
+        </div>
+        
+        <hr />
+        
+        <div class="HoverDropdown-item">
+            Exportar cena
+            <div class="HoverDropdown">
+                <?php foreach ($import_loaders as $loader) : ?>
+                    <div class="HoverDropdown-item" data-loader="<?php echo $loader["label"] ?>">
+                        <?php echo $loader["label"] ?> (<?php echo join(", ", $loader["extensions"]) ?>)
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
+        <div class="HoverDropdown-item">
+            Exportar objeto
+            <div class="HoverDropdown">
+                <?php foreach ($import_loaders as $loader) : ?>
+                    <div class="HoverDropdown-item" data-loader="<?php echo $loader["label"] ?>">
+                        <?php echo $loader["label"] ?> (<?php echo join(", ", $loader["extensions"]) ?>)
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    
+    <hr />
+    
+</div>   

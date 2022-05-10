@@ -1,0 +1,79 @@
+@each $state in ("", ".is-fullscreen") {
+    .Editor#{$state} {
+        position: absolute;
+        top: 0;
+        left: -20px;
+        width: 100%;
+        height: 100vh;
+        overflow-x: auto;
+        
+        $menubarHeight: 32px;
+        $sidebarWidth: 320px;
+        @if $state == ".is-fullscreen" {
+            $viewportHeight: 100%;
+        } @else {
+            $viewportHeight: 91%;
+        }
+        
+        .Menubar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            
+            padding: 0;
+            margin: 0;
+            
+            width: 100%;
+            height: $menubarHeight;
+        }
+        
+        .Viewport {
+            position: absolute;
+            top: $menubarHeight;
+            bottom: 0;
+            left: 0;
+            right: $sidebarWidth;
+            
+            height: $viewportHeight;
+        }
+        
+        .Sidebar { 
+            position: absolute;
+            top: $menubarHeight;
+            bottom: 0;
+            right: 0;
+            
+            width: $sidebarWidth;
+            height: $viewportHeight;
+            
+            overflow-y: auto;
+            overflow-x: hidden; 
+        }
+        
+        .Footer {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            
+            padding: 0;
+            margin: 0;
+            
+            width: 100%;
+            height: 50px;
+        }
+    }
+}
+
+@media (max-width: 575.98px) {
+    
+}
+
+// Small devices (landscape phones, less than 768px)
+@media (max-width: 767.98px) {
+    
+}
+
+// Medium devices (tablets, less than 992px)
+@media (max-width: 991.98px) {
+    
+}

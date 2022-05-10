@@ -1,0 +1,30 @@
+<aside class="Sidebar" id="sidebar">
+    <ul class="Tabs">
+        <li class="Tabs-tabItem Tabs-tabItem--is-selected">
+            <a href="#project-tab" id="project">
+                Projeto
+            </a> 
+        </li>
+        <li class="Tabs-tabItem">
+            <a href="#scene-tab" id="scene">
+                Cena 
+            </a>
+        </li>
+        <li class="Tabs-tabItem">
+            <a href="#settings-tab" id="settings">
+                Configurações
+            </a>
+        </li>
+    </ul> 
+    <div class="Panel-container">
+        <div id="project-tab" style="">
+            <?php require "project-tab/ProjectTab.phtml"; ?>
+        </div>
+        <div id="scene-tab" style="display: none;">
+            <?php require "scene-tab/SceneTab.phtml"; ?>
+        </div>
+        <div id="settings-tab" style="display: none;">
+            <?php require "settings-tab/SettingsTab.phtml"; ?>
+        </div>
+    </div>
+</aside>
