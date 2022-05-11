@@ -1,22 +1,21 @@
-/**
- * @typedef {Object} ThreeDModel
- * @typedef {Object} Object3D
- */
-
 class Editor {
     /**
-     * Construtor.
+     * Usado para editar uma instância da classe ThreeDModel.
      * @param {ThreeDModel} model - O modelo da planta a ser editada, instância da classe ThreeDModel.
      */
     constructor(model) {
         /**
          * Usado para guardar dados temporários para operações no editor.
          * @protected 
+         * @type {Editor.Memory}
          */
         this._memory = {
             /**
              * Cria um "namespace", contexto ou subpartição para os dados na memória.
-             * @param {String} ctxName Nome do espaço.
+             * @public
+             * @method
+             * @param {string} ctxName - Nome do espaço.
+             * @returns {void}
              */
             create(ctxName) {
                 this[ctxName] = {
@@ -29,8 +28,10 @@ class Editor {
 
             /**
              * Verifica se a memória contém subpartição.
-             * @param   {String}  ctxName - Nome da subpartição.
-             * @returns {Boolean} Retorna verdadeiro se tiver a subpartição.
+             * @public
+             * @method
+             * @param   {string}  ctxName - Nome da subpartição.
+             * @returns {boolean} Retorna verdadeiro se tiver a subpartição.
              */
             has(ctxName) {
                 return ctxName in this;
@@ -38,7 +39,12 @@ class Editor {
 
             /**
              * Cria ou modifica dados na memória.
-             * @param {Object<String, Any>} params - Objeto JS no formato: { "nomeDado": "valorDado", ... }.
+             * @public
+             * @method
+             * @param {{
+             *     [dataName: string]: any
+             * }} params - Chave e valor do dado.
+             * @returns {void}
              */
             set(params) {
                 Object.entries(params).forEach(([key, value]) => {
@@ -48,7 +54,10 @@ class Editor {
 
             /**
              * Limpa/Exclui dados salvos na memória.
-             * @param {Array<String>} keys - Lista com os nomes dos dados a serem excluídos.
+             * @public
+             * @method
+             * @param {Array<string>} keys - Lista com os nomes dos dados a serem excluídos.
+             * @returns {void}
              */
             clear(keys) {
                 keys.forEach((key) => {
@@ -61,6 +70,9 @@ class Editor {
          * Lista de eventos possiveis do editor.
          * @protected 
          * @readonly
+         * @type {{
+         *     [eventName: string]: Array<(editor: Editor) => void>
+         * }}
          */
         this._events = {
             onSelect: [],
@@ -72,25 +84,74 @@ class Editor {
             onSaveRenderer: [],
         };
         
+        /**
+         * @public
+         * @type {ThreeDModel}
+         */
         this.model     = model;
+        
+        /**
+         * @public
+         * @type {THREE.Raycaster}
+         */
         this.raycaster = new THREE.Raycaster();
+        
+        /**
+         * @public
+         * @type {THREE.Vector2}
+         */
         this.mouse     = new THREE.Vector2();
         
+        /**
+         * @public
+         * @type {Editor.Contexts}
+         */
         this.contexts = new Editor.Contexts(this);
         this.contexts.create("Editor");
         
+        /**
+         * @public
+         * @type {Editor.StatTracker}
+         */
         this.stats    = new Editor.StatTracker(this);
+        
+        /**
+         * @public
+         * @type {Editor.History}
+         */
         this.history  = new Editor.History(this);
+        
+        /**
+         * @public
+         * @type {Editor.Viewport}
+         */
         this.viewport = new Editor.Viewport(this);
+        
+        /**
+         * @public
+         * @type {Editor.Transformer}
+         */
         this.selected = new Editor.Transformer(this);
+        
+        /**
+         * @public
+         * @type {Editor.Scene}
+         */
         this.scene    = new Editor.Scene(this);
+        
+        /**
+         * @public
+         * @type {Editor.Renderer}
+         */
         this.renderer = new Editor.Renderer(this);
+        
+        /**
+         * @public
+         * @type {Editor.Controls}
+         */
         this.controls = new Editor.Controls(this);
     } 
-    
-    /**
-     * @protected
-     */
+
     get _scenes() {
         return this.model.scenes;
     }
@@ -135,17 +196,23 @@ class Editor {
         return this.selected.getSelected();
     }
 
-    #getLightObj = (object) => {
-        const className = object.constructor.name;
+    /**
+     * Tenta verificar se o determinado objeto está associado a um objeto de luz.
+     * @private
+     * @param {THREE.Object3D} obj3D
+     * @returns {THREE.Light|false}
+     */
+    #getLightObj = (obj3D) => {
+        const className = obj3D.constructor.name;
 
         const isLight = /^(?!.*(helper)).*light/i.test(className);
         const isHelper = /helper/i.test(className);
-        const isChild = !isLight && !isHelper && !!object.parent;
+        const isChild = !isLight && !isHelper && object.parent;
         const notLight = false;
 
         switch (true) {
             case isLight:
-                return object;
+                return obj3D;
 
             case isHelper:
                 return this.#getLightObj(object.light);
@@ -156,8 +223,17 @@ class Editor {
             default:
                 return notLight;
         }
-    };
+    }
 
+    /**
+     * Retorna os objetos onde o cursor do mouse está em cima.
+     * @private
+     * @param {PointerEvent} event
+     * @returns {{
+     *     objects: Array<THREE.Object3D>,
+     *     gizmos: Array<THREE.Object3D>
+     * }}
+     */
     #getIntersects = (event) => {
         this.mouse.x = (event.clientX / this._vwpDom.offsetWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / this._vwpDom.offsetHeight) * 2 + 1;
@@ -213,8 +289,14 @@ class Editor {
             objects: objIntersects,
             gizmos: gizmoIntersects,
         };
-    };
+    }
 
+    /**
+     * 
+     * @private
+     * @param {PointerEvent} event
+     * @returns {void}
+     */
     #handleRaycaster = (event) => {
         const intersects = this.#getIntersects(event);
         const smthIsSelected = !!this._selected;
@@ -314,8 +396,14 @@ class Editor {
 
             this.selected.unselect();
         }
-    };
+    }
 
+    /**
+     * 
+     * @private
+     * @param {PointerEvent} event
+     * @returns {void}
+     */
     #handleCursorStyle = (event) => {
         const intersects = this.#getIntersects(event);
         const smthIsSelected = !!this._selected;
@@ -332,7 +420,7 @@ class Editor {
         }
 
         this._rendererDom.style.cursor = cursor;
-    };
+    }
 
     addDefaultEvents() {
         this._rendererDom.addEventListener(
@@ -348,10 +436,11 @@ class Editor {
     }
     
     /**
-     * Anexa eventos ao editor - pode anexar múltiplas funções ao mesmo evento.
+     * Anexa eventos ao editor - pode-se anexar múltiplas funções ao mesmo evento.
      * @public
-     * @param {String}   eventName - O nome do evento (sem a palavra "on").
-     * @param {Function} callback  - A função que o evento executará.
+     * @param {string} eventName - O nome do evento (sem a palavra "on").
+     * @param {(editor: Editor) => void} callback  - A função que o evento executará.
+     * @returns {void}
      */
     on(eventName, callback) {
         eventName = eventName[0].toUpperCase() + eventName.slice(1);
@@ -365,9 +454,11 @@ class Editor {
     }
     
     /**
-     * 
-     * @param {String} eventName 
-     * @param {...Any} args 
+     * Aciona um evento.
+     * @public
+     * @param {string} eventName 
+     * @param {...any} args 
+     * @returns {void}
      */
     trigger(eventName, ...args) {
         eventName = eventName[0].toUpperCase() + eventName.slice(1);
@@ -379,7 +470,9 @@ class Editor {
     }
 
     /**
-     * Inicializa o editor de acordo com as configurações pré-definidas.
+     * Inicializa o editor de acordo com as configurações definidas.
+     * @public
+     * @returns {void}
      */
     init() {
         // Adicionando os helpers dos objetos de cada cena
@@ -404,7 +497,13 @@ class Editor {
 
         this.addDefaultEvents();
     }
-
+    
+    /**
+     * Salva as edições feitas no modelo, o output do renderizador sai no 
+     * evento "onSaveRenderer" e o do modelo sai no "onSaveModel".
+     * @public
+     * @returns {void}
+     */
     save() {
         this.trigger("saveRenderer", this._renderer.userData);
 
@@ -420,8 +519,8 @@ class Editor {
             sceneCopy.fog = scene.fog;
 
             scene.children.filter((object) =>
-                /(mesh|hotspot|light|TransformControls)/i.test(object.constructor.name) &&
-                !/helper/i.test(object.constructor.name)
+                /(mesh|hotspot|light)/i.test(object.constructor.name) &&
+                !/helper|TransformControls/i.test(object.constructor.name)
             ).forEach((object) => (
                 sceneCopy.add(object.clone())
             ));
