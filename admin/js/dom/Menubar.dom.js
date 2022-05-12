@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+    const $editor = $("#editor");
     const $menubar = $("#menubar");
     const $deleteBtn = $("#delete-btn");
     const $undoBtn = $("#undo-btn");
@@ -7,7 +8,7 @@ jQuery(document).ready(function ($) {
 
     $("#toggle-fullscreen-btn").click(function () {
         const $button = $(this);
-        const editor = $("#editor")[0];
+        const editor = $editor[0];
         const isFullscreen =
             (document.fullScreenElement &&
                 document.fullScreenElement !== null) ||
@@ -40,6 +41,19 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    $("#toggle-theme-btn").click(function () {
+        const theme = $editor.attr("data-theme");
+        const oldHtml = this.innerHTML;
+        
+        if (theme === "light") {
+            this.innerHTML = oldHtml.replace("escuro", "claro");
+            $editor.attr("data-theme", "dark");
+        } else {
+            this.innerHTML = oldHtml.replace("claro", "escuro");
+            $editor.attr("data-theme", "light");
+        }
+    });
+    
     $("#add-hotspot-btn").click(function () {
         window.ThreeDModelEditor.scene.add("HotSpot", {
             position: [0, 0.5, 0],
