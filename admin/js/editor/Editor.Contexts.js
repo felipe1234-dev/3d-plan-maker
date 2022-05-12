@@ -1,7 +1,3 @@
-/**
- * @typedef {Object} THREE.Scene 
- */
-
 Editor.Contexts = class {
     #editor;
     constructor(editor) {
@@ -66,7 +62,7 @@ Editor.Contexts = class {
              * contidas neste contexto.
              * @param {Number} value - O novo valor do fator de opacidade (entre 0 e 1).
              */
-            setOpacityFactor(value) {
+            setOpacityFactor(value, feedHistory = true) {
                 if (value > 1) value = 1;
 
                 if (value < 0) value = 0;
@@ -137,7 +133,7 @@ Editor.Contexts = class {
              * 
              * @param {Number} index 
              */
-            setRenderOrder(index, feedHistory) {
+            setRenderOrder(index, feedHistory = true) {
                 if (index >= scope.Editor.renderOrder && this.name !== "Editor") {
                     index = scope.Editor.renderOrder - 1;
                 }
@@ -242,9 +238,8 @@ Editor.Contexts = class {
             },
         };
 
-        this.Editor.setRenderOrder(Object.keys(this.#editor._scenes).length);
+        this.Editor.setRenderOrder(Object.keys(this.#editor._scenes).length, false);
         
         if (ctxName !== "Editor") this[ctxName].select();
     }
 };
- 
