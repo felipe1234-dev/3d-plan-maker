@@ -82,7 +82,8 @@
             "admin/scss/layouts/_sidebar.layout.scss",
             "admin/scss/layouts/_viewport.layout.scss",
             
-            "admin/scss/themes/_light.theme.scss"
+            "admin/scss/themes/_light.theme.scss",
+            "admin/scss/themes/_dark.theme.scss"
         ]
     }
 } 
