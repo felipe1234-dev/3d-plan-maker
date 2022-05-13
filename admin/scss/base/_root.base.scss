@@ -20,7 +20,7 @@ body {
 #editor.Editor {
     hr {
         border: 0;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid var(--on-bg-dark);
     }
 
     [title] {
@@ -29,9 +29,9 @@ body {
 
     .Loader {
         animation: is-rotating 1s infinite;
-        border: 6px solid var(--Loader-borderColor);
+        border: 6px solid var(--bg-light);
         border-radius: 50%;
-        border-top-color: var(--Loader-borderTopColor);
+        border-top-color: var(--text);
         
         &--isBig {
             height: 50px;
@@ -44,39 +44,33 @@ body {
             transform: rotate(1turn);
         }
     }
-
+    
     .Button {
         position: relative;
-        color: var(--Button-textColor);
-        background-color: var(--Button-backgroundColor);
         border: 0;
         margin: 0 1px; /* GNOME Web */
         padding: 5px 8px;
         text-transform: uppercase;
         cursor: pointer;
         outline: none;
-
-        &:hover {
-            background-color: #fff;
-        }
-
-        &--is-selected {
-            background-color: #fff;
-        }
     }
-
+    
     select {
-        color: var(--Select-textColor);
-        background-color: var(--Select-backgroundColor);
         border: 0px;
         text-transform: uppercase;
         cursor: pointer;
         outline: 0;
-
-        &:hover {
-            background-color: #fff;
+    }
+    
+    .Button, select {
+        color: var(--text);
+        background-color: var(--bg-dark);
+        
+        &:hover, &--is-selected {
+            background-color: var(--on-bg-light);
         }
     }
+
 
     input {
         display: inline-block;
@@ -98,7 +92,7 @@ body {
         }
 
         &[type="number"] {
-            color: var(--TextInput-textColor) !important;
+            color: var(--on-hover) !important;
             font-size: 12px;
             background-color: transparent;
         }
@@ -160,11 +154,11 @@ body {
         vertical-align: middle;
     }
 
-    textarea,
-    input {
+    textarea, input {
+        color: var(--text-dark);
+        background-color: var(--on-bg-light);
         outline: none;
         border: 1px solid transparent;
-        color: #444;
         padding: 2px;
     } /* osx */
 
@@ -174,11 +168,11 @@ body {
         min-height: 16px;
         max-width: 32px;
         max-height: 16px;
-        background-color: #eee;
+        background-color: var(--on-bg-light);
         background-repeat: no-repeat;
         background-position: center;
         background-size: 50vw 50vh;
-        border: 1px solid rgb(136, 136, 136);
+        border: 1px solid var(--text-light);
         display: inline-block;
         vertical-align: middle;
         cursor: pointer;
@@ -190,15 +184,13 @@ body {
 
     .is-inactive {
         opacity: 0.5;
-        color: #bbb;
         background-color: transparent;
         padding: 5px 10px;
         margin: 0 !important;
 
         &:hover {
-            color: #bbb;
             background-color: transparent;
-            cursor: default;
+            cursor: not-allowed;
         }
     }
 
