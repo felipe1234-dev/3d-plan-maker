@@ -78,6 +78,8 @@ add_action( "admin_enqueue_scripts", function() use ( $plugin ) : void {
         wp_enqueue_script( "jquery-ui-core" );
         wp_enqueue_script( "jquery-ui-tabs" );
         wp_enqueue_script( "jquery-ui-tooltip" );
+        wp_enqueue_script( "jquery-ui-accordion" );
+        wp_enqueue_script( "jquery-ui-sortable" );
     }
 });
 
