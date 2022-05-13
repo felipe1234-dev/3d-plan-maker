@@ -8,13 +8,28 @@ jQuery(document).ready(function ($) {
     const MATERIAL_TAB = 2;
 
     const $sidebar = $("#sidebar");
+    
+    $sidebar.find(".Tabs")
+        .accordion({
+            active: PROJECT_TAB,
+            header: "> li > a",
+            collapsible: true,
+            activate: function (event, ui) {
+                $(ui.newHeader).parent("li").addClass("Tabs-tabItem--is-selected");
+                $(ui.newPanel).css("height", "auto");
+                
+                $(ui.oldHeader).parent("li").removeClass("Tabs-tabItem--is-selected");
+                $(ui.oldPanel).css("height", "auto");
+            }
+        })
+        .sortable();
 
     // setando OS tooltips
     $(document).tooltip({
         tooltipClass: "custom-tooltip-styling",
     });
 
-    // setando tabs
+    /*// setando tabs
     $sidebar.tabs({
         active: PROJECT_TAB,
         activate: function (event, { newTab, oldTab }) {
@@ -29,7 +44,7 @@ jQuery(document).ready(function ($) {
             $(newTab).addClass("Tabs-tabItem--is-selected");
             $(oldTab).removeClass("Tabs-tabItem--is-selected");
         },
-    });
+    });*/
 
     window.ThreeDModelEditor.on("select", () =>
         $sidebar.tabs({ active: SCENE_TAB })
