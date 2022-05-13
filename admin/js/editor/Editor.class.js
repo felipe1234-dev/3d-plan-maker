@@ -203,7 +203,7 @@ class Editor {
      * @returns {THREE.Light|false}
      */
     #getLightObj = (obj3D) => {
-        const className = obj3D.constructor.name;
+        const className = obj3D.constructor.name || "";
 
         const isLight = /^(?!.*(helper)).*light/i.test(className);
         const isHelper = /helper/i.test(className);
