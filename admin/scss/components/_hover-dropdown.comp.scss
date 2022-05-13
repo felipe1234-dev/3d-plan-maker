@@ -14,10 +14,10 @@
     list-style:none;
     margin: 0;
     
-    background-color: var(--HoverDropdown-backgroundColor);
+    background-color: var(--on-bg-dark);
 
     hr {
-        border-color: #ddd;
+        border-color: var(--bg-dark) !important;
     }
     
     &:hover {
@@ -30,7 +30,7 @@
         font: inherit;
         outline: inherit;
         
-        color: #666;
+        color: var(--text-dark);
         background-color: transparent;
         padding: 5px 10px;
         margin: 0 !important;
@@ -38,9 +38,9 @@
         text-align: left;
         cursor: pointer;
 
-        &:hover {
-            color: #fff;
-            background-color: #08f;
+        &:hover:not(.is-inactive) {
+            background-color: var(--on-hover);
+            color: var(--on-bg-light);
             
             > .HoverDropdown {
                 display: block;
@@ -49,7 +49,7 @@
         }
 
         &:active {
-            color: #666;
+            color: var(--text-dark);
             background: transparent;
         }
     }
