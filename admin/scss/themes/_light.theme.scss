@@ -1,28 +1,13 @@
-$primaryColor: #eee;
-$secondaryColor: #888;
-$tertiaryColor: #ccc; 
-
-.Editor[theme="light"] {
-    --Loader-borderColor: #{$primaryColor};
-    --Loader-borderTopColor: #{$secondaryColor};
+.Editor[data-theme="light"] {
+    --bg-dark: #ddd;
+    --on-bg-dark: #ccc;
     
-    --Select-textColor: #{$secondaryColor};
-    --Select-backgroundColor: #ddd;
+    --bg-light: #f0f0f1;
+    --on-bg-light: #fff;
     
-    --TextInput-textColor: #08f;
+    --text: #aaa;
+    --text-dark: #888;
+    --text-light: #666;
     
-    --Menubar-backgroundColor: #{$primaryColor};
-    --Menubar-textColor: #{$secondaryColor};
-    
-    --HoverDropdown-backgroundColor: #{$primaryColor};
-    
-    --Button-backgroundColor: #ddd;
-    --Button-textColor: #{$secondaryColor};
-    
-    --Panel-textColor: #{$secondaryColor};
-    --Panel-borderTopColor: #{$tertiaryColor};
-    
-    --Viewport-toolbar-backgroundColor: #{$primaryColor};
-    
-    --Sidebar-backgroundColor: #{$primaryColor};
+    --on-hover: #2271b1;
 }
