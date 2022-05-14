@@ -67,7 +67,8 @@ body {
         background-color: var(--bg-dark);
         
         &:hover, &--is-selected {
-            background-color: var(--on-bg-light);
+            background-color: var(--on-hover);
+            color: var(--on-bg-light);
         }
     }
 
