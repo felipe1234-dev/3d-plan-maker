@@ -1,55 +1,34 @@
 jQuery(document).ready(function ($) {
-    const PROJECT_TAB = 0;
-    const SCENE_TAB = 1;
-    const SETTINGS_TAB = 2;
-
-    const OBJECT_TAB = 0;
-    const GEOMETRY_TAB = 1;
-    const MATERIAL_TAB = 2;
-
     const $sidebar = $("#sidebar");
+    const $tabs = $sidebar.find(".Tabs");
     
-    $sidebar.find(".Tabs")
+    $tabs
         .accordion({
-            active: PROJECT_TAB,
+            active: 0,
             header: "> li > a",
             collapsible: true,
             activate: function (event, ui) {
                 $(ui.newHeader).parent("li").addClass("Tabs-tabItem--is-selected");
-                $(ui.newPanel).css("height", "auto");
+                $(ui.newPanel).show().css("height", "auto");
                 
                 $(ui.oldHeader).parent("li").removeClass("Tabs-tabItem--is-selected");
-                $(ui.oldPanel).css("height", "auto");
+                $(ui.oldPanel).hide().css("height", "auto");
             }
         })
+        .find("#project-tab")
+            .show()
+            .css("height", "auto")
         .sortable();
 
-    // setando OS tooltips
+    // setando os tooltips
     $(document).tooltip({
         tooltipClass: "custom-tooltip-styling",
     });
 
-    /*// setando tabs
-    $sidebar.tabs({
-        active: PROJECT_TAB,
-        activate: function (event, { newTab, oldTab }) {
-            $(newTab).addClass("Tabs-tabItem--is-selected");
-            $(oldTab).removeClass("Tabs-tabItem--is-selected");
-        },
-    });
-
-    $("#properties").tabs({
-        active: OBJECT_TAB,
-        activate: function (event, { newTab, oldTab }) {
-            $(newTab).addClass("Tabs-tabItem--is-selected");
-            $(oldTab).removeClass("Tabs-tabItem--is-selected");
-        },
-    });*/
-
     window.ThreeDModelEditor.on("select", () =>
-        $sidebar.tabs({ active: SCENE_TAB })
+        $tabs.find("#scene-tab-item").click()
     );
     window.ThreeDModelEditor.on("unselect", () =>
-        $sidebar.tabs({ active: PROJECT_TAB })
+        $tabs.find("#project-tab-item").click()
     );
 });
