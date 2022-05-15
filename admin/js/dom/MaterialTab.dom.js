@@ -1,9 +1,9 @@
 jQuery(document).ready(function ($) {
-    const $materialTab = $("#material-tab");
+    const $materialTabPanel = $("#material-tab-panel");
     const $materialBtn = $('a[href="#material-tab"]');
     const $opacity = $("#field-opacity");
     const $alphaTest = $("#field-alphaTest");
-    const $textareas = $materialTab.find('textarea[data-type="JSON"]');
+    const $textareas = $materialTabPanel.find('textarea[data-type="JSON"]');
 
     $textareas.each(function () {
         const option = $(this).data("option");
@@ -95,23 +95,23 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $materialTab.on("sync", function () {
+    $materialTabPanel.on("sync", function () {
         if (!window.ThreeDModelEditor.selected.hasScope("material")) {
             $materialBtn.hide();
-            $materialTab.find('div[id*="-row"]').hide();
+            $materialTabPanel.find('div[id*="-row"]').hide();
             return;
         } else {
             $materialBtn.show();
         }
 
-        $materialTab.find('div[id*="-row"]').hide();
+        $materialTabPanel.find('div[id*="-row"]').hide();
 
         const materialType =
             window.ThreeDModelEditor.selected.material.get("type");
         const selectedRows = JSON.parse($(`#${materialType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
-            const $row = $materialTab.find(`#material-${attribute}-row`);
+            const $row = $materialTabPanel.find(`#material-${attribute}-row`);
 
             $row.find("[data-option]").each(function () {
                 const dataOpt = $(this).data("option");
@@ -144,7 +144,7 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $materialTab
+    $materialTabPanel
         .find('[data-scope="material"]')
         .on("change input", function (event) {
             const feedHistory = event.type == "change";
@@ -158,7 +158,7 @@ jQuery(document).ready(function ($) {
                         this.value,
                         feedHistory
                     );
-                    $materialTab.trigger("sync");
+                    $materialTabPanel.trigger("sync");
                     break;
 
                 case this.tagName == "SELECT":
@@ -209,11 +209,11 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $materialTab.trigger("sync")
+        $materialTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $materialTab.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $materialTab.trigger("sync"));
+    window.ThreeDModelEditor.on("select", () => $materialTabPanel.trigger("sync"));
+    window.ThreeDModelEditor.on("unselect", () => $materialTabPanel.trigger("sync"));
     window.ThreeDModelEditor.on("editSelected", () =>
-        $materialTab.trigger("sync")
+        $materialTabPanel.trigger("sync")
     );
 });

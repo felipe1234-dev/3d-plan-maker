@@ -3,8 +3,8 @@ jQuery(document).ready(function ($) {
     const $sidebar = $("#sidebar");
     
     const $sidebarTabs = $sidebar.find(".Tabs");
-    const $projectTabItem  = $sidebarTabs.find("#project-tab-item");
-    const $sceneTabItem = $sidebarTabs.find("#scene-tab-item");
+    const $projectTabItem = $sidebarTabs.find("#project-tab-item");
+    const $elementTabItem = $sidebarTabs.find("#3d-elem-tab-item");
     
     $tabs
         .accordion({
@@ -30,12 +30,12 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("select", () => {
-        const isSelected = $sceneTabItem.attr("aria-selected") === "true";
+        const isSelected = $elementTabItem.attr("aria-selected") === "true";
         if (isSelected) {
             return;
         }
         
-        $sceneTabItem.click();
+        $elementTabItem.click();
     });
     window.ThreeDModelEditor.on("unselect", () => {
         const isSelected = $projectTabItem.attr("aria-selected") === "true";

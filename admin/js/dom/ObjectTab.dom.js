@@ -1,8 +1,8 @@
 jQuery(document).ready(function ($) {
-    const $objectTab = $("#object-tab");
+    const $objectTabPanel = $("#object-tab-panel");
     const $objectBtn = $('a[href="#object-tab"]');
 
-    $objectTab
+    $objectTabPanel
         .find('[data-scope="object"]')
         .on("change input", function (event) {
             const feedHistory = event.type == "change";
@@ -22,22 +22,22 @@ jQuery(document).ready(function ($) {
             );
         });
 
-    $objectTab.on("sync", function () {
+    $objectTabPanel.on("sync", function () {
         if (!window.ThreeDModelEditor.selected.hasScope("object")) {
             $objectBtn.hide();
-            $objectTab.find('div[id*="-row"]').hide();
+            $objectTabPanel.find('div[id*="-row"]').hide();
             return;
         } else {
             $objectBtn.show();
         }
 
-        $objectTab.find('div[id*="-row"]').hide();
+        $objectTabPanel.find('div[id*="-row"]').hide();
 
         const objectType = window.ThreeDModelEditor.selected.object.get("type");
         const selectedRows = JSON.parse($(`#${objectType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
-            const $row = $objectTab.find(`#object-${attribute}-row`);
+            const $row = $objectTabPanel.find(`#object-${attribute}-row`);
 
             $row.find("[data-option]").each(function () {
                 const dataOpt = $(this).data("option");
@@ -62,11 +62,11 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $objectTab.trigger("sync")
+        $objectTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $objectTab.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $objectTab.trigger("sync"));
+    window.ThreeDModelEditor.on("select", () => $objectTabPanel.trigger("sync"));
+    window.ThreeDModelEditor.on("unselect", () => $objectTabPanel.trigger("sync"));
     window.ThreeDModelEditor.on("editSelected", () =>
-        $objectTab.trigger("sync")
+        $objectTabPanel.trigger("sync")
     );
 });

@@ -1,8 +1,8 @@
 jQuery(document).ready(function ($) {
-    const $geometryTab = $("#geometry-tab");
+    const $geometryTabPanel = $("#geometry-tab-panel");
     const $geometryBtn = $('a[href="#geometry-tab"]');
 
-    $geometryTab
+    $geometryTabPanel
         .find('[data-scope="geometry"]')
         .on("change input", function (event) {
             const feedHistory = event.type == "change";
@@ -30,23 +30,23 @@ jQuery(document).ready(function ($) {
             }
         });
 
-    $geometryTab.on("sync", function () {
+    $geometryTabPanel.on("sync", function () {
         if (!window.ThreeDModelEditor.selected.hasScope("geometry")) {
             $geometryBtn.hide();
-            $geometryTab.find('div[id*="-row"]').hide();
+            $geometryTabPanel.find('div[id*="-row"]').hide();
             return;
         } else {
             $geometryBtn.show();
         }
 
-        $geometryTab.find('div[id*="-row"]').hide();
+        $geometryTabPanel.find('div[id*="-row"]').hide();
 
         const geometryType =
             window.ThreeDModelEditor.selected.geometry.get("type");
         const selectedRows = JSON.parse($(`#${geometryType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
-            const $row = $geometryTab.find(`#geometry-${attribute}-row`);
+            const $row = $geometryTabPanel.find(`#geometry-${attribute}-row`);
 
             $row.find("[data-option]").each(function () {
                 const dataOpt = $(this).data("option");
@@ -80,11 +80,11 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $geometryTab.trigger("sync")
+        $geometryTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $geometryTab.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $geometryTab.trigger("sync"));
+    window.ThreeDModelEditor.on("select", () => $geometryTabPanel.trigger("sync"));
+    window.ThreeDModelEditor.on("unselect", () => $geometryTabPanel.trigger("sync"));
     window.ThreeDModelEditor.on("editSelected", () =>
-        $geometryTab.trigger("sync")
+        $geometryTabPanel.trigger("sync")
     );
 });

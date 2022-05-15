@@ -49,18 +49,24 @@ jQuery(document).ready(function ($) {
             const isDisabled = sceneName == "Editor" ? " disabled" : "";
 
             $ctxSelector.append(`
-                    <option value="${sceneName}"${isSelected}${isDisabled}>
-                        ${sceneName}
-                    </option>
-                `);
+                <option value="${sceneName}"${isSelected}${isDisabled}>
+                    ${sceneName}
+                </option>
+            `);
         });
 
-        $ctxSelector.val(window.ThreeDModelEditor.contexts.current.name);
-        $ctxName.val(window.ThreeDModelEditor.contexts.current.name);
+        $ctxSelector.val(
+            window.ThreeDModelEditor.contexts.current.name
+        );
+        $ctxName.val(
+            window.ThreeDModelEditor.contexts.current.name
+        );
         $opacityFactor.val(
             window.ThreeDModelEditor.contexts.current.opacityFactor
         );
-        $renderOrder.val(window.ThreeDModelEditor.contexts.current.renderOrder);
+        $renderOrder.val(
+            window.ThreeDModelEditor.contexts.current.renderOrder
+        );
         $renderOrder.attr("max", sceneNames.length - 1);
     });
 
