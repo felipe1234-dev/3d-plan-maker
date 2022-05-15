@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $sceneTab = $("#scene-tab");
+    const $sceneTabPanel = $("#scene-tab-panel");
     const $bgPanel = $("#bg-selector-panel");
     const $bgSelectBox = $bgPanel.find("#bg-type-selector");
     const $bgImageBox = $bgPanel.find("#bg-image");
@@ -55,7 +55,7 @@ jQuery(document).ready(function ($) {
         $bgSelectBox.trigger("updateBackground", [event.type == "change"]);
     });
 
-    $sceneTab.on("sync", function () {
+    $sceneTabPanel.on("sync", function () {
         const {
             type: bgType,
             object: bgObject,
@@ -76,6 +76,6 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $sceneTab.trigger("sync")
+        $sceneTabPanel.trigger("sync")
     );
 });
