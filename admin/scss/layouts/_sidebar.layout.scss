@@ -6,7 +6,7 @@
     select, input, textarea {
         padding: 0 8px;
         
-        background-color: var(--bg-dark);
+        background-color: var(--on-bg-dark);
         color: var(--text-dark);
         
         outline: none;
@@ -17,8 +17,7 @@
         cursor: pointer;
         
         &:hover {
-            background-color: var(--on-hover);
-            color: var(--text-light);
+            background-color: var(--on-bg-light);
         }
     }
     
@@ -66,17 +65,22 @@
 
     div.Image {
         position: relative;
+        
         min-width: 32px;
         min-height: 16px;
         max-width: 32px;
         max-height: 16px;
-        background-color: var(--on-bg-light);
+        
         background-repeat: no-repeat;
         background-position: center;
         background-size: 50vw 50vh;
+        
         border: 1px solid var(--text-light);
+        background-color: var(--on-bg-light);
+        
         display: inline-block;
         vertical-align: middle;
+        
         cursor: pointer;
     }
 }
