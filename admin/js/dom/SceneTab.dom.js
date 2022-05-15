@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $sceneTab = $("#scene-tab");
+    const $sceneTabPanel = $("#scene-tab-panel");
     const $ctxSelector = $("#ctx-selector");
     const $deleteSceneBtn = $("#delete-scene-btn");
     const $addSceneBtn = $("#add-scene-btn");
@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
     $ctxSelector.change(function () {
         if (!(this.value in window.ThreeDModelEditor.contexts)) return;
         window.ThreeDModelEditor.contexts[this.value].select();
-        $sceneTab.trigger("sync");
+        $sceneTabPanel.trigger("sync");
     });
 
     $deleteSceneBtn.click(function () {
@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
         );
     });
 
-    $sceneTab.on("sync", function () {
+    $sceneTabPanel.on("sync", function () {
         const sceneNames = Object.keys(window.ThreeDModelEditor.model.scenes);
 
         $ctxSelector.html("");
@@ -65,6 +65,6 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $sceneTab.trigger("sync")
+        $sceneTabPanel.trigger("sync")
     );
 });

@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $sceneTab = $("#scene-tab");
+    const $sceneTabPanel = $("#scene-tab-panel");
     const $mapPanel = $("#env-map-panel");
     const $mapSelectBox = $("#env-map-type-selector");
     const $mapImageBox = $mapPanel.find("#env-map-image");
@@ -60,7 +60,7 @@ jQuery(document).ready(function ($) {
         textureUploader.open();
     });
 
-    $sceneTab.on("sync", function () {
+    $sceneTabPanel.on("sync", function () {
         const {
             type: mapType,
             object: mapObject,
@@ -81,6 +81,6 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $sceneTab.trigger("sync")
+        $sceneTabPanel.trigger("sync")
     );
 });

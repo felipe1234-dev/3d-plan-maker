@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $sceneTab = $("#scene-tab");
+    const $sceneTabPanel = $("#scene-tab-panel");
     const $fogPanel = $("#fog-selector-panel");
     const $fogSelector = $fogPanel.find("#fog-type-selector");
     const $fogColor = $fogPanel.find("#fog-color");
@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
         $fogSelector.trigger("updateFog", event.type == "change");
     });
 
-    $sceneTab.on("sync", function () {
+    $sceneTabPanel.on("sync", function () {
         const { type: fogType, ...rest } =
             window.ThreeDModelEditor.scene.get("fog");
 
@@ -50,6 +50,6 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $sceneTab.trigger("sync")
+        $sceneTabPanel.trigger("sync")
     );
 });
