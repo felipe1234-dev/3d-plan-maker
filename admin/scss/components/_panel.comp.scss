@@ -11,23 +11,24 @@
     background-color: var(--bg-dark);
     color: var(--text-dark);
     padding: 10px;
-        
+
     &:first-child {
-        border-top: 0px; 
+        border-top: 0px;
     }
-    
+
     &-row {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        
+
         min-height: 20px;
         margin-bottom: 10px;
-        
-        select, input:not([type="checkbox"]):not([type="number"]) {
+
+        select,
+        input:not([type="checkbox"]):not([type="number"]) {
             flex: 40%;
         }
-        
+
         @for $i from 0 through 100 {
             *.Panel-item--is#{$i} {
                 flex: none !important;
@@ -35,18 +36,36 @@
             }
         }
     }
-    
+
     &-title {
         display: inline-block;
         text-transform: uppercase;
         text-align: left;
         width: 100%;
-    } 
-    
+    }
+
     &-text {
-        display: inline-block; 
+        display: inline-block;
         text-align: left;
         width: 30%;
         margin-right: 10px;
+    }
+
+    &-button {
+        position: relative;
+        padding: 5px 8px;
+
+        cursor: pointer !important;
+        outline: none;
+        border: none;
+
+        background-color: var(--on-bg-dark);
+        color: var(--text-dark);
+
+        &:hover,
+        &--is-selected {
+            background-color: var(--on-bg-light);
+            color: var(--text-dark);
+        }
     }
 }
