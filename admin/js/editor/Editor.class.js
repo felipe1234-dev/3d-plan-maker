@@ -104,13 +104,6 @@ class Editor {
         
         /**
          * @public
-         * @type {Editor.Contexts}
-         */
-        this.contexts = new Editor.Contexts(this);
-        this.contexts.create("Editor");
-        
-        /**
-         * @public
          * @type {Editor.StatTracker}
          */
         this.stats    = new Editor.StatTracker(this);
@@ -121,6 +114,13 @@ class Editor {
          */
         this.history  = new Editor.History(this);
         
+        /**
+         * @public
+         * @type {Editor.Contexts}
+         */
+        this.contexts = new Editor.Contexts(this);
+        this.contexts.create("Editor", false);
+         
         /**
          * @public
          * @type {Editor.Viewport}
@@ -207,7 +207,7 @@ class Editor {
 
         const isLight = /^(?!.*(helper)).*light/i.test(className);
         const isHelper = /helper/i.test(className);
-        const isChild = !isLight && !isHelper && object.parent;
+        const isChild = !isLight && !isHelper && obj3D.parent;
         const notLight = false;
 
         switch (true) {
@@ -215,10 +215,10 @@ class Editor {
                 return obj3D;
 
             case isHelper:
-                return this.#getLightObj(object.light);
+                return this.#getLightObj(obj3D.light);
 
             case isChild:
-                return this.#getLightObj(object.parent);
+                return this.#getLightObj(obj3D.parent);
 
             default:
                 return notLight;
@@ -487,7 +487,7 @@ class Editor {
 
         // Criando um contexto para cada cena do modelo
         Object.entries(this.model.scenes).forEach(([name, scene]) => {
-            this.contexts.create(name, scene);
+            this.contexts.create(name, false, scene);
         });
 
         this.model.animate(() => {
