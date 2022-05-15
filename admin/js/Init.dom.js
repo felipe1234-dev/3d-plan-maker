@@ -4,7 +4,7 @@ jQuery(document).ready(function ($) {
     const $titleDiv = $("#titlediv");
 
     $("#submitpost").appendTo(
-        $projectTabPanel.find(".Panel:nth-child(3) .Panel-row")
+        $projectTabPanel.find(".Panel:nth-child(2) .Panel-row")
     );
     $("#editor").appendTo($form);
     $form.attr("novalidate", "true");
