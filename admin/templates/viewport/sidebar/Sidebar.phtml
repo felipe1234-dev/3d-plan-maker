@@ -1,10 +1,10 @@
 <ul class="Tabs">
-    <li class="Tabs-tabItem Tabs-tabItem--is-selected">
+    <li class="Tabs-tabItem">
         <a href="#project-tab" id="project-tab-item">
             <i class="Tabs-tabItem-arrow"></i>
             <span>Projeto</span>
         </a>
-        <div id="project-tab">
+        <div id="project-tab-panel" class="Tabs-tabPanel">
             <?php require "project-tab/ProjectTab.phtml"; ?>
         </div>
     </li>
@@ -13,7 +13,7 @@
             <i class="Tabs-tabItem-arrow"></i>
             <span>Cena</span>
         </a>
-        <div id="scene-tab">
+        <div id="scene-tab-panel" class="Tabs-tabPanel">
             <?php require "scene-tab/SceneTab.phtml"; ?>
         </div>
     </li>
@@ -22,45 +22,8 @@
             <i class="Tabs-tabItem-arrow"></i>
             <span>Configurações</span>
         </a>
-        <div id="settings-tab">
+        <div id="settings-tab-panel" class="Tabs-tabPanel">
             <?php require "settings-tab/SettingsTab.phtml"; ?>
         </div>
     </li>
 </ul>
-
-<?php /*<aside class="Sidebar" id="sidebar">
-    <ul class="Tabs">
-    <li class="Tabs-tabItem Tabs-tabItem--is-selected">
-        <a href="#project-tab" id="project">
-        Projeto
-        </a>
-        <div> 
-        </div>
-    </li>
-    <li class="Tabs-tabItem">
-        <a href="#scene-tab" id="scene">
-        Cena 
-        </a>
-        <div>
-        </div>
-    </li>
-    <li class="Tabs-tabItem">
-        <a href="#settings-tab" id="settings">
-        Configurações
-        </a>
-        <div>
-        </div>
-    </li>
-    </ul> 
-    <div class="Panel-container">
-    <div id="project-tab" style="">
-        <?php require "project-tab/ProjectTab.phtml"; ?>
-    </div>
-    <div id="scene-tab" style="display: none;">
-        <?php require "scene-tab/SceneTab.phtml"; ?>
-    </div>
-    <div id="settings-tab" style="display: none;">
-        <?php require "settings-tab/SettingsTab.phtml"; ?>
-    </div>
-    </div>
-</aside>*/ ?>
