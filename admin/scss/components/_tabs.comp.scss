@@ -6,7 +6,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     
-    color: var(--text-light);
+    color: var(--text-dark);
     background-color: var(--bg-dark);
     border-right: 1px solid var(--on-bg-dark);
     border-top: 1px solid var(--on-bg-dark);
@@ -25,7 +25,7 @@
         a {
             padding: 5px;
             cursor: pointer;
-            color: var(--text-light);
+            color: var(--text-dark);
             text-decoration: none;
             border-bottom: 1px solid var(--on-bg-dark);
             
@@ -38,7 +38,7 @@
         }
         
         &-arrow {
-            border: solid var(--text-light);
+            border: solid var(--text-dark);
             border-width: 0 3px 3px 0;
             display: inline-block;
             padding: 3px;
