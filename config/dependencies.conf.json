@@ -57,7 +57,7 @@
             "admin/js/dom/Menubar.dom.js",
             "admin/js/dom/Viewport.dom.js",
             "admin/js/dom/History.dom.js",
-            "admin/js/dom/ProjectTab.dom.js",
+            "admin/js/dom/RendererTab.dom.js",
             "admin/js/dom/SceneTab.dom.js",
             "admin/js/dom/SettingsTab.dom.js", 
             "admin/js/dom/ObjectTab.dom.js",
