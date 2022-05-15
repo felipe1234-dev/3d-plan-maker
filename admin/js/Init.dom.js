@@ -1,16 +1,16 @@
 jQuery(document).ready(function ($) {
     const $form = $("form#post");
-    const $projectTab = $("#project-tab");
+    const $projectTabPanel = $("#project-tab-panel");
     const $titleDiv = $("#titlediv");
 
     $("#submitpost").appendTo(
-        $projectTab.find(".Panel:nth-child(3) .Panel-row")
+        $projectTabPanel.find(".Panel:nth-child(3) .Panel-row")
     );
     $("#editor").appendTo($form);
     $form.attr("novalidate", "true");
 
     $titleDiv.appendTo(
-        $projectTab.find(".Panel:nth-child(1) .Panel-row:nth-child(2)")
+        $projectTabPanel.find(".Panel:nth-child(1) .Panel-row:nth-child(2)")
     );
     $titleDiv.find("#titlewrap").remove();
 
@@ -37,13 +37,13 @@ jQuery(document).ready(function ($) {
             .text()
             .replace(/[\n\t]+/g, "")
     ) {
-        $projectTab
+        $projectTabPanel
             .find(".Panel:nth-child(1) .Panel-row:nth-child(2)")
             .remove();
     }
 
     $("#samplepermalinknonce").appendTo(
-        $projectTab.find(".Panel:nth-child(1) .Panel-row:nth-child(2)")
+        $projectTabPanel.find(".Panel:nth-child(1) .Panel-row:nth-child(2)")
     );
     $("#poststuff").remove();
     $("#submitpost").css("flex", "100%");
