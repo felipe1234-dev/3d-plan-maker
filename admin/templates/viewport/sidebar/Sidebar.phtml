@@ -5,7 +5,7 @@
             <span>Projeto</span>
         </a>
         <div id="project-tab-panel" class="Tabs-tabPanel">
-            <?php require "project-tab/ProjectTab.phtml"; ?>
+            <?php require "ProjectTab.phtml"; ?>
         </div>
     </li>
     <li class="Tabs-tabItem">
@@ -18,12 +18,30 @@
         </div>
     </li>
     <li class="Tabs-tabItem">
+        <a href="#renderer-tab" id="renderer-tab-item">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Renderizador</span>
+        </a>
+        <div id="renderer-tab-panel" class="Tabs-tabPanel">
+            <?php require "RendererTab.phtml"; ?>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
+        <a href="#3d-elem-tab" id="3d-elem-tab-item">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Elemento 3D</span>
+        </a>
+        <div id="3d-elem-tab-panel" class="Tabs-tabPanel">
+            <?php require "3d-element-tab/3DElementTab.phtml"; ?>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
         <a href="#settings-tab" id="settings-tab-item">
             <i class="Tabs-tabItem-arrow"></i>
             <span>Configurações</span>
         </a>
         <div id="settings-tab-panel" class="Tabs-tabPanel">
-            <?php require "settings-tab/SettingsTab.phtml"; ?>
+            <?php require "SettingsTab.phtml"; ?>
         </div>
     </li>
 </ul>
