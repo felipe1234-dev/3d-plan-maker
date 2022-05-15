@@ -22,7 +22,7 @@
         flex-direction: column;
         width: 100%;
 
-        a {
+        &> a {
             padding: 5px;
             cursor: pointer;
             color: var(--text-dark);
@@ -43,20 +43,21 @@
             display: inline-block;
             padding: 3px;
             margin: 0 5px;
+            transition: transform .5s;
             transform: rotate(-45deg);
             -webkit-transform: rotate(-45deg);
         }
         
-        &--is-selected &-arrow {
+        &--is-selected > a > &-arrow {
             transform: rotate(45deg);
             -webkit-transform: rotate(45deg);
         }
         
-        &--is-selected &-arrow, &:hover &-arrow {
+        &--is-selected > a > &-arrow, &:hover > a > &-arrow {
             border-color: var(--on-hover);
         }
         
-        &--is-selected a, &:hover a {
+        &--is-selected > a, &:hover > a {
             background-color: var(--on-bg-dark);
             color: var(--on-hover);
         }        
