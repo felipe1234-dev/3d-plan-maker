@@ -1,0 +1,29 @@
+<ul class="Tabs">
+    <li class="Tabs-tabItem">
+        <a href="#object-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Objeto</span>
+        </a>
+        <div id="object-tab-panel" class="Tabs-tabPanel Panel">
+            <?php require "rows/ObjectRows.phtml"; ?>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
+        <a href="#geometry-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Geometria</span>
+        </a>
+        <div id="geometry-tab-panel" class="Tabs-tabPanel Panel">
+            <?php require "rows/GeometryRows.phtml"; ?>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
+        <a href="#material-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Material</span>
+        </a>
+        <div id="material-tab-panel" class="Tabs-tabPanel Panel">
+            <?php require "rows/MaterialRows.phtml"; ?>
+        </div>
+    </li>
+</ul>
