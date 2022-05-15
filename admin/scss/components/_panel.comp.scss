@@ -7,8 +7,9 @@
 }
 
 .Panel {
-    border-top: 1px solid var(--bg-dark);
-    color: var(--text);
+    border-top: 1px solid var(--text);
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
     padding: 10px;
         
     &:first-child {
