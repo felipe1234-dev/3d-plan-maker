@@ -5,12 +5,14 @@ Editor.Contexts = class {
         this.current = null;
     }
     
-    /** +
+    /**
      * 
-     * @param {String} ctxName 
+     * @param {string} ctxName 
+     * @param {boolean?} feedHistory
      * @param {THREE.Scene?} ctxScene 
+     * @returns {void}
      */
-    create(ctxName, ctxScene) {
+    create(ctxName, feedHistory = true, ctxScene) {
         if (ctxName in this) return;
 
         if (!(ctxName in this.#editor._scenes))
@@ -18,8 +20,7 @@ Editor.Contexts = class {
 
         const scope = this;
 
-        /* 
-         * Cada cena criada já contém o seu fator de opacidade (determinado pelo 
+        /* Cada cena criada já contém o seu fator de opacidade (determinado pelo 
          * usuário no último save).
          * Logo, nós temos que pegar esses fatores já definidos.
          * Se não foi definido (como no caso que a cena foi recém criada),
@@ -224,7 +225,7 @@ Editor.Contexts = class {
                 scope.current = this;
             },
             
-            delete() {
+            delete(feedHistory = true) {
                 delete scope.#editor._scenes[this.name];
                 delete scope[this.name];
                 
@@ -235,11 +236,29 @@ Editor.Contexts = class {
                         scope[key].select();
                     }
                 });
+                
+                if (feedHistory) {
+                    scope.#editor.history.add({
+                        description: `Delete model.context = ${this.name}`,
+                        undo: () => this.delete(false),
+                        redo: () => scope.create(ctxName, false, this.scene),
+                        always: () => scope.#editor.save()
+                    });
+                }
             },
         };
 
         this.Editor.setRenderOrder(Object.keys(this.#editor._scenes).length, false);
         
         if (ctxName !== "Editor") this[ctxName].select();
+        
+        if (feedHistory) {
+            this.#editor.history.add({
+                description: `Add model.context = ${ctxName}`,
+                undo: () => this[ctxName].delete(false),
+                redo: () => this[ctxName].create(ctxName, this[ctxName].scene, false),
+                always: () => this.#editor.save()
+            });
+        }
     }
 };
