@@ -40,7 +40,7 @@
 
         &:hover:not(.is-inactive) {
             background-color: var(--on-hover);
-            color: var(--on-bg-light);
+            color: var(--text-light);
             
             > .HoverDropdown {
                 display: block;
