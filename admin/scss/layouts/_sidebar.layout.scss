@@ -1,0 +1,82 @@
+.Editor #sidebar {
+    [title] {
+        cursor: help;
+    }
+    
+    select, input, textarea {
+        padding: 0 8px;
+        
+        background-color: var(--bg-dark);
+        color: var(--text-dark);
+        
+        outline: none;
+        border: 0;
+    }
+    
+    select {
+        cursor: pointer;
+        
+        &:hover {
+            background-color: var(--on-hover);
+            color: var(--text-light);
+        }
+    }
+    
+    input {
+        display: inline-block;
+        vertical-align: middle;
+
+        &::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        &::-webkit-color-swatch {
+            border: 0;
+        }
+
+        &[type="number"] {
+            color: var(--on-hover) !important;
+        }
+
+        &[type="color"] {
+            min-width: 32px;
+            min-height: 16px;
+            max-width: 32px;
+            max-height: 16px;
+            background-color: transparent;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+
+        &[type="checkbox"]:disabled {
+            opacity: 0.8;
+            cursor: default;
+        }
+    }
+    
+    textarea {
+        tab-size: 4;
+        white-space: pre;
+        word-wrap: normal;
+        vertical-align: middle;
+    }
+
+    div.Image {
+        position: relative;
+        min-width: 32px;
+        min-height: 16px;
+        max-width: 32px;
+        max-height: 16px;
+        background-color: var(--on-bg-light);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 50vw 50vh;
+        border: 1px solid var(--text-light);
+        display: inline-block;
+        vertical-align: middle;
+        cursor: pointer;
+    }
+}
