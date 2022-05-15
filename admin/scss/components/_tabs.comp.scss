@@ -62,4 +62,8 @@
             color: var(--on-hover);
         }        
     }
+    
+    &-tabItem &-tabPanel {
+        margin-left: 10px;
+    }
 }
