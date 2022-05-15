@@ -1,10 +1,13 @@
 jQuery(document).ready(function ($) {
+    const $tabs = $(".Tabs");
     const $sidebar = $("#sidebar");
-    const $tabs = $sidebar.find(".Tabs");
+    
+    const $sidebarTabs = $sidebar.find(".Tabs");
+    const $projectTabItem  = $sidebarTabs.find("#project-tab-item");
+    const $sceneTabItem = $sidebarTabs.find("#scene-tab-item");
     
     $tabs
         .accordion({
-            active: 0,
             header: "> li > a",
             collapsible: true,
             activate: function (event, ui) {
@@ -15,20 +18,31 @@ jQuery(document).ready(function ($) {
                 $(ui.oldPanel).hide().css("height", "auto");
             }
         })
-        .find("#project-tab")
-            .show()
-            .css("height", "auto")
-        .sortable();
+        .sortable()
+        .find(".Tabs-tabPanel")
+        .css("height", "auto");
+    
+    $projectTabItem.click();
 
     // setando os tooltips
     $(document).tooltip({
         tooltipClass: "custom-tooltip-styling",
     });
 
-    window.ThreeDModelEditor.on("select", () =>
-        $tabs.find("#scene-tab-item").click()
-    );
-    window.ThreeDModelEditor.on("unselect", () =>
-        $tabs.find("#project-tab-item").click()
-    );
+    window.ThreeDModelEditor.on("select", () => {
+        const isSelected = $sceneTabItem.attr("aria-selected") === "true";
+        if (isSelected) {
+            return;
+        }
+        
+        $sceneTabItem.click();
+    });
+    window.ThreeDModelEditor.on("unselect", () => {
+        const isSelected = $projectTabItem.attr("aria-selected") === "true";
+        if (isSelected) {
+            return;
+        }
+        
+        $projectTabItem.click();
+    });
 });
