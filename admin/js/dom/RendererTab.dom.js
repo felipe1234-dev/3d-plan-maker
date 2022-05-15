@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $projectTab = $("#project-tab");
+    const $rendererTabPanel = $("#project-tab-panel");
     const $antialias = $("#antialias-toggler");
     const $physicalLights = $("#physical-lights-toggler");
     const $shadowEnabler = $("#shadow-toggler");
@@ -44,20 +44,21 @@ jQuery(document).ready(function ($) {
         );
     });
 
-    $projectTab
+    $rendererTabPanel
         .on("sync", function () {
             $antialias[0].checked =
                 window.ThreeDModelEditor.renderer.get("antialias");
-            $physicalLights[0].checked = window.ThreeDModelEditor.renderer.get(
-                "enablePhysicalLights"
-            );
+            $physicalLights[0].checked = 
+                window.ThreeDModelEditor.renderer.get("enablePhysicalLights");
             $shadowEnabler[0].checked =
                 window.ThreeDModelEditor.renderer.get("enableShadows");
 
             $shadowType.val(
                 window.ThreeDModelEditor.renderer.get("shadowType")
             );
-            $toneType.val(window.ThreeDModelEditor.renderer.get("toneMapping"));
+            $toneType.val(
+                window.ThreeDModelEditor.renderer.get("toneMapping")
+            );
             $toneExposure.val(
                 window.ThreeDModelEditor.renderer.get("toneMappingExposure")
             );
@@ -65,6 +66,6 @@ jQuery(document).ready(function ($) {
         .trigger("sync");
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $projectTab.trigger("sync")
+        $rendererTabPanel.trigger("sync")
     );
 });
