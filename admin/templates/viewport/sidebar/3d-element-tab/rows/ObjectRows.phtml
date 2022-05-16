@@ -14,8 +14,12 @@
         UUID
     </span>
     <input 
-        autocomplete="off" data-option="uuid" 
-        data-scope="<?php echo $scope ?>" data-type="String" disabled 
+        type="text"
+        autocomplete="off" 
+        data-option="uuid" 
+        data-scope="<?php echo $scope ?>" 
+        data-type="String" 
+        disabled 
     />
 </div>
 
@@ -24,8 +28,12 @@
         Nome
     </label>
     <input 
-        id="<?php echo "$scope-name-field" ?>" autocomplete="off" 
-        data-option="name" data-scope="<?php echo $scope ?>" data-type="String"
+        id="<?php echo "$scope-name-field" ?>" 
+        type="text"
+        autocomplete="off" 
+        data-option="name" 
+        data-scope="<?php echo $scope ?>" 
+        data-type="String"
     />
 </div>
 
@@ -62,8 +70,13 @@ endforeach; ?>
         Ordem de Renderização
     </label>
     <input 
-        id="<?php echo "$scope-renderOrder-field" ?>" type="number" 
-        step="1" autocomplete="off" data-type="Int" data-scope="<?php echo $scope ?>" 
+        id="<?php echo "$scope-renderOrder-field" ?>" 
+        class="Panel-item--is16"
+        type="number" 
+        step="1" 
+        autocomplete="off" 
+        data-type="Int" 
+        data-scope="<?php echo $scope ?>" 
         data-option="renderOrder" 
     />
 </div>
