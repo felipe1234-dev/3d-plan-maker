@@ -1,0 +1,92 @@
+<ul class="Tabs">
+    <li class="Tabs-tabItem">
+        <a href="#viewport-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Porta de visualização</span>
+        </a>
+        <div class="Tabs-tabPanel Panel">
+            <div class="Panel-row">
+                <label for="toggle-grids-input" class="Panel-text">
+                    Grades
+                </label>
+                <input
+                    id="toggle-grids-input" 
+                    type="checkbox" 
+                    name="show_grids"
+                    <?php echo (bool)$post->show_grids ? "checked" : "" ?>
+                />
+            </div>
+            <div class="Panel-row">
+                <label for="grid-size-input" class="Panel-text">
+                    Tamanho das Grades
+                </label>
+                <input 
+                    id="grid-size-input" 
+                    class="Panel-item--is20"
+                    type="number" 
+                    name="grid_size"
+                    step="1"  
+                    value="<?php echo $post->grid_size ?>"
+                />
+            </div>
+            <div class="Panel-row">
+                <span class="Panel-text">
+                    Auxiliares
+                </span>
+                <input 
+                    id="show-helpers-input" 
+                    type="checkbox" 
+                    name="show_helpers"
+                    <?php echo (bool)$post->show_helpers ? "checked" : "" ?>
+                />
+            </div>
+            <div class="Panel-row">
+                <label for="zoom-speed-input" class="Panel-text">
+                    Velocidade do Zoom
+                </label>
+                <input 
+                    id="zoom-speed-input" 
+                    class="Panel-item--is20"
+                    type="number"
+                    name="zoom_speed" 
+                    step="0.01" 
+                    value="<?php echo $post->zoom_speed ?>"
+                />
+            </div>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
+        <a href="#shortcuts-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Atalhos</span>
+        </a>
+        <div class="Tabs-tabPanel Panel">
+            <?php foreach ( $label_texts as $key => $label ) : ?>
+                <?php if ((bool)preg_match("/shortcut/i", $key)) : ?>
+                    <div class="Panel-row">
+                        <label for="<?php echo $key ?>" class="Panel-text">
+                            <?php echo $label ?>
+                        </label>
+                        <input  
+                            id="<?php echo $key ?>" 
+                            class="Panel-item--is10 is-lowercase text-is-centered" 
+                            name="<?php echo $key ?>" 
+                            autocomplete="off" 
+                            maxlength="1" 
+                            value="<?php echo $post->$key ?>"
+                        />
+                    </div>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    </li>
+    <li class="Tabs-tabItem">
+        <a href="#history-tab">
+            <i class="Tabs-tabItem-arrow"></i>
+            <span>Histórico</span>
+        </a>
+        <div class="Tabs-tabPanel Panel">
+            <div id="history" class="Outliner"></div>
+        </div>
+    </li>
+</ul>
