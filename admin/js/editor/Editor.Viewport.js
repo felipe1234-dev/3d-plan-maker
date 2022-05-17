@@ -1,4 +1,4 @@
-Editor.Viewport = class {
+class EditorViewport {
     #editor;
     #grids;
     #helpers;
@@ -94,32 +94,41 @@ Editor.Viewport = class {
         this.#editor.model.scenes.Editor.add(this.#grids.group);
     }
     
-    setHelper(object) {
-        const isGroup = object instanceof THREE.Group;
-        const isMesh = object instanceof THREE.Mesh;
-        const isHotSpot = object instanceof THREE.HotSpot; 
-        const isLight = /light/i.test(object.constructor.name);
+    setHelper(element3D) {
+        const isGroup   = element3D instanceof THREE.Group;
+        const isMesh    = element3D instanceof THREE.Mesh;
+        const isHotSpot = element3D instanceof THREE.HotSpot; 
+        const isLight   = /light/i.test(element3D.constructor.name);
             
         let helper;
         
-        if (isGroup) {   
+        if (isGroup) { 
         } else if (isMesh || isHotSpot) {
-            helper = new THREE.BoxHelper(object, new THREE.Color(0xffff00));
+            helper = new THREE.BoxHelper(element3D, new THREE.Color(0xffff00));
             helper.visible = false;
         } else if (isLight) { 
-            // ambient light não tem um helper
-            if (object.type !== "AmbientLight") {
-                helper = new THREE[object.type + "Helper"](object);
+            // AmbientLight não tem um helper
+            if (element3D.type !== "AmbientLight") {
+                helper = new THREE[element3D.type + "Helper"](element3D);
                 helper.visible = this.showHelpers; 
             }
         }
             
-        if (helper)
-            this.helpers[object.uuid] = helper;
+        if (helper) {
+            this.helpers[element3D.uuid] = helper;
+        }
     }
     
-    getHelper(object) {
-        return this.helpers[object.uuid]
+    getHelper(element3D) {
+        return this.helpers[element3D.uuid]
+    }
+    
+    removeHelper(element3D) {
+        const helper = this.getHelper(element3D);
+        this.#editor._currentScene.remove(element3D);
+        this.#editor._currentScene.remove(helper);
+
+        delete this.helpers[element3D.uuid];
     }
     
     get(option) {
@@ -184,10 +193,9 @@ Editor.Viewport = class {
         }
     }
     
-    /** 
-     * os métodos zoomIn e zoomOut foram implementados no próprio código fonte
+    /* Os métodos zoomIn e zoomOut foram implementados no próprio código fonte
      * da biblioteca threejs: libs/threejs-r136/assets/controls/OrbitControls.js, 
-     * linhas 1049 e 1050
+     * linhas 1049 e 1050.
      */
 
     zoomIn = () => this.#editor.model.orbitControls.zoomIn()
