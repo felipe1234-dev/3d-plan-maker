@@ -33,9 +33,11 @@
             "inc/js/HotSpotMaterial.class.js",
             "inc/js/RoomEnvironment.class.js",
             
+            "admin/js/changes/BufferGeometry.three.js",
             "admin/js/changes/Color.three.js",
             "admin/js/changes/Fog.three.js",
             "admin/js/changes/FogExp2.three.js",
+            "admin/js/changes/Material.three.js",
             "admin/js/changes/Scene.three.js",
             "admin/js/changes/Texture.three.js",
             
