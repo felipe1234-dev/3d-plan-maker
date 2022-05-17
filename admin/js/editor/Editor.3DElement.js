@@ -87,7 +87,7 @@ class Scope {
     constructor(editor, parent) {
         this._editor = editor;
         this._parent = parent;
-        this._elem3D = this.#parent.ref;
+        this._elem3D = this._parent.ref;
     }
 }
 
@@ -158,7 +158,7 @@ class ObjectScope extends Scope {
             this._elem3D[option] = value;
         }
 
-        this.#editor.viewport.getHelper(this._elem3D).update();
+        this._editor.viewport.getHelper(this._elem3D).update();
     }
 }
 
