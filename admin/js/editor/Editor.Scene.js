@@ -1,16 +1,110 @@
-Editor.Scene = class {
+/**
+ * Serve para editar a cena (do contexto) atual do editor.
+ */
+class EditorScene {
     #editor;
     
+    /**
+     * @param {Editor} editor - Uma instância do editor.
+     */
     constructor(editor) {
         this.#editor = editor;
+        
+        /* Criando um proxy para monitorar quando a "função de setagem" é acionada,
+         * e assim, mandar automaticamente uma mensagem ao histórico.
+         */
+        const scope = this;
+        
+        this.set = new Proxy(this.set, {
+            apply: function(set, thisScope, args) {
+                const feedHistory = args[2];
+            
+                if (feedHistory) {
+                    const option  = args[0];
+                    const newVal  = args[1];
+                    const oldVal  = scope.get(option);
+                    const ctxName = scope.#editor.contexts.current.name;
+                    
+                    scope.#editor.history.add({
+                        description: `Mudou "${option}" de "${ctxName}" para ${newVal}`,
+                        undo: () => set(option, oldVal, false),
+                        redo: () => set(option, newVal, false),
+                        always: () => scope.#editor.save()
+                    });
+                }
+                
+                set(...args);
+            }
+        });
+        
+        this.add = new Proxy(this.add, {
+            apply: function(add, thisScope, args) {
+                const feedHistory = args[2];
+                
+                if (feedHistory) {
+                    const ctxName = scope.#editor.contexts.current.name;
+                    let elem3D    = args[0];
+                    elem3D        = scope.#editor._currentScene.children.filter((child) => (
+                        elem3D.uuid === child.uuid
+                    ))[0]; // Para pegar a posição anterior do objeto
+                    const props   = args[1];
+        
+                    scope.#editor.history.add({
+                        description: `Adicionou ${elem3D.type} em "${ctxName}"`,
+                        undo: () => scope.remove(elem3D, false),
+                        redo: () => add(elem3D, {
+                            position: [...elem3D.position], // Mantendo a posição (escolhida aleatoriamente ou não)
+                            checkForCollision: true
+                        }, false),
+                        always: () => scope.#editor.save(),
+                    });
+                }
+                
+                add(...args);
+            }
+        });
+        
+        this.remove = new Proxy(this.remove, {
+            apply: function(remove, thisScope, args) {
+                const feedHistory = args[2];
+                
+                if (feedHistory) {
+                    const elem3D  = args[0];
+                    const ctxName = scope.#editor.contexts.current.name;
+        
+                    scope.#editor.history.add({
+                        description: `Removeu ${elem3D.type} de "${ctxName}"`,
+                        undo: () => scope.add(elem3D, {
+                            position: [...elem3D.position], // Mantendo a posição que o objeto estava
+                            checkForCollision: true
+                        }, false),
+                        redo: () => remove(elem3D, false),
+                        always: () => scope.#editor.save(),
+                    });
+                }
+                
+                remove(...args);
+            }
+        });
     }
 
-    #setBackground({ type, ...rest }) {
+    /**
+     * @private
+     * @param {{
+     *     type: string,
+     *     color?: string,
+     *     url?: string,
+     *     urls?: Array<string> 
+     * }} props
+     * @returns {void}
+     */
+    #setBackground(props) {
+        const { type, ...rest } = props;
         let texture;
 
-        // a refração não altera a aparência do pano de fundo
-        // por isso environment considera refração mas o background não
-
+        /* A refração não altera a aparência do pano de fundo,
+         * por isso, environment considera refração mas o background não.
+         */
         switch (true) {
             case /^color$/i.test(type):
                 const { color } = rest;
@@ -38,14 +132,26 @@ Editor.Scene = class {
                 break;
 
             default:
-                this.#editor._scene.background = null;
+                this.#editor._currentScene.background = null;
                 return;
         }
 
-        this.#editor._scene.background = texture;
+        this.#editor._currentScene.background = texture;
     }
 
-    #setEnvironment({ type, ...rest }) {
+    /**
+     * @private
+     * @param {{
+     *     type: string,
+     *     color?: string,
+     *     url?: string,
+     *     urls?: Array<string>,
+     *     refraction?: boolean
+     * }} props
+     * @returns {void}
+     */
+    #setEnvironment(props) {
+        const { type, ...rest } = props;
         let texture;
 
         switch (true) {
@@ -76,34 +182,52 @@ Editor.Scene = class {
                 break;
 
             default:
-                this.#editor._scene.environment = null;
+                this.#editor._currentScene.environment = null;
                 return;
         }
 
         texture.encoding = THREE.sRGBEncoding;
 
-        this.#editor._scene.environment = texture;
+        this.#editor._currentScene.environment = texture;
     }
 
-    #setFog({ type, ...rest }) {
+    /**
+     * @private
+     * @param {{
+     *     type: string,
+     *     color?: number | string,
+     *     near?: number,
+     *     far?: number,
+     *     density?: number
+     * }} props 
+     */
+    #setFog(props) {
+        const { type, ...rest } = props;
+        
         if (!!type && "color" in rest) {
             const { color } = rest;
 
             if (/linear/i.test(type)) {
                 const { near, far } = rest;
-                this.#editor._scene.fog = new THREE.Fog(color, near, far);
+                this.#editor._currentScene.fog = new THREE.Fog(color, near, far);
             } else if (/exponential/i.test(type)) {
                 const { density } = rest;
-                this.#editor._scene.fog = new THREE.FogExp2(color, density);
+                this.#editor._currentScene.fog = new THREE.FogExp2(color, density);
             }
         } else {
-            this.#editor._scene.fog = null;
+            this.#editor._currentScene.fog = null;
         }
     }
 
+    /**
+     * Retorna o valor de alguma propriedade da cena atual.
+     * @public
+     * @param {string} option - Nome ou apelido da propriedade. 
+     * @returns {any}           Retorna o valor da propriedade, podendo ser de any tipos.
+     */
     get(option) {
         if (/(background)|(environment)|(fog)/i.test(option)) {
-            const data = this.#editor._scene.editorData;
+            const data = this.#editor._currentScene.editorData;
             const res = data[option];
             
             return res;
@@ -112,25 +236,24 @@ Editor.Scene = class {
         // o usuário/programador pode enviar um "caminho" de objeto
         // em pontos: "prop1.prop2.prop3..."
         if (/(\w+\.)+/.test(option)) {
-            return eval(`this.#editor._scene.${option}`);
+            return eval(`this.#editor._currentScene.${option}`);
         }
 
         option = option.replace(/[\s-]+([A-Z])/g, "$1");
-        return this.#editor._scene[option];
+        return this.#editor._currentScene[option];
     }
-
+    
+    /**
+     * Seta alguma propriedade da cena atual.
+     * @public
+     * @param {string}   option      - O nome do campo a ser setado.
+     * @param {any}      value       - O novo valor desse campo.
+     * @param {boolean?} feedHistory - Um booleano para decidir se gravará no histórico ou não. Padrão é true.
+     * @returns {void}
+     */
     set(option, value, feedHistory = true) {
-        if (!this.#editor._memory.has(this.#editor._scene.uuid))
-            this.#editor._memory.create(this.#editor._scene.uuid);
-
-        if (!this.#editor._memory[this.#editor._scene.uuid].has(option)) {
-            this.#editor._memory[this.#editor._scene.uuid].set({
-                [option]: this.get(option),
-            });
-        }
-
         if (/user[\s-]*Data/i.test(option)) {
-            this.#editor._scene.userData = value;
+            this.#editor._currentScene.userData = value;
         } else if (/background/i.test(option)) {
             this.#setBackground(value);
         } else if (/environment|env(ironment)*[\s-]*map/i.test(option)) {
@@ -138,40 +261,33 @@ Editor.Scene = class {
         } else if (/fog/i.test(option)) {
             this.#setFog(value);
         } else if (/(\w+\.)+/.test(option)) {
-            eval(`this.#editor._scene.${option} = value`);
+            eval(`this.#editor._currentScene.${option} = value`);
         } else {
-            this.#editor._scene[option] = value;
-        }
-
-        if (feedHistory) {
-            const oldValueCopy = this.#editor._memory[this.#editor._scene.uuid][option];
-
-            this.#editor.history.add({
-                description: `Set scene.${option} = ${
-                    typeof value == "object" ? JSON.stringify(value) : value
-                }`,
-                undo: () => this.set(option, oldValueCopy, false),
-                redo: () => this.set(option, value, false),
-                always: () => this.#editor.save(),
-            });
-
-            this.#editor._memory.clear([this.#editor._scene.uuid]);
+            this.#editor._currentScene[option] = value;
         }
     }
-
-    // ---
-
+    
+    /**
+     * Calcula o espaço total que o objeto ocupa.
+     * @private
+     * @param {THREE.Object3D} cmpObject - O elemento cuja posição será setada.
+     * @returns {{
+     *     x: { start: number, end: number },
+     *     y: { start: number, end: number },
+     *     z: { start: number, end: number }
+     * }}
+     */
     #calcIntervals(cmpObject) {
         const { position, scale } = cmpObject;
         const intervals = {
             x: { start: null, end: null },
             y: { start: null, end: null },
-            z: { start: null, end: null },
+            z: { start: null, end: null }
         };
         const lengths = {
             x: 1,
             y: 1,
-            z: 1,
+            z: 1
         };
 
         if ("geometry" in cmpObject && "parameters" in cmpObject.geometry) {
@@ -209,6 +325,21 @@ Editor.Scene = class {
         return intervals;
     }
 
+    /**
+     * Verifica se os intervalos estão sobrepostos.
+     * @private
+     * @param {{
+     *     x: { start: number, end: number },
+     *     y: { start: number, end: number },
+     *     z: { start: number, end: number }
+     * }} intervals1 - Objeto retornado por EditorScene.#calcIntervals do objeto 1.
+     * @param {{
+     *     x: { start: number, end: number },
+     *     y: { start: number, end: number },
+     *     z: { start: number, end: number }
+     * }} intervals2 - Objeto retornado por EditorScene.#calcIntervals do objeto 2.
+     * @returns {boolean}
+     */
     #collided(intervals1, intervals2) {
         return (
             ((intervals1.x.start >= intervals2.x.start &&
@@ -225,20 +356,38 @@ Editor.Scene = class {
                     intervals2.z.start <= intervals1.z.end))
         );
     }
-
-    #checkForCollision(object) {
+    
+    /**
+     * Seta uma posição aleatória ao objeto, recursivamente para não sobrescrever a posição
+     * de outro objeto. Retorna
+     * @private
+     * @param {THREE.Object3D} element3D - O elemento cuja posição será setada.
+     * @returns {{
+     *     objec1: {
+     *         x: { start: number, end: number },
+     *         y: { start: number, end: number },
+     *         z: { start: number, end: number }
+     *     },
+     *     objec2: {
+     *         x: { start: number, end: number },
+     *         y: { start: number, end: number },
+     *         z: { start: number, end: number }
+     *     }
+     * } | null}
+     */
+    #checkForCollision(element3D) {
         let result = null;
 
-        this.#editor._scene.children.every((item) => {
+        this.#editor._currentScene.children.every((item) => {
             if (
                 this.#collided(
-                    this.#calcIntervals(object),
+                    this.#calcIntervals(element3D),
                     this.#calcIntervals(item)
                 ) &&
-                object !== item
+                element3D !== item
             ) {
                 result = {
-                    object1: this.#calcIntervals(object),
+                    object1: this.#calcIntervals(element3D),
                     object2: this.#calcIntervals(item),
                 };
 
@@ -249,152 +398,74 @@ Editor.Scene = class {
 
         return result;
     }
+    
+    /**
+     * Seta uma posição aleatória ao objeto recursivamente para não sobrescrever a posição
+     * de outro objeto.
+     * @private
+     * @param {THREE.Object3D} element3D - O elemento cuja posição será setada.
+     * @returns {void}
+     */
+    #setRandomPosition(element3D) {
+        const { position } = element3D;
 
-    #setRandomPosition(object) {
-        const { position } = object;
-
-        if (this.#checkForCollision(object)) {
+        if (this.#checkForCollision(element3D)) {
             const axes = ["x", "y", "z"];
             const randAxis = axes[parseInt(Math.random() * 3)];
-            const objThatsOver = this.#checkForCollision(object).object2;
+            const objThatsOver = this.#checkForCollision(element3D).object2;
 
             const { start, end } = objThatsOver[randAxis];
             position[randAxis] = Math.random() * Math.abs(start - end) + end;
         }
 
-        object.position.set(position.x, position.y, position.z);
+        element3D.position.set(position.x, position.y, position.z);
 
-        if (this.#checkForCollision(object)) this.#setRandomPosition(object);
+        if (this.#checkForCollision(element3D)) {
+            this.#setRandomPosition(element3D);
+        }
     }
+    
+    /**
+     * @public
+     * @param {THREE.Object3D} element3D - O elemento a ser removido da cena.
+     * @param {boolean?} feedHistory     - Booleano que determina se a ação será gravada no histórico. Padrão é true.
+     * @returns {void}
+     */
+    remove(element3D, feedHistory = true) {
+        if (this.#editor.selected.ref === element3D) {
+            this.#editor.selected.unselect();
+        }
 
-    #addHotSpot({ position, material, checkForCollision }) {
-        material = new THREE.HotSpotMaterial(material);
-        const object = new THREE.HotSpot(material);
-        object.name = "HotSpot";
+        this.#editor.viewport.removeHelper(element3D);
+    }
+ 
+    /**
+     * @public
+     * @param {THREE.Object3D} element3D - O elemento a ser adicionado.
+     * @param {{
+     *     position: [x: number, y: number, z: number],
+     *     checkForCollision: boolean
+     * }} props - Objeto especificando a posição e se deve checar porcolisão (ou seja, se a posição definida já for ocupada,
+     * aleatoriamente escolhe outra).  
+     * @param {boolean?} feedHistory - Booleano que determina se a ação será gravada no histórico. Padrão é true.
+     * @returns {void}
+     */
+    add(element3D, props, feedHistory = true) {
+        const { position, checkForCollision } = props;
+        const elem3D = element3D;
 
         if (!!position && position.length === 3) {
             if (checkForCollision) {
-                this.#setRandomPosition(object);
+                this.#setRandomPosition(elem3D);
             } else {
-                object.position.set(...position);
+                elem3D.position.set(...position);
             }
         }
 
-        this.#editor._scene.add(object);
-        this.#editor.viewport.setHelper(object);
+        this.#editor._currentScene.add(elem3D);
+        this.#editor.viewport.setHelper(elem3D);
 
-        const boxHelper = this.#editor.viewport.getHelper(object);
-        this.#editor._scene.add(boxHelper);
-
-        return object;
+        const helper = this.#editor.viewport.getHelper(elem3D);
+        this.#editor._currentScene.add(helper);
     }
-
-    #addLight({ position, type, args, checkForCollision }) {
-        const light =
-            args.length > 0 ? new THREE[type](...args) : new THREE[type]();
-        light.name = type;
-
-        if (!!position && position.length === 3) {
-            if (checkForCollision) {
-                this.#setRandomPosition(light);
-            } else {
-                light.position.set(...position);
-            }
-        }
-
-        this.#editor._scene.add(light);
-        this.#editor.viewport.setHelper(light);
-
-        const lightHelper = this.#editor.viewport.getHelper(light);
-        if (lightHelper) this.#editor._scene.add(lightHelper);
-
-        return light;
-    }
-
-    #addGeometry({
-        position,
-        geometry: geomSets,
-        material: matsets,
-        checkForCollision,
-    }) {
-        const { type: geometryName, args: geometryArgs } = geomSets;
-        const { type: materialName, params: materialParams } = matsets;
-
-        const geometry =
-            geometryArgs.length > 0
-                ? new THREE[geometryName](...geometryArgs)
-                : new THREE[geometryName]();
-        const material = new THREE[materialName](materialParams);
-
-        const object = new THREE.Mesh(geometry, material);
-        object.name = geometryName;
-
-        if (!!position && position.length === 3) {
-            if (checkForCollision) {
-                this.#setRandomPosition(object);
-            } else {
-                object.position.set(...position);
-            }
-        }
-
-        this.#editor._scene.add(object);
-        this.#editor.viewport.setHelper(object);
-
-        const boxHelper = this.#editor.viewport.getHelper(object);
-        this.#editor._scene.add(boxHelper);
-
-        return object;
-    }
-
-    #add(object) {
-        this.#editor.viewport.setHelper(object);
-
-        this.#editor._scene.add(object);
-        this.#editor._scene.add(this.#editor.viewport.getHelper(object));
-    }
-
-    #remove(object) {
-        if (this.#editor.selected.ref === object) this.#editor.selected.unselect();
-
-        this.#editor._scene.remove(object);
-        this.#editor._scene.remove(this.#editor.viewport.getHelper(object));
-
-        delete this.#editor._helpers[object.uuid];
-    }
-
-    add(type, props, feedHistory = true) {
-        if (!this.#editor._memory.has(this.#editor._scene.uuid))
-            this.#editor._memory.create(this.#editor._scene.uuid);
-
-        let object;
-
-        if (/geometry/i.test(type)) {
-            object = this.#addGeometry(props);
-        } else if (/light/i.test(type)) {
-            object = this.#addLight(props);
-        } else if (/hotspot/i.test(type)) {
-            object = this.#addHotSpot(props);
-        }
-
-        if (!object) return;
-
-        if (!this.#editor._memory[this.#editor._scene.uuid].has(object.uuid)) {
-            this.#editor._memory[this.#editor._scene.uuid].set({
-                [object.uuid]: object,
-            });
-        }
-
-        if (feedHistory) {
-            const objectCopy = this.#editor._memory[this.#editor._scene.uuid][object.uuid];
-
-            this.#editor.history.add({
-                description: `Add ${type} ${object.name}`,
-                undo: () => this.#remove(objectCopy),
-                redo: () => this.#add(objectCopy),
-                always: () => this.#editor.save(),
-            });
-
-            this.#editor._memory.clear([this.#editor._scene.uuid]);
-        }
-    }
-};
+}
