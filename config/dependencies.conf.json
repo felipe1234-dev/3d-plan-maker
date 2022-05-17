@@ -49,7 +49,7 @@
             "admin/js/editor/Editor.Renderer.js",
             "admin/js/editor/Editor.Scene.js",
             "admin/js/editor/Editor.Viewport.js",
-            "admin/js/editor/Editor.Transformer.js",
+            "admin/js/editor/Editor.3DElement.js",
             "admin/js/Init.Editor.js",
             
             "admin/js/helpers/points.helper.js",
