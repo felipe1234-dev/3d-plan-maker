@@ -55,37 +55,48 @@ jQuery(document).ready(function ($) {
     });
     
     $("#add-hotspot-btn").click(function () {
-        window.ThreeDModelEditor.scene.add("HotSpot", {
+        const material = new THREE.HotSpotMaterial({
+            text: "H"
+        });
+        material.name  = "HotSpotMaterial";
+        
+        const element3D = new THREE.HotSpot(material);
+        element3D.name  = "HotSpot";
+        
+        window.ThreeDModelEditor.scene.add(element3D, {
             position: [0, 0.5, 0],
-            material: { text: "H" },
-            checkForCollision: true,
+            checkForCollision: true
         });
     });
 
     $menubar.find("div[data-geometry]").click(function () {
-        window.ThreeDModelEditor.scene.add("Geometry", {
+        const type      = $(this).data("geometry");
+        const geometry  = new THREE[type]();
+        geometry.name   = type;
+        
+        const material  = new THREE.MeshPhysicalMaterial({
+            color: 0x049ef4, // azul
+            side: THREE.DoubleSide,
+        });
+        material.name   = "MeshPhysicalMaterial";
+        
+        const element3D = new THREE.Mesh(geometry, material);
+        element3D.name  = "Mesh";
+        
+        window.ThreeDModelEditor.scene.add(element3D, {
             position: [0, 0.5, 0], // x, y, z
-            geometry: {
-                type: $(this).data("geometry"),
-                args: [],
-            },
-            material: {
-                type: "MeshPhysicalMaterial",
-                params: {
-                    color: 0x049ef4, // azul
-                    side: THREE.DoubleSide,
-                },
-            },
             checkForCollision: true,
         });
     });
 
     $menubar.find("div[data-light]").click(function () {
-        window.ThreeDModelEditor.scene.add("Light", {
+        const type  = $(this).data("light");
+        const light = new THREE[type]();
+        light.name  = type;
+        
+        window.ThreeDModelEditor.scene.add(light, {
             position: [0, 10, 0],
-            type: $(this).data("light"),
-            args: [],
-            checkForCollision: true,
+            checkForCollision: true
         });
     });
 
