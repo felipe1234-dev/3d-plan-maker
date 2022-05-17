@@ -8,6 +8,31 @@ class Editor3DElement {
         this.object   = new ObjectScope(editor, this);
         this.geometry = new GeometryScope(editor, this);
         this.material = new MaterialScope(editor, this);
+        
+        const scope = this;
+        ["object", "geometry", "material"].forEach((elemScope) => {
+            this[elemScope].set = new Proxy(this[elemScope].set, {
+                apply: function(set, thisArg, args) {
+                    const feedHistory = args[2];
+                
+                    if (feedHistory) {
+                        const option   = args[0];
+                        const newVal   = args[1];
+                        const oldVal   = scope.get(option);
+                        const elemName = parent.ref.name;
+                        
+                        editor.history.add({
+                            description: `Mudou "${option}" do ${elemScope}["${elemName}"] para ${newVal}`,
+                            undo: () => set(option, oldVal, false),
+                            redo: () => set(option, newVal, false),
+                            always: () => editor.save()
+                        });
+                    }
+                    
+                    set(...args);
+                }
+            });
+        });
     }
  
     getSelected() {
