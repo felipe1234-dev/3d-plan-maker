@@ -18,6 +18,7 @@
             "object": {
                 "uuid": "16EF0FA0-36DA-4354-88D7-15704F63368C",
                 "type": "Scene",
+                "name": "Paisagem",
                 "userData": {
                     "opacityFactor": 0.5
                 },
@@ -87,6 +88,7 @@
             "object": {
                 "uuid": "A02016A4-DD4B-4D36-AE76-6B859EB7C67C",
                 "type": "Scene",
+                "name": "Planta",
                 "userData": {
                     "opacityFactor": 0.5
                 },

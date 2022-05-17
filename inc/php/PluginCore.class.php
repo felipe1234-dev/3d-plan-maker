@@ -15,8 +15,8 @@ class PluginCore {
         $this->plugin_dir_url = $settings["plugin_dir_url"];
         $this->post_type      = $settings["post_settings"]["post_type"];
         $this->post_data      = $settings["post_settings"]["args"];
-        $this->post_editor    = new PostEditor( $this->root."/admin",  $settings["default_settings"] );
-        $this->post_widget    = new PostWidget( $this->root."/public", $settings["default_settings"] );
+        $this->post_editor    = new PostEditor( $this->root."/admin",  $settings["editor_settings"] );
+        $this->post_widget    = new PostWidget( $this->root."/public", $settings["editor_settings"] );
     }
 
     /**

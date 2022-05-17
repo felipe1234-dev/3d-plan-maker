@@ -50,13 +50,13 @@ require_once "inc/php/PostWidget.class.php";
 
 $dependencies     = loadJSON( $root."/config/dependencies.conf.json" );
 $post_settings    = loadJSON( $root."/config/post-settings.conf.json" );
-$default_settings = loadJSON( $root."/config/editor-default-settings.conf.json" );
+$editor_settings = loadJSON( $root."/config/editor-settings.conf.json" );
 
 $plugin = new PluginCore(array(
-    "root"             => $root,
-    "plugin_dir_url"   => $plugin_dir_url,
-    "post_settings"    => $post_settings, 
-    "default_settings" => $default_settings 
+    "root"            => $root,
+    "plugin_dir_url"  => $plugin_dir_url,
+    "post_settings"   => $post_settings, 
+    "editor_settings" => $editor_settings 
 ));
 
 // HEAD
