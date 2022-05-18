@@ -39,13 +39,13 @@ jQuery(document).ready(function ($) {
         ]);
     });
 
-    $toolbar.find("div.Button[data-mode]").click(function () {
+    $toolbar.find("div.Viewport-toolbar-button[data-mode]").click(function () {
         const newMode = $(this).data("mode");
 
         $toolbar
-            .find("div.Button[data-mode]")
-            .removeClass("Button--is-selected");
-        $(this).addClass("Button--is-selected");
+            .find("div.Viewport-toolbar-button[data-mode]")
+            .removeClass("Viewport-toolbar-button--is-selected");
+        $(this).addClass("Viewport-toolbar-button--is-selected");
 
         window.ThreeDModelEditor.controls.set("transformMode", newMode, false);
     });
