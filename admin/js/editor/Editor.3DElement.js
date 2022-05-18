@@ -9,10 +9,10 @@ class Editor3DElement {
         this.geometry = new GeometryScope(editor, this);
         this.material = new MaterialScope(editor, this);
         
-        const scope = this;
+        const parent = this;
         ["object", "geometry", "material"].forEach((elemScope) => {
             this[elemScope].set = new Proxy(this[elemScope].set, {
-                apply: function(set, thisArg, args) {
+                apply: function(set, scope, args) {
                     const feedHistory = args[2];
                 
                     if (feedHistory) {
@@ -22,14 +22,19 @@ class Editor3DElement {
                         const elemName = parent.ref.name;
                         
                         editor.history.add({
-                            description: `Mudou "${option}" do ${elemScope}["${elemName}"] para ${newVal}`,
-                            undo: () => set(option, oldVal, false),
-                            redo: () => set(option, newVal, false),
+                            description: 
+                                `Mudou "${option}" do ${elemScope}["${elemName}"] para ${
+                                    typeof newVal === "object"
+                                        ? JSON.stringify(newVal)
+                                        : newVal
+                                }`,
+                            undo: () => set.call(scope, option, oldVal, false),
+                            redo: () => set.call(scope, option, newVal, false),
                             always: () => editor.save()
                         });
                     }
                     
-                    set(...args);
+                    set.call(scope, ...args);
                 }
             });
         });
@@ -87,7 +92,10 @@ class Scope {
     constructor(editor, parent) {
         this._editor = editor;
         this._parent = parent;
-        this._elem3D = this._parent.ref;
+    }
+    
+    get _elem3D() {
+        return this._parent.ref;
     }
 }
 
@@ -166,7 +174,7 @@ class GeometryScope extends Scope {
     get(option) {
         let geom;
 
-        if (elem3D) {
+        if (this._elem3D) {
             if ("geometry" in this._elem3D) geom = this._elem3D.geometry;
         }
 

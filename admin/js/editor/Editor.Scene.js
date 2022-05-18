@@ -13,77 +13,80 @@ class EditorScene {
         /* Criando um proxy para monitorar quando a "função de setagem" é acionada,
          * e assim, mandar automaticamente uma mensagem ao histórico.
          */
-        const scope = this;
         
         this.set = new Proxy(this.set, {
-            apply: function(set, thisScope, args) {
+            apply: function(set, scope, args) {
                 const feedHistory = args[2];
             
                 if (feedHistory) {
                     const option  = args[0];
                     const newVal  = args[1];
                     const oldVal  = scope.get(option);
-                    const ctxName = scope.#editor.contexts.current.name;
+                    const ctxName = editor.contexts.current.name;
                     
-                    scope.#editor.history.add({
-                        description: `Mudou "${option}" de "${ctxName}" para ${newVal}`,
-                        undo: () => set(option, oldVal, false),
-                        redo: () => set(option, newVal, false),
-                        always: () => scope.#editor.save()
+                    editor.history.add({
+                        description: `Mudou "${option}" de "${ctxName}" para ${
+                            typeof newVal === "object"
+                                ? JSON.stringify(newVal)
+                                : newVal
+                        }`,
+                        undo: () => set.call(scope, option, oldVal, false),
+                        redo: () => set.call(scope, option, newVal, false),
+                        always: () => editor.save()
                     });
                 }
-                
-                set(...args);
+                 
+                set.call(scope, ...args);
             }
         });
         
         this.add = new Proxy(this.add, {
-            apply: function(add, thisScope, args) {
+            apply: function(add, scope, args) {
                 const feedHistory = args[2];
                 
                 if (feedHistory) {
-                    const ctxName = scope.#editor.contexts.current.name;
+                    const ctxName = editor.contexts.current.name;
                     let elem3D    = args[0];
-                    elem3D        = scope.#editor._currentScene.children.filter((child) => (
+                    elem3D        = editor._currentScene.children.filter((child) => (
                         elem3D.uuid === child.uuid
                     ))[0]; // Para pegar a posição anterior do objeto
                     const props   = args[1];
         
-                    scope.#editor.history.add({
+                    editor.history.add({
                         description: `Adicionou ${elem3D.type} em "${ctxName}"`,
                         undo: () => scope.remove(elem3D, false),
-                        redo: () => add(elem3D, {
+                        redo: () => add.call(scope, elem3D, {
                             position: [...elem3D.position], // Mantendo a posição (escolhida aleatoriamente ou não)
                             checkForCollision: true
                         }, false),
-                        always: () => scope.#editor.save(),
+                        always: () => editor.save(),
                     });
                 }
                 
-                add(...args);
+                add.call(scope, ...args);
             }
         });
         
         this.remove = new Proxy(this.remove, {
-            apply: function(remove, thisScope, args) {
+            apply: function(remove, scope, args) {
                 const feedHistory = args[2];
                 
                 if (feedHistory) {
                     const elem3D  = args[0];
-                    const ctxName = scope.#editor.contexts.current.name;
+                    const ctxName = editor.contexts.current.name;
         
-                    scope.#editor.history.add({
+                    editor.history.add({
                         description: `Removeu ${elem3D.type} de "${ctxName}"`,
                         undo: () => scope.add(elem3D, {
                             position: [...elem3D.position], // Mantendo a posição que o objeto estava
                             checkForCollision: true
                         }, false),
-                        redo: () => remove(elem3D, false),
-                        always: () => scope.#editor.save(),
+                        redo: () => remove.call(scope, elem3D, false),
+                        always: () => editor.save()
                     });
                 }
                 
-                remove(...args);
+                remove.call(scope, ...args);
             }
         });
     }
