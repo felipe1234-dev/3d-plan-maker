@@ -1,5 +1,5 @@
 jQuery(document).ready(function ($) {
-    const $settingsTab = $("#settings-tab");
+    const $settingsTabPanel = $("#settings-tab-panel");
     const $toggleGrids = $("#toggle-grids-input");
     const $showHelpers = $("#show-helpers-input");
     const $gridSize = $("#grid-size-input");
@@ -58,7 +58,7 @@ jQuery(document).ready(function ($) {
         }).change();
     });
 
-    $settingsTab.on("sync", function () {
+    $settingsTabPanel.on("sync", function () {
         $toggleGrids[0].checked =
             window.ThreeDModelEditor.viewport.get("showGrids");
         $showHelpers[0].checked =
@@ -68,6 +68,6 @@ jQuery(document).ready(function ($) {
     });
 
     window.ThreeDModelEditor.on("historyChange", () =>
-        $settingsTab.trigger("sync")
+        $settingsTabPanel.trigger("sync")
     );
 });
