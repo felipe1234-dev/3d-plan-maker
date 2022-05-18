@@ -31,6 +31,39 @@ class EditorViewport {
         }
         
         this.#addGrids();
+        
+        this.set = new Proxy(this.set, {
+            apply: function(set, scope, args) {
+                const feedHistory = args[2] === undefined ? true : args[2];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                let option;
+                let newVal;
+                let oldVal;
+            
+                if (feedHistory) {
+                    option  = args[0];
+                    newVal  = args[1];
+                    oldVal  = scope.get(option);
+                }
+                 
+                set.call(scope, ...args);
+                
+                if (feedHistory) {
+                    editor.history.add({
+                        description: `viewport: ${option} = ${
+                            typeof newVal === "object"
+                                ? JSON.stringify(newVal)
+                                : newVal
+                        }`,
+                        undo: () => set.call(scope, option, oldVal, false),
+                        redo: () => set.call(scope, option, newVal, false),
+                        always: () => editor.save()
+                    });
+                }
+            }
+        });
     }
     
     get showGrids() {
@@ -157,15 +190,6 @@ class EditorViewport {
     }
 
     set(option, value, feedHistory = true) {
-        if (!this.#editor._memory.has("viewport"))
-            this.#editor._memory.create("viewport");
-
-        if (!this.#editor._memory["viewport"].has(option)) {
-            this.#editor._memory["viewport"].set({
-                [option]: this.get(option)
-            });
-        }
-
         if (/show[\s-]*Grids/i.test(option)) {
             this.showGrids = value;
         } else if (/show[\s-]*Helpers/i.test(option)) {
@@ -178,18 +202,6 @@ class EditorViewport {
             eval(`this.${option} = value`);
         } else {
             this[option] = value;
-        }
-
-        if (feedHistory) {
-            const oldValueCopy = this.#editor._memory["viewport"][option];
-
-            this.#editor.history.add({
-                description: `Set viewport.${option} = ${typeof value == "object" ? JSON.stringify(value) : value}`,
-                undo: () => this.set(option, oldValueCopy, false),
-                redo: () => this.set(option, value, false)
-            });
-
-            this.#editor._memory.clear(["viewport"]);
         }
     }
     
