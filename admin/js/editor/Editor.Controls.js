@@ -1,7 +1,40 @@
-Editor.Controls = class {
+class EditorControls {
     #editor; 
     constructor(editor) {
         this.#editor = editor;
+        
+        this.set = new Proxy(this.set, {
+            apply: function(set, scope, args) {
+                const feedHistory = args[2] === undefined ? true : args[2];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                let option;
+                let newVal;
+                let oldVal;
+            
+                if (feedHistory) {
+                    option  = args[0];
+                    newVal  = args[1];
+                    oldVal  = scope.get(option);
+                }
+                 
+                set.call(scope, ...args);
+                
+                if (feedHistory) {
+                    editor.history.add({
+                        description: `Controles: ${option} = ${
+                            typeof newVal === "object"
+                                ? JSON.stringify(newVal)
+                                : newVal
+                        }`,
+                        undo: () => set.call(scope, option, oldVal, false),
+                        redo: () => set.call(scope, option, newVal, false),
+                        always: () => editor.save()
+                    });
+                }
+            }
+        });
     }
     
     get(option) {
@@ -16,15 +49,6 @@ Editor.Controls = class {
     }
     
     set(option, value, feedHistory = true) {
-        if (!this.#editor._memory.has("controls")) 
-            this.#editor._memory.create("controls");
-                        
-        if (!this.#editor._memory["controls"].has(option)) {
-            this.#editor._memory["controls"].set({
-                [option]: this.get(option)
-            }); 
-        }
-        
         if ( /zoom[\s_-]*Speed/i.test(option) ) {
             this.#editor._orbitControls.zoomSpeed = value;
         } else if ( /transform[\s_-]*Mode/i.test(option) ) {
@@ -32,18 +56,6 @@ Editor.Controls = class {
         } else if ( /show[\s_-]*[XYZ]/i.test(option) ) {
             const axis = option.replace(/show[\s_-]*/i, "").toUpperCase();
             this.#editor._transformControls[`show${axis}`] = value;
-        }
-        
-        if (feedHistory) {
-            const oldValueCopy = this.#editor._memory["controls"][option];
-                        
-            this.#editor.history.add({
-                description: `Set controls.${option} = ${value}`,
-                undo: () => this.set(option, oldValueCopy, false),
-                redo: () => this.set(option, value, false)
-            });
-        
-            this.#editor._memory.clear([ "controls" ]);
         }
     }
 }
