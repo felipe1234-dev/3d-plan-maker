@@ -108,10 +108,6 @@ class Editor {
         this.model.scenes = value;
     }
 
-    get _scene() {
-        return this.contexts.current.scene;
-    }
-
     get _camera() {
         return this.model.camera;
     }
