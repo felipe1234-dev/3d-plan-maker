@@ -1,6 +1,8 @@
+/**
+ * Usado para editar uma instância da classe ThreeDModel.
+ */
 class Editor {
     /**
-     * Usado para editar uma instância da classe ThreeDModel.
      * @param {ThreeDModel} model - O modelo da planta a ser editada, instância da classe ThreeDModel.
      */
     constructor(model) {
