@@ -149,9 +149,17 @@ class Editor {
          * @public
          * @type {Editor.Controls}
          */
-        this.controls = new Editor.Controls(this);
-    } 
-
+        this.controls = new EditorControls(this);
+    }
+    
+    get _currentScene() {
+        return this.contexts.current.scene;
+    }
+    
+    get _currentContext() {
+        return this.contexts.current;
+    }
+    
     get _scenes() {
         return this.model.scenes;
     }
