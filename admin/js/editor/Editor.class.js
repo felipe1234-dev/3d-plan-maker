@@ -345,7 +345,7 @@ class Editor {
      */
     #handleCursorStyle = (event) => {
         const intersects = this.#getIntersects(event);
-        const smthIsSelected = !!this._selected;
+        const smthIsSelected = !!this.selected.ref;
 
         const intersectedObj = intersects.objects[0];
         const intersectedGizmo = intersects.gizmos[0];
@@ -408,6 +408,19 @@ class Editor {
         }
     }
 
+    addDefaultEvents() {
+        this._rendererDom.addEventListener(
+            "pointerdown",
+            this.#handleRaycaster,
+            false
+        );
+        this._rendererDom.addEventListener(
+            "pointermove",
+            this.#handleCursorStyle,
+            false
+        );
+    }
+    
     /**
      * Inicializa o editor de acordo com as configurações definidas.
      * @public
@@ -416,10 +429,10 @@ class Editor {
     init() {
         // Adicionando os helpers dos objetos de cada cena
         Object.entries(this.model.scenes).forEach(([name, scene]) => {
-            scene.children.forEach((object) => {
-                this.viewport.setHelper(object);
+            scene.children.forEach((object3D) => {
+                this.viewport.setHelper(object3D);
 
-                const helper = this.viewport.getHelper(object);
+                const helper = this.viewport.getHelper(object3D);
                 if (helper) scene.add(helper);
             });
         });
@@ -428,7 +441,9 @@ class Editor {
         Object.entries(this.model.scenes).forEach(([name, scene]) => {
             this.contexts.create(name, false, scene);
         });
-
+        
+        this.contexts[Object.keys(this.model.scenes)[0]].select();
+        
         this.model.animate(() => {
             this.model.orbitControls.update();
             this.stats.update();
