@@ -1,4 +1,4 @@
-Editor.StatTracker = class {
+class EditorStatTracker {
     #editor;
     constructor(editor) {
         this.#editor = editor;
@@ -23,7 +23,7 @@ Editor.StatTracker = class {
         this.textures   = this.#editor.model.renderer.info.memory.textures;
         this.position   = this.#editor.model.camera.position;
         
-        this.#editor._scene.children.forEach(object => {
+        this.#editor._currentScene.children.forEach(object => {
             const isGroup = object.constructor.name == "Group";
                 
             if (isGroup)
