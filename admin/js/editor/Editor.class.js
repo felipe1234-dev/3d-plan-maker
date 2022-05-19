@@ -247,9 +247,9 @@ class Editor {
      */
     #handleRaycaster = (event) => {
         const intersects = this.#getIntersects(event);
-        const smthIsSelected = !!this._selected;
+        const smthIsSelected = !!this.selected.ref;
 
-        let intersectedObj = intersects.objects[0];
+        let intersectedElem  = intersects.objects[0];
         let intersectedGizmo = intersects.gizmos[0];
 
         if (!this._memory.has("raycaster")) {
@@ -263,85 +263,76 @@ class Editor {
         }
 
         const onObjectChange = () => {
-            this.viewport.getHelper(this._selected).update();
+            this.viewport.getHelper(this.selected.ref).update();
             this._rendererDom.style.cursor = "grabbing";
-
-            this._memory.raycaster.set({ transformed: true });
-
+            
+            localStorage.setItem("transformed", "1");
+            
             this.trigger("editSelected", this);
         };
 
-        if (intersectedObj && !intersectedGizmo && !smthIsSelected) {
+        if (intersectedElem && !intersectedGizmo && !smthIsSelected) {
             this._transformControls.addEventListener(
                 "objectChange",
                 onObjectChange
             );
-
-            const intersectCopy = intersectedObj.object;
-
-            const oldValues = {};
-            ["position", "scale", "rotation"].forEach((attr) => {
-                oldValues[attr] = {
-                    x: intersectCopy[attr].x,
-                    y: intersectCopy[attr].y,
-                    z: intersectCopy[attr].z,
-                };
-            });
-
-            this._memory.raycaster.set({
-                description: `Transform object ${intersectCopy.name}`,
-                undo: () => {
-                    ["position", "scale", "rotation"].forEach((attr) => {
-                        intersectCopy[attr].x = oldValues[attr].x;
-                        intersectCopy[attr].y = oldValues[attr].y;
-                        intersectCopy[attr].z = oldValues[attr].z;
-                    });
-                    this.viewport.getHelper(intersectCopy).update();
-                },
-            });
-
-            this.selected.select(intersectCopy);
-        } else if (!intersectedObj && !intersectedGizmo && smthIsSelected) {
-            const intersectCopy = this._selected;
-
+            
+            this.selected.select(intersectedElem.object);
+            
+            localStorage.setItem("orig scale", JSON.stringify(this.selected.ref.scale));
+            localStorage.setItem("orig position", JSON.stringify(this.selected.ref.position));
+            localStorage.setItem("orig rotation", JSON.stringify(this.selected.ref.rotation));
+        } else if (!intersectedElem && !intersectedGizmo && smthIsSelected) {
             this._rendererDom.style.cursor = "default";
             this._transformControls.removeEventListener(
                 "objectChange",
                 onObjectChange
             );
-
-            // redo
-            const newValues = {};
-            ["position", "scale", "rotation"].forEach((attr) => {
-                newValues[attr] = {
-                    x: intersectCopy[attr].x,
-                    y: intersectCopy[attr].y,
-                    z: intersectCopy[attr].z,
-                };
-            });
-
-            this._memory.raycaster.set({
-                redo: () => {
-                    ["position", "scale", "rotation"].forEach((attr) => {
-                        intersectCopy[attr].x = newValues[attr].x;
-                        intersectCopy[attr].y = newValues[attr].y;
-                        intersectCopy[attr].z = newValues[attr].z;
-                    });
+            
+            if (localStorage.getItem("transformed")) {
+                const elem3D = this.selected.ref;
+                
+                const newPosition = JSON.parse(JSON.stringify(elem3D.position));
+                const newScale = JSON.parse(JSON.stringify(elem3D.scale));
+                const newRotation = JSON.parse(JSON.stringify(elem3D.rotation));
+                
+                const oldScale = JSON.parse(localStorage.getItem("orig scale"));
+                const oldPosition = JSON.parse(localStorage.getItem("orig position"));
+                const oldRotation = JSON.parse(localStorage.getItem("orig rotation"));
+                
+                this.history.add({
+                    description: 
+                        `Mudou o elemento "${
+                            this.selected.ref.name
+                        }" da cena "${
+                            this._currentContext.name
+                        }" com o cursor`,
+                    redo: () => {
+                        ["x", "y", "z"].forEach((axis) => {
+                            elem3D.position[axis] = newPosition[axis];
+                            elem3D.scale[axis] = newScale[axis];
+                            elem3D.rotation[axis] = newRotation["_" + axis];
+                        });
 
                     this.viewport.getHelper(intersectCopy).update();
-                },
-            });
-
-            if (this._memory.raycaster.transformed) {
-                this.history.add({
-                    description: this._memory.raycaster.description,
-                    undo: this._memory.raycaster.undo,
-                    redo: this._memory.raycaster.redo,
+                    },
+                    undo: () => {
+                        ["x", "y", "z"].forEach((axis) => {
+                            elem3D.position[axis] = oldPosition[axis];
+                            elem3D.scale[axis] = oldScale[axis];
+                            elem3D.rotation[axis] = oldRotation["_" + axis];
+                        });
+                    },
+                    always: () => this.save()
                 });
+                
+                localStorage.removeItem("transformed");
             }
 
-            this._memory.clear(["raycaster"]);
-
+            localStorage.removeItem("orig scale");
+            localStorage.removeItem("orig position");
+            localStorage.removeItem("orig rotation");
+            
             this.selected.unselect();
         }
     }
