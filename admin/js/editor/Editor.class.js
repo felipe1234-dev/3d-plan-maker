@@ -7,68 +7,6 @@ class Editor {
      */
     constructor(model) {
         /**
-         * Usado para guardar dados temporários para operações no editor.
-         * @protected 
-         * @type {Editor.Memory}
-         */
-        this._memory = {
-            /**
-             * Cria um "namespace", contexto ou subpartição para os dados na memória.
-             * @public
-             * @method
-             * @param {string} ctxName - Nome do espaço.
-             * @returns {void}
-             */
-            create(ctxName) {
-                this[ctxName] = {
-                    create: this.create,
-                    has: this.has,
-                    set: this.set,
-                    clear: this.clear,
-                };
-            },
-
-            /**
-             * Verifica se a memória contém subpartição.
-             * @public
-             * @method
-             * @param   {string}  ctxName - Nome da subpartição.
-             * @returns {boolean} Retorna verdadeiro se tiver a subpartição.
-             */
-            has(ctxName) {
-                return ctxName in this;
-            },
-
-            /**
-             * Cria ou modifica dados na memória.
-             * @public
-             * @method
-             * @param {{
-             *     [dataName: string]: any
-             * }} params - Chave e valor do dado.
-             * @returns {void}
-             */
-            set(params) {
-                Object.entries(params).forEach(([key, value]) => {
-                    this[key] = value;
-                });
-            },
-
-            /**
-             * Limpa/Exclui dados salvos na memória.
-             * @public
-             * @method
-             * @param {Array<string>} keys - Lista com os nomes dos dados a serem excluídos.
-             * @returns {void}
-             */
-            clear(keys) {
-                keys.forEach((key) => {
-                    delete this[key];
-                });
-            },
-        };
-
-        /**
          * Lista de eventos possiveis do editor.
          * @protected 
          * @readonly
