@@ -211,7 +211,7 @@ class Editor {
          * todos os lightHelpers pelos objetos de luzes correspondentes.
          */
         
-        const sceneObjects = this._scene.children.filter(
+        const sceneObjects = this._currentScene.children.filter(
             (object) =>
                 /(mesh|hotspot|light)/i.test(object.constructor.name) &&
                 !/helper/i.test(object.constructor.name)
@@ -247,16 +247,6 @@ class Editor {
 
         let intersectedElem  = intersects.objects[0];
         let intersectedGizmo = intersects.gizmos[0];
-
-        if (!this._memory.has("raycaster")) {
-            this._memory.create("raycaster");
-            this._memory.raycaster.set({
-                description: "",
-                undo: null,
-                redo: null,
-                transformed: false,
-            });
-        }
 
         const onObjectChange = () => {
             this.viewport.getHelper(this.selected.ref).update();
@@ -309,8 +299,6 @@ class Editor {
                             elem3D.scale[axis] = newScale[axis];
                             elem3D.rotation[axis] = newRotation["_" + axis];
                         });
-
-                    this.viewport.getHelper(intersectCopy).update();
                     },
                     undo: () => {
                         ["x", "y", "z"].forEach((axis) => {
@@ -355,19 +343,6 @@ class Editor {
         }
 
         this._rendererDom.style.cursor = cursor;
-    }
-
-    addDefaultEvents() {
-        this._rendererDom.addEventListener(
-            "pointerdown",
-            this.#handleRaycaster,
-            false
-        );
-        this._rendererDom.addEventListener(
-            "pointermove",
-            this.#handleCursorStyle,
-            false
-        );
     }
     
     /**
@@ -471,9 +446,9 @@ class Editor {
             scene.children.filter((object) =>
                 /(mesh|hotspot|light)/i.test(object.constructor.name) &&
                 !/helper|TransformControls/i.test(object.constructor.name)
-            ).forEach((object) => (
-                sceneCopy.add(object.clone())
-            ));
+            ).forEach((object) => {
+                sceneCopy.add(object.clone());
+            });
             
             sceneCopy.userData.opacityFactor = this.contexts[name].opacityFactor;
             
