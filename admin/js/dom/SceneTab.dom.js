@@ -19,6 +19,9 @@ jQuery(document).ready(function ($) {
 
     $addSceneBtn.click(function () {
         window.ThreeDModelEditor.contexts.create("Nova cena");
+        if ("Nova cena" in window.ThreeDModelEditor.contexts) {
+            window.ThreeDModelEditor.contexts["Nova cena"].select();
+        }
     });
 
     $ctxName.change(function () {
