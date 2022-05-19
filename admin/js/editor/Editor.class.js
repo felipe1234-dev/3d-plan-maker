@@ -28,7 +28,7 @@ class Editor {
          * @public
          * @type {ThreeDModel}
          */
-        this.model     = model;
+        this.model = model;
         
         /**
          * @public
@@ -40,54 +40,54 @@ class Editor {
          * @public
          * @type {THREE.Vector2}
          */
-        this.mouse     = new THREE.Vector2();
+        this.mouse = new THREE.Vector2();
         
         /**
          * @public
-         * @type {Editor.StatTracker}
+         * @type {EditorStatTracker}
          */
-        this.stats    = new Editor.StatTracker(this);
+        this.stats = new EditorStatTracker(this);
         
         /**
          * @public
-         * @type {Editor.History}
+         * @type {EditorHistory}
          */
-        this.history  = new Editor.History(this);
+        this.history = new EditorHistory(this);
         
         /**
          * @public
-         * @type {Editor.Contexts}
+         * @type {EditorContexts}
          */
-        this.contexts = new Editor.Contexts(this);
+        this.contexts = new EditorContexts(this);
         this.contexts.create("Editor", false);
          
         /**
          * @public
-         * @type {Editor.Viewport}
+         * @type {EditorViewport}
          */
-        this.viewport = new Editor.Viewport(this);
+        this.viewport = new EditorViewport(this);
         
         /**
          * @public
-         * @type {Editor.Transformer}
+         * @type {Editor3DElement}
          */
-        this.selected = new Editor.Transformer(this);
+        this.selected = new Editor3DElement(this);
         
         /**
          * @public
-         * @type {Editor.Scene}
+         * @type {EditorScene}
          */
-        this.scene    = new Editor.Scene(this);
+        this.scene = new EditorScene(this);
         
         /**
          * @public
-         * @type {Editor.Renderer}
+         * @type {EditorRenderer}
          */
-        this.renderer = new Editor.Renderer(this);
+        this.renderer = new EditorRenderer(this);
         
         /**
          * @public
-         * @type {Editor.Controls}
+         * @type {EditorControls}
          */
         this.controls = new EditorControls(this);
     }
