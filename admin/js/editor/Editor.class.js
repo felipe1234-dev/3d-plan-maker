@@ -484,6 +484,19 @@ class Editor {
             const sceneJSON = sceneCopy.toJSON();
 
             modelJSON[name] = sceneJSON;
+            
+            if (this._currentContext.name !== name && "materials" in modelJSON[name]) {
+                modelJSON[name].materials.forEach((material) => {
+                    material.opacity = material.opacity ?? 1;
+                    material.opacity /= this._currentContext.opacityFactor;
+                    
+                    if (material.opacity > 1) 
+                        material.opacity = 1;
+                    
+                    if (material.opacity < 0) 
+                        material.opacity = 0;
+                });
+            }
         });
         
         this.trigger("saveModel", modelJSON);
