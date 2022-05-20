@@ -88,7 +88,7 @@ class EditorRenderer {
             if (this.#editor._transformControls.object) {
                 attached = this.#editor._transformControls.object;
                 this.#editor._transformControls.detach();
-                this.#editor._scene.remove(this.#editor._transformControls);
+                this.#editor._currentScene.remove(this.#editor._transformControls);
             }
             
             if ( /anti[\s_-]*alias(ing)*/i.test(option) ) {
@@ -106,7 +106,7 @@ class EditorRenderer {
             
             if (attached) {
                 this.#editor._transformControls.attach(attached);
-                this.#editor._scene.add(this.#editor._transformControls);
+                this.#editor._currentScene.add(this.#editor._transformControls);
             }
         }
     }
