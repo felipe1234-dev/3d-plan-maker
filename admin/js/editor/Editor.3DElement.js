@@ -13,17 +13,30 @@ class Editor3DElement {
         ["object", "geometry", "material"].forEach((elemScope) => {
             this[elemScope].set = new Proxy(this[elemScope].set, {
                 apply: function(set, scope, args) {
-                    const feedHistory = args[2];
-                
+                    const feedHistory = args[2] === undefined ? true : args[2];
+                    /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                     * logo, o valor padrão (true) é que vale.
+                     */
+                    let option;
+                    let newVal;
+                    let oldVal;
+                    let elemName;
+                    let ctxName;
+                    
                     if (feedHistory) {
-                        const option   = args[0];
-                        const newVal   = args[1];
-                        const oldVal   = scope.get(option);
-                        const elemName = parent.ref.name;
-                        
+                        option   = args[0];
+                        newVal   = args[1];
+                        oldVal   = scope.get(option);
+                        elemName = parent.ref.name;
+                        ctxName  = editor.contexts.current.name;
+                    }
+                    
+                    set.call(scope, ...args);
+                    
+                    if (feedHistory) {
                         editor.history.add({
                             description: 
-                                `Mudou "${option}" do ${elemScope}["${elemName}"] para ${
+                                `${ctxName} > ${elemName}: ${elemScope}.${option} = ${
                                     typeof newVal === "object"
                                         ? JSON.stringify(newVal)
                                         : newVal
@@ -33,8 +46,6 @@ class Editor3DElement {
                             always: () => editor.save()
                         });
                     }
-                    
-                    set.call(scope, ...args);
                 }
             });
         });
