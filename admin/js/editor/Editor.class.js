@@ -90,6 +90,12 @@ class Editor {
          * @type {EditorControls}
          */
         this.controls = new EditorControls(this);
+        
+        /**
+         * @public
+         * @type {EditorFileManager}
+         */
+        this.fileManager = new EditorFileManager(this);
     }
     
     get _currentScene() {
@@ -446,9 +452,9 @@ class Editor {
             scene.children.filter((object) =>
                 /(mesh|hotspot|light)/i.test(object.constructor.name) &&
                 !/helper|TransformControls/i.test(object.constructor.name)
-            ).forEach((object) => {
-                sceneCopy.add(object.clone());
-            });
+            ).forEach((object) => (
+                sceneCopy.add(object.clone())
+            ));
             
             sceneCopy.userData.opacityFactor = this.contexts[name].opacityFactor;
             
