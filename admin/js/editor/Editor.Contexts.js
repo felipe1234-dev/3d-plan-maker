@@ -1,12 +1,249 @@
-Editor.Contexts = class {
+class Context {
+    #editor;
+    #parent;
+
+    constructor(ctxName, opacityFactor, renderOrder, editor, parent) {
+        this.#editor = editor;
+        this.#parent = parent;
+        this.name = ctxName;
+        this.scene = editor._scenes[ctxName];
+        this.opacityFactor = opacityFactor;
+        this.renderOrder = renderOrder;
+        
+        const methods = [
+            "setOpacityFactor",
+            "setContextName",
+            "setRenderOrder"
+        ];
+        
+        methods.forEach((method) => {
+            this[method] = new Proxy(this[method], {
+                apply: function(func, scope, args) {
+                    const feedHistory = args[1] === undefined ? true : args[1];
+                    /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                    * logo, o valor padrão (true) é que vale.
+                    */
+                    let option;
+                    let newVal;
+                    let oldVal;
+                
+                    if (feedHistory) {
+                        option = method
+                            .replace("set", "")
+                            .replace(/^([A-Z])/, (char) => (
+                                char.toLowerCase()
+                            ));
+                        newVal = args[0];
+                        oldVal = scope[option];
+                    }
+                    
+                    if (typeof newVal === "string" && !newVal) {
+                        return;
+                    }
+                    
+                    func.call(scope, ...args);
+                    
+                    if (feedHistory) {
+                        editor.history.add({
+                            description: `${scope.name}: ${option} = ${
+                                typeof newVal === "object"
+                                    ? JSON.stringify(newVal)
+                                    : newVal
+                            }`,
+                            undo: () => func.call(scope, oldVal, false),
+                            redo: () => func.call(scope, newVal, false),
+                            always: () => editor.save()
+                        });
+                    }
+                }
+            });
+        });
+    }
+    
+    /**
+     * Modifica o valor do fator de opacidade. O fator de opacidade é um valor
+     * pelo qual as opacidades dos objetos das outras cenas serão multiplicadas
+     * para criar um efeito de transparência e assim dar destaque para as coisas
+     * contidas neste contexto.
+     * @param {Number} value - O novo valor do fator de opacidade (entre 0 e 1).
+     */
+    setOpacityFactor(value, feedHistory = true) {
+        if (value > 1) value = 1;
+
+        if (value < 0) value = 0;
+
+        this.opacityFactor = value;
+        this.scene.userData.opacityFactor = value;
+
+        this.select();
+    }
+
+    /**
+     * Seta o nome do contexto e da cena (diretamente no modelo - ThreeDModel).
+     * @param {String} name - O nome novo do contexto.
+     */
+    setContextName(name, feedHistory = true) {
+        if (name === "" || !name) {
+            return;
+        }
+        
+        const newName = name;
+        const oldName = this.name;
+
+        this.#parent[newName] = this;
+        delete this.#parent[oldName];
+
+        this.#editor._scenes[newName] = this.scene;
+        delete this.#editor._scenes[oldName];
+
+        this.name = newName;
+        this.setRenderOrder(this.renderOrder);
+    }
+
+    /**
+     *
+     * @param {Number} index
+     */
+    setRenderOrder(index, feedHistory = true) {
+        if (index >= this.#parent.Editor.renderOrder && this.name !== "Editor") {
+            index = this.#parent.Editor.renderOrder - 1;
+        }
+
+        const sceneNames = Object.keys(this.#editor._scenes);
+
+        const cutPos =
+            index > sceneNames.indexOf(this.name) ? index + 1 : index;
+
+        const part1 = sceneNames
+            .slice(0, cutPos)
+            .filter((item) => item !== this.name);
+        const part2 = sceneNames
+            .slice(cutPos)
+            .filter((item) => item !== this.name);
+
+        const reordered = [...part1, this.name, ...part2];
+
+        const scenesCopy = {};
+
+        reordered.forEach((key, i) => {
+            scenesCopy[key] = this.#editor._scenes[key];
+            if (key in this.#parent) this.#parent[key].renderOrder = i;
+        });
+
+        this.#editor._scenes = scenesCopy;
+    }
+
+    select() {
+        if (this.#parent.current) {
+            this.#parent.current.scene.children.forEach((object) => {
+                const isGeom  = !/helper/i.test(object.constructor.name) && "material" in object;
+                
+                if (isGeom) {
+                    object.material.transparent = true;
+                    
+                    /* Se algum contexto anterior já estava selecionado (this.#parent.current),
+                    * atualizaremos as opacidades de seus objetos, caso o usuário as
+                    * tenha modificado.
+                    */
+                    localStorage.setItem(object.uuid, object.material.opacity);
+                }
+            });
+        }
+        
+        Object.entries(this.#editor._scenes).forEach(([sceneName, scene]) => {
+            scene.children.forEach((object) => {
+                const isLight = /light(?!helper)/i.test(object.constructor.name);
+                const isGeom  = !/helper/i.test(object.constructor.name) && "material" in object;
+                
+                if (isLight) {
+                    const helper = this.#editor.viewport.getHelper(object);
+                    
+                    if (!helper) {
+                        return;
+                    }
+                    
+                    if (sceneName !== this.name) {
+                        helper.visible = false;
+                    } else {
+                        helper.visible = this.#editor.viewport.showHelpers
+                    }
+                } else if (isGeom) {
+                    object.material.transparent = true;
+                    
+                    const previousOpacity = localStorage.getItem(object.uuid);
+                    object.material.opacity = 
+                        previousOpacity 
+                            ? parseFloat(previousOpacity) 
+                            : object.material.opacity;
+
+                    if (sceneName !== this.name)
+                        object.material.opacity *= this.opacityFactor;
+
+                    if (object.material.opacity > 1)
+                        object.material.opacity = 1;
+
+                    if (object.material.opacity < 0)
+                        object.material.opacity = 0;
+
+                    object.material.needsUpdate = true;
+                }
+            });
+        });
+
+        this.#parent.current = this;
+    }
+
+    delete(feedHistory = true) {
+        delete this.#editor._scenes[this.name];
+        delete this.#parent[this.name];
+
+        this.#parent.Editor.setRenderOrder(
+            Object.keys(this.#editor._scenes).length - 1
+        );
+
+        Object.keys(this.#editor._scenes).forEach((key, i) => {
+            if (i == 0) {
+                this.#parent[key].select();
+            }
+        });
+    }
+}
+
+class EditorContexts {
     #editor;
     constructor(editor) {
         this.#editor = editor;
         this.current = null;
+        
+        this.create = new Proxy(this.create, {
+            apply: function(create, scope, args) {
+                const feedHistory = args[1] === undefined ? true : args[1];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                let ctxName;
+                let ctxScene;
+            
+                if (feedHistory) {
+                    ctxName  = args[0];
+                    ctxScene = args[2];
+                }
+                 
+                create.call(scope, ...args);
+                
+                if (feedHistory) {
+                    editor.history.add({
+                        description: `Criou "${ctxName}"`,
+                        undo: () => scope[ctxName].delete(false),
+                        redo: () => create.call(scope, ctxName, false, ctxScene),
+                        always: () => editor.save()
+                    });
+                }
+            }
+        });
     }
     
     /**
-     * 
      * @param {string} ctxName 
      * @param {boolean?} feedHistory
      * @param {THREE.Scene?} ctxScene 
@@ -18,8 +255,6 @@ Editor.Contexts = class {
         if (!(ctxName in this.#editor._scenes))
             this.#editor._scenes[ctxName] = ctxScene ? ctxScene : new THREE.Scene();
 
-        const scope = this;
-
         /* Cada cena criada já contém o seu fator de opacidade (determinado pelo 
          * usuário no último save).
          * Logo, nós temos que pegar esses fatores já definidos.
@@ -27,238 +262,33 @@ Editor.Contexts = class {
          * o padrão é 0,5.
          */
         
-        let sceneOpacityFactor = scope.#editor._scenes[ctxName].userData.opacityFactor;
+        let sceneOpacityFactor = this.#editor._scenes[ctxName].userData.opacityFactor;
         sceneOpacityFactor = sceneOpacityFactor ? sceneOpacityFactor : 0.5;
 
-        let sceneRenderOrder = Object.keys(scope.#editor._scenes).indexOf(ctxName);
-        sceneRenderOrder = sceneRenderOrder < 0 ? Object.keys(scope.#editor._scenes).length : sceneRenderOrder;
-        
-        const sceneUuid = this.#editor._scenes[ctxName].uuid;
-        
-        if (!this.#editor._memory.has("contexts")) 
-            this.#editor._memory.create("contexts");
-
-        if (!this.#editor._memory.contexts.has(sceneUuid))
-            this.#editor._memory.contexts.create(sceneUuid);
-
+        let sceneRenderOrder = Object.keys(this.#editor._scenes).indexOf(ctxName);
+        sceneRenderOrder = 
+            sceneRenderOrder < 0 
+                ? Object.keys(this.#editor._scenes).length 
+                : sceneRenderOrder;
+    
         // Salvando as opacidades padrões dos objetos.
         this.#editor._scenes[ctxName].children.forEach((object) => {
-            if ("material" in object) {
-                this.#editor._memory.contexts[sceneUuid].set({
-                    [object.uuid]: object.material.opacity,
-                });
+            if (!/helper/i.test(object.constructor.name) && "material" in object) {
+                localStorage.setItem(object.uuid, object.material.opacity);
             }
         });
 
-        this[ctxName] = {
-            name: ctxName,
-            scene: scope.#editor._scenes[ctxName],
-            opacityFactor: sceneOpacityFactor,
-            renderOrder: sceneRenderOrder,
-            
-            /**
-             * Modifica o valor do fator de opacidade. O fator de opacidade é um valor
-             * pelo qual as opacidades dos objetos das outras cenas serão multiplicadas
-             * para criar um efeito de transparência e assim dar destaque para as coisas 
-             * contidas neste contexto.
-             * @param {Number} value - O novo valor do fator de opacidade (entre 0 e 1).
-             */
-            setOpacityFactor(value, feedHistory = true) {
-                if (value > 1) value = 1;
+        this[ctxName] = new Context(
+            ctxName, 
+            sceneOpacityFactor, 
+            sceneRenderOrder, 
+            this.#editor,
+            this
+        );
 
-                if (value < 0) value = 0;
-
-                this.opacityFactor = value;
-                this.scene.userData.opacityFactor = value;
-
-                this.select();
-                
-                if (!scope.#editor._memory["contexts"][this.scene.uuid].has("opacityFactor")) {
-                    scope.#editor._memory["contexts"][this.scene.uuid].set({
-                        opacityFactor: value
-                    });
-                }
-
-                if (feedHistory) {
-                    const oldValueCopy = scope.#editor._memory["contexts"][this.scene.uuid].opacityFactor;
-
-                    scope.#editor.history.add({
-                        description: `Set scene.opacityFactor = ${value}`,
-                        undo: () => this.setOpacityFactor(oldValueCopy, false),
-                        redo: () => this.setOpacityFactor(value, false),
-                        always: () => scope.#editor.save(),
-                    });
-
-                    scope.#editor._memory["contexts"][this.scene.uuid].clear(["opacityFactor"]);
-                }
-            }, 
-
-            /**
-             * Seta o nome do contexto e da cena (diretamente no modelo - ThreeDModel).
-             * @param {String} name - O nome novo do contexto. 
-             */
-            setContextName(name, feedHistory = true) {
-                const newName = name;
-                const oldName = this.name;
-
-                scope[newName] = this;
-                delete scope[oldName];
-
-                scope.#editor._scenes[newName] = this.scene;
-                delete scope.#editor._scenes[oldName];
-
-                this.name = name;
-                this.setRenderOrder(this.renderOrder);
-                
-                if (!scope.#editor._memory["contexts"][this.scene.uuid].has("name")) {
-                    scope.#editor._memory["contexts"][this.scene.uuid].set({
-                        name: oldName
-                    });
-                }
-
-                if (feedHistory) {
-                    const oldValueCopy = scope.#editor._memory["contexts"][this.scene.uuid].name;
-
-                    scope.#editor.history.add({
-                        description: `Set scene.name = ${newName}`,
-                        undo: () => this.setContextName(oldValueCopy, false),
-                        redo: () => this.setContextName(newName, false),
-                        always: () => scope.#editor.save(),
-                    });
-
-                    scope.#editor._memory["contexts"][this.scene.uuid].clear(["name"]);
-                }
-            },
-            
-            /**
-             * 
-             * @param {Number} index 
-             */
-            setRenderOrder(index, feedHistory = true) {
-                if (index >= scope.Editor.renderOrder && this.name !== "Editor") {
-                    index = scope.Editor.renderOrder - 1;
-                }
-                
-                const sceneNames = Object.keys(scope.#editor._scenes);
-                
-                const cutPos = index > sceneNames.indexOf(this.name) ? index + 1 : index;
-    
-                const part1 = sceneNames.slice(0, cutPos).filter(item => item !== this.name);
-                const part2 = sceneNames.slice(cutPos).filter(item => item !== this.name);
-
-                const reordered = [ ...part1, this.name, ...part2 ];
-                
-                const scenesCopy = {};
-                
-                reordered.forEach((key, i) => {
-                    scenesCopy[key] = scope.#editor._scenes[key];
-                    if (key in scope)
-                        scope[key].renderOrder = i;
-                });
-                
-                scope.#editor._scenes = scenesCopy;
-                
-                if (!scope.#editor._memory["contexts"][this.scene.uuid].has("renderOrder")) {
-                    scope.#editor._memory["contexts"][this.scene.uuid].set({
-                        renderOrder: index
-                    });
-                }
-
-                if (feedHistory) {
-                    const oldValueCopy = scope.#editor._memory["contexts"][this.scene.uuid].renderOrder;
-
-                    scope.#editor.history.add({
-                        description: `Set scene.renderOrder = ${index}`,
-                        undo: () => this.setRenderOrder(oldValueCopy, false),
-                        redo: () => this.setRenderOrder(index, false),
-                        always: () => scope.#editor.save(),
-                    });
-
-                    scope.#editor._memory["contexts"][this.scene.uuid].clear(["renderOrder"]);
-                }
-            },
-            
-            select() {
-                Object.entries(scope.#editor._scenes).forEach(([name, scene]) => {
-                    scene.children.forEach((object) => {
-                        if ("material" in object) {
-                            object.material.transparent = true;
-                                
-                            /*
-                             * Se algum contexto anterior já estava selecionado (scope.current),
-                             * atualizaremos as opacidades des seus objetos, caso o usuário as 
-                             * tenha modificado.
-                             */
-                            if (scope.current && name == scope.current.name) {
-                                scope.#editor._memory.contexts[scene.uuid][
-                                    object.uuid
-                                ] = object.material.opacity;
-                            }
- 
-                            if (scope.#editor._memory.contexts.has(scene.uuid)) {
-                                object.material.opacity =
-                                    scope.#editor._memory.contexts[scene.uuid][object.uuid];
-                                    
-                                if (name !== this.name)
-                                    object.material.opacity *= this.opacityFactor;
-
-                                if (object.material.opacity > 1)
-                                    object.material.opacity = 1;
-
-                                if (object.material.opacity < 0)
-                                    object.material.opacity = 0;
-                            }
-
-                            object.material.needsUpdate = true;
-                        } else if (
-                            /light(?!helper)/i.test(object.constructor.name)
-                        ) {
-                            const helper = scope.#editor.viewport.getHelper(object);
-                            if (helper)
-                                helper.visible =
-                                    scope.#editor.viewport.showHelpers &&
-                                    name == this.name;
-                        }
-                    });
-                });
-
-                scope.current = this;
-            },
-            
-            delete(feedHistory = true) {
-                delete scope.#editor._scenes[this.name];
-                delete scope[this.name];
-                
-                scope.Editor.setRenderOrder(Object.keys(scope.#editor._scenes).length - 1);
-                
-                Object.keys(scope.#editor._scenes).forEach((key, i) => {
-                    if (i == 0) {
-                        scope[key].select();
-                    }
-                });
-                
-                if (feedHistory) {
-                    scope.#editor.history.add({
-                        description: `Delete model.context = ${this.name}`,
-                        undo: () => this.delete(false),
-                        redo: () => scope.create(ctxName, false, this.scene),
-                        always: () => scope.#editor.save()
-                    });
-                }
-            },
-        };
-
-        this.Editor.setRenderOrder(Object.keys(this.#editor._scenes).length, false);
-        
-        if (ctxName !== "Editor") this[ctxName].select();
-        
-        if (feedHistory) {
-            this.#editor.history.add({
-                description: `Add model.context = ${ctxName}`,
-                undo: () => this[ctxName].delete(false),
-                redo: () => this[ctxName].create(ctxName, this[ctxName].scene, false),
-                always: () => this.#editor.save()
-            });
-        }
+        this.Editor.setRenderOrder(
+            Object.keys(this.#editor._scenes).length, 
+            false
+        );
     }
-};
+}
