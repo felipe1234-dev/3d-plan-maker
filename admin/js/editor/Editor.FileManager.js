@@ -1,7 +1,43 @@
-Editor.FileManager = class {
+class EditorFileManager {
     #editor;
-    constructor(editor, ) {
+    #loaders;
+    constructor(editor) {
         this.#editor = editor;
+        
+        this.#loaders = {
+            "3dm": {
+                "module": "Rhino3dmLoader",
+                "readAs": "ArrayBuffer"
+            },
+            "3ds": {
+                "module": "TDSLoader",
+                "readAs": "ArrayBuffer"
+            },
+            "3mf": {
+                "module": "ThreeMFLoader",
+                "readAs": "ArrayBuffer"
+            },
+            "amf": {
+                "module": "AMFLoader",
+                "readAs": "ArrayBuffer"
+            },
+            "dae": {
+                "module": "ColladaLoader",
+                "readAs": "text"
+            },
+            "kmz": {
+                "module": "KMZLoader",
+                "readAs": "ArrayBuffer"
+            },
+            "wrl": {
+                "module": "VRMLLoader",
+                "readAs": "text"
+            },
+            "obj": {
+                "module": "OBJLoader",
+                "readAs": "text"
+            }
+        };
     }
 
     /**
@@ -10,7 +46,7 @@ Editor.FileManager = class {
      * será substituída por esta.
      * @param {File}   file - O objeto representando o arquivo (retornado pelo input type="file").
      */
-    importScene(name, file) {
+    importScene(file) {
         const filename = file.name;
         const extension = filename
             .match(/\.\w+$/)[0]
@@ -27,7 +63,19 @@ Editor.FileManager = class {
             }
         }
         
-        switch (extension) {
+        if (!(extension in this.#loaders)) {
+            alert(`Formato de arquivo não suportado (".${extension}").`);
+        }
+        
+        reader.addEventListener("load", (event) => {
+            const result = event.target.result;
+            const loader = new THREE[this.#loaders[extension].module]();
+            loader.parse(result, (object) => {
+                console.log(object);
+            });
+        });
+        
+        /*switch (extension) {
             case "3dm":
                 reader.addEventListener(
                     "load",
@@ -303,6 +351,6 @@ Editor.FileManager = class {
             default:
                 console.error(`Unsupported file format (${extension}).`);
                 break;
-        }
+        }*/
     }
 };
