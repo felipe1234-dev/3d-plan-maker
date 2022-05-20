@@ -10,22 +10,33 @@ class EditorScene {
     constructor(editor) {
         this.#editor = editor;
         
-        /* Criando um proxy para monitorar quando a "função de setagem" é acionada,
+        /* Criando proxies para monitorar quando "funções de setagem" são acionadas,
          * e assim, mandar automaticamente uma mensagem ao histórico.
          */
         
         this.set = new Proxy(this.set, {
             apply: function(set, scope, args) {
-                const feedHistory = args[2];
+                const feedHistory = args[2] === undefined ? true : args[2];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                let option;
+                let newVal;
+                let oldVal;
+                let ctxName;
             
                 if (feedHistory) {
-                    const option  = args[0];
-                    const newVal  = args[1];
-                    const oldVal  = scope.get(option);
-                    const ctxName = editor.contexts.current.name;
-                    
+                    option  = args[0];
+                    newVal  = args[1];
+                    oldVal  = scope.get(option);
+                    ctxName = editor.contexts.current.name;
+                }
+                 
+                set.call(scope, ...args);
+                
+                if (feedHistory) {
                     editor.history.add({
-                        description: `Mudou "${option}" de "${ctxName}" para ${
+                        description: `${ctxName}: ${option} = ${
                             typeof newVal === "object"
                                 ? JSON.stringify(newVal)
                                 : newVal
@@ -35,25 +46,27 @@ class EditorScene {
                         always: () => editor.save()
                     });
                 }
-                 
-                set.call(scope, ...args);
             }
         });
         
         this.add = new Proxy(this.add, {
             apply: function(add, scope, args) {
-                const feedHistory = args[2];
+                const feedHistory = args[2] === undefined ? true : args[2];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                
+                add.call(scope, ...args);
                 
                 if (feedHistory) {
                     const ctxName = editor.contexts.current.name;
-                    let elem3D    = args[0];
-                    elem3D        = editor._currentScene.children.filter((child) => (
+                    let elem3D = args[0];
+                    elem3D = editor._currentScene.children.filter((child) => (
                         elem3D.uuid === child.uuid
                     ))[0]; // Para pegar a posição anterior do objeto
-                    const props   = args[1];
-        
+                    
                     editor.history.add({
-                        description: `Adicionou ${elem3D.type} em "${ctxName}"`,
+                        description: `${ctxName}: ${elem3D.type} adicionado`,
                         undo: () => scope.remove(elem3D, false),
                         redo: () => add.call(scope, elem3D, {
                             position: [...elem3D.position], // Mantendo a posição (escolhida aleatoriamente ou não)
@@ -62,21 +75,24 @@ class EditorScene {
                         always: () => editor.save(),
                     });
                 }
-                
-                add.call(scope, ...args);
             }
         });
         
         this.remove = new Proxy(this.remove, {
             apply: function(remove, scope, args) {
-                const feedHistory = args[2];
+                const feedHistory = args[1] === undefined ? true : args[1];
+                /* Se estiver undefined, significa que o usuário não passou o argumento, 
+                 * logo, o valor padrão (true) é que vale.
+                 */
+                
+                remove.call(scope, ...args);
                 
                 if (feedHistory) {
                     const elem3D  = args[0];
                     const ctxName = editor.contexts.current.name;
-        
+                    
                     editor.history.add({
-                        description: `Removeu ${elem3D.type} de "${ctxName}"`,
+                        description: `${ctxName}: ${elem3D.type} removido`,
                         undo: () => scope.add(elem3D, {
                             position: [...elem3D.position], // Mantendo a posição que o objeto estava
                             checkForCollision: true
@@ -85,8 +101,6 @@ class EditorScene {
                         always: () => editor.save()
                     });
                 }
-                
-                remove.call(scope, ...args);
             }
         });
     }
@@ -229,7 +243,7 @@ class EditorScene {
      * @returns {any}           Retorna o valor da propriedade, podendo ser de any tipos.
      */
     get(option) {
-        if (/(background)|(environment)|(fog)/i.test(option)) {
+        if (/(background|environment|fog)/i.test(option)) {
             const data = this.#editor._currentScene.editorData;
             const res = data[option];
             
