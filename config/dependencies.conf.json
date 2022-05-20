@@ -23,7 +23,16 @@
             "libs/threejs-r136/three.js",
             "libs/threejs-r136/assets/controls/OrbitControls.js",
             "libs/threejs-r136/assets/controls/TransformControls.js",
-            "libs/threejs-r136/assets/loaders/GLTFLoader.js",
+            
+            "libs/threejs-r136/assets/loaders/3DMLoader.js",
+            "libs/threejs-r136/assets/loaders/TDSLoader.js",
+            "libs/threejs-r136/assets/loaders/3MFLoader.js",
+            "libs/threejs-r136/assets/loaders/AMFLoader.js",
+            "libs/threejs-r136/assets/loaders/ColladaLoader.js",
+            "libs/threejs-r136/assets/loaders/KMZLoader.js",
+            "libs/threejs-r136/assets/loaders/VRMLLoader.js",
+            "libs/threejs-r136/assets/loaders/OBJLoader.js",
+            
             "libs/threejs-r136/assets/exporters/GLTFExporter.js",
             "libs/fontawesome-v4.7.0/css/font-awesome-v4.7.0.min.css"
         ],
@@ -50,6 +59,7 @@
             "admin/js/editor/Editor.Scene.js",
             "admin/js/editor/Editor.Viewport.js",
             "admin/js/editor/Editor.3DElement.js",
+            "admin/js/editor/Editor.FileManager.js",
             "admin/js/Init.Editor.js",
             
             "admin/js/helpers/points.helper.js",
