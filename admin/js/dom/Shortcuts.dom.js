@@ -16,12 +16,12 @@ jQuery(document).ready(function ($) {
 
             case event.ctrlKey && event.key == "=":
                 event.preventDefault();
-                window.ThreeDModelEditor.viewport.zoomIn();
+                PlanMaker.editor.viewport.zoomIn();
                 break;
 
             case event.ctrlKey && event.key == "-":
                 event.preventDefault();
-                window.ThreeDModelEditor.viewport.zoomOut();
+                PlanMaker.editor.viewport.zoomOut();
                 break;
 
             case event.key == "Delete":
@@ -50,23 +50,23 @@ jQuery(document).ready(function ($) {
                 break;
 
             case /^x$/i.test(key):
-                window.ThreeDModelEditor.controls.set(
+                PlanMaker.editor.controls.set(
                     "showX",
-                    !window.ThreeDModelEditor.controls.get("showX")
+                    !PlanMaker.editor.controls.get("showX")
                 );
                 break;
 
             case /^y$/i.test(key):
-                window.ThreeDModelEditor.controls.set(
+                PlanMaker.editor.controls.set(
                     "showY",
-                    !window.ThreeDModelEditor.controls.get("showY")
+                    !PlanMaker.editor.controls.get("showY")
                 );
                 break;
 
             case /^z$/i.test(key):
-                window.ThreeDModelEditor.controls.set(
+                PlanMaker.editor.controls.set(
                     "showZ",
-                    !window.ThreeDModelEditor.controls.get("showZ")
+                    !PlanMaker.editor.controls.get("showZ")
                 );
                 break;
 
@@ -75,10 +75,10 @@ jQuery(document).ready(function ($) {
         }
     };
 
-    window.ThreeDModelEditor.on("select", () =>
+    PlanMaker.editor.on("select", () =>
         $(window).on("keydown", transformShortcuts)
     );
-    window.ThreeDModelEditor.on("unselect", () =>
+    PlanMaker.editor.on("unselect", () =>
         $(window).off("keydown", transformShortcuts)
     );
 });

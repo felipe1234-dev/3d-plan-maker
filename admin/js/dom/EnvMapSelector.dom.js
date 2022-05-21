@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
             params.refraction = hasRefr;
         }
 
-        window.ThreeDModelEditor.scene.set("environment", params);
+        PlanMaker.editor.scene.set("environment", params);
     });
 
     $mapHasRefr.change(function () {
@@ -65,7 +65,7 @@ jQuery(document).ready(function ($) {
             type: mapType,
             object: mapObject,
             ...rest
-        } = window.ThreeDModelEditor.scene.get("environment");
+        } = PlanMaker.editor.scene.get("environment");
         $mapSelectBox.val(mapType);
 
         if (mapObject) {
@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
         $mapSelectBox.trigger("syncSelectTagHelper");
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $sceneTabPanel.trigger("sync")
     );
 });

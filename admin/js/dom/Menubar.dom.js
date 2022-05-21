@@ -1,12 +1,14 @@
 jQuery(document).ready(function ($) {
     const $editor = $("#editor");
     const $menubar = $("#menubar");
+    const $inputFile = $menubar.find('input[type="file"]');
     const $deleteBtn = $("#delete-btn");
     const $undoBtn = $("#undo-btn");
     const $redoBtn = $("#redo-btn");
     const $clearBtn = $("#clear-btn");
-
-    $("#toggle-fullscreen-btn").click(function () {
+    
+    
+    $("#toggle-fullscreen-btn").click(function() {
         const $button = $(this);
         const editor = $editor[0];
         const isFullscreen =
@@ -41,7 +43,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $("#toggle-theme-btn").click(function () {
+    $("#toggle-theme-btn").click(function() {
         const theme = $editor.attr("data-theme");
         const oldHtml = this.innerHTML;
         
@@ -54,7 +56,7 @@ jQuery(document).ready(function ($) {
         }
     });
     
-    $("#add-hotspot-btn").click(function () {
+    $("#add-hotspot-btn").click(function() {
         const material = new THREE.HotSpotMaterial({
             text: "H"
         });
@@ -69,7 +71,26 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $menubar.find("div[data-geometry]").click(function () {
+    $inputFile.change(function(event) {
+        const action = $(this).data("action");
+        const file = event.target.files[0];
+        
+        switch (action) {
+            case "import-scene":
+                window.ThreeDModelEditor.fileManager.importScene(file);
+                break;
+        
+            default:
+                break;
+        }
+    });
+    
+    $("#import-scene-btn").click(function() {
+        $inputFile.attr("data-action", "import-scene");
+        $inputFile.click();
+    });
+    
+    $menubar.find("div[data-geometry]").click(function() {
         const type      = $(this).data("geometry");
         const geometry  = new THREE[type]();
         geometry.name   = type;
@@ -89,7 +110,7 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $menubar.find("div[data-light]").click(function () {
+    $menubar.find("div[data-light]").click(function() {
         const type  = $(this).data("light");
         const light = new THREE[type]();
         light.name  = type;
@@ -100,31 +121,31 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $deleteBtn.click(function () {
+    $deleteBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
             window.ThreeDModelEditor.selected.remove();
         }
     });
 
-    $undoBtn.click(function () {
+    $undoBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
             window.ThreeDModelEditor.history.undo();
         }
     });
 
-    $redoBtn.click(function () {
+    $redoBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
             window.ThreeDModelEditor.history.redo();
         }
     });
 
-    $clearBtn.click(function () {
+    $clearBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
             window.ThreeDModelEditor.history.clear();
         }
     });
 
-    $menubar.on("sync", function () {
+    $menubar.on("sync", function() {
         if (window.ThreeDModelEditor.history.undoIsDisabled()) {
             $undoBtn.removeClass("is-inactive");
         } else {

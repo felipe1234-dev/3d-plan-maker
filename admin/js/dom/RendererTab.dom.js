@@ -8,36 +8,36 @@ jQuery(document).ready(function ($) {
     const $toneExposure = $("#tone-mapping-exposure");
 
     $antialias.change(function () {
-        window.ThreeDModelEditor.renderer.set("antialias", this.checked);
+        PlanMaker.editor.renderer.set("antialias", this.checked);
     });
 
     $physicalLights.change(function () {
-        window.ThreeDModelEditor.renderer.set(
+        PlanMaker.editor.renderer.set(
             "enablePhysicalLights",
             this.checked
         );
     });
 
     $shadowEnabler.change(function () {
-        window.ThreeDModelEditor.renderer.set("enableShadows", this.checked);
+        PlanMaker.editor.renderer.set("enableShadows", this.checked);
     });
 
     $shadowType.change(function () {
-        window.ThreeDModelEditor.renderer.set(
+        PlanMaker.editor.renderer.set(
             "shadowType",
             parseInt(this.value)
         );
     });
 
     $toneType.change(function () {
-        window.ThreeDModelEditor.renderer.set(
+        PlanMaker.editor.renderer.set(
             "toneMapping",
             parseInt(this.value)
         );
     });
 
     $toneExposure.on("change input", function (event) {
-        window.ThreeDModelEditor.renderer.set(
+        PlanMaker.editor.renderer.set(
             "toneMappingExposure",
             parseFloat(this.value),
             event.type == "change"
@@ -47,25 +47,25 @@ jQuery(document).ready(function ($) {
     $rendererTabPanel
         .on("sync", function () {
             $antialias[0].checked =
-                window.ThreeDModelEditor.renderer.get("antialias");
+                PlanMaker.editor.renderer.get("antialias");
             $physicalLights[0].checked = 
-                window.ThreeDModelEditor.renderer.get("enablePhysicalLights");
+                PlanMaker.editor.renderer.get("enablePhysicalLights");
             $shadowEnabler[0].checked =
-                window.ThreeDModelEditor.renderer.get("enableShadows");
+                PlanMaker.editor.renderer.get("enableShadows");
 
             $shadowType.val(
-                window.ThreeDModelEditor.renderer.get("shadowType")
+                PlanMaker.editor.renderer.get("shadowType")
             );
             $toneType.val(
-                window.ThreeDModelEditor.renderer.get("toneMapping")
+                PlanMaker.editor.renderer.get("toneMapping")
             );
             $toneExposure.val(
-                window.ThreeDModelEditor.renderer.get("toneMappingExposure")
+                PlanMaker.editor.renderer.get("toneMappingExposure")
             );
         })
         .trigger("sync");
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $rendererTabPanel.trigger("sync")
     );
 });

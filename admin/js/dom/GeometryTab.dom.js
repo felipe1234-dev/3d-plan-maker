@@ -16,13 +16,13 @@ jQuery(document).ready(function ($) {
                     value = eval(`parse${dataType}(value)`);
                 }
 
-                window.ThreeDModelEditor.selected.geometry.set(
+                PlanMaker.editor.selected.geometry.set(
                     option,
                     value,
                     feedHistory
                 );
             } else {
-                window.ThreeDModelEditor.selected.geometry.set(
+                PlanMaker.editor.selected.geometry.set(
                     "points",
                     points.get(),
                     feedHistory
@@ -31,7 +31,7 @@ jQuery(document).ready(function ($) {
         });
 
     $geometryTabPanel.on("sync", function () {
-        if (!window.ThreeDModelEditor.selected.hasScope("geometry")) {
+        if (!PlanMaker.editor.selected.hasScope("geometry")) {
             $geometryBtn.hide();
             $geometryTabPanel.find('div[id*="-row"]').hide();
             return;
@@ -42,7 +42,7 @@ jQuery(document).ready(function ($) {
         $geometryTabPanel.find('div[id*="-row"]').hide();
 
         const geometryType =
-            window.ThreeDModelEditor.selected.geometry.get("type");
+            PlanMaker.editor.selected.geometry.get("type");
         const selectedRows = JSON.parse($(`#${geometryType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
@@ -52,13 +52,13 @@ jQuery(document).ready(function ($) {
                 const dataOpt = $(this).data("option");
                 const dataType = $(this).data("type");
                 const optValue =
-                    window.ThreeDModelEditor.selected.geometry.get(dataOpt);
+                    PlanMaker.editor.selected.geometry.get(dataOpt);
 
                 switch (true) {
                     case this.id == "geometry-points-field":
                         points.start($row[0]);
                         points.render(
-                            window.ThreeDModelEditor.selected.geometry.get(
+                            PlanMaker.editor.selected.geometry.get(
                                 "points"
                             )
                         );
@@ -79,12 +79,12 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $geometryTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $geometryTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $geometryTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("editSelected", () =>
+    PlanMaker.editor.on("select", () => $geometryTabPanel.trigger("sync"));
+    PlanMaker.editor.on("unselect", () => $geometryTabPanel.trigger("sync"));
+    PlanMaker.editor.on("editSelected", () =>
         $geometryTabPanel.trigger("sync")
     );
 });

@@ -29,14 +29,14 @@ const __MODE__  = "prod";
 $root           = dirname( __FILE__ );
 $plugin_dir_url = plugin_dir_url( __FILE__ );
 
-if ( ! class_exists( '\ScssPhp\ScssPhp\Compiler' ) ) {
+if ( ! class_exists( "\ScssPhp\ScssPhp\Compiler" ) ) {
     require_once "libs/scssphp-1.9.0/scss.inc.php";
 }
 
 if ( 
-    ! class_exists( '\MatthiasMullie\Minify\JS' ) && 
-    ! class_exists( '\MatthiasMullie\Minify\CSS' ) &&
-    ! class_exists( '\MatthiasMullie\PathConverter\Converter' )
+    ! class_exists( "\MatthiasMullie\Minify\JS" ) && 
+    ! class_exists( "\MatthiasMullie\Minify\CSS" ) &&
+    ! class_exists( "\MatthiasMullie\PathConverter\Converter" )
 ) {
     require_once "libs/minify-v1.3.63/minify.php";
     require_once "libs/path-converter-v1.1.3/path-converter.php";
@@ -48,8 +48,8 @@ require_once "inc/php/UI.class.php";
 require_once "inc/php/PostEditor.class.php";
 require_once "inc/php/PostWidget.class.php";
 
-$dependencies     = loadJSON( $root."/config/dependencies.conf.json" );
-$post_settings    = loadJSON( $root."/config/post-settings.conf.json" );
+$dependencies    = loadJSON( $root."/config/dependencies.conf.json" );
+$post_settings   = loadJSON( $root."/config/post-settings.conf.json" );
 $editor_settings = loadJSON( $root."/config/editor-settings.conf.json" );
 
 $plugin = new PluginCore(array(
@@ -67,6 +67,19 @@ add_action( "wp_head", function() use ( $plugin, $dependencies ) : void {
 
 add_action( "admin_head", function() use ( $plugin, $dependencies ) : void {
     if ($plugin->isAdmin()) {
+        // Global
+        echo '
+            <script id="3d-plan-maker-globals" type="text/javascript">
+                const PlanMaker = '.json_encode(array(
+                    "editor" => null,
+                    "ajax"   => array(
+                        "url" => admin_url( "admin-ajax.php" ),
+                    ),
+                    "upload" => wp_get_upload_dir(),
+                )).';
+            </script>
+        ';
+        
         $plugin->loadDeps( $dependencies["admin"]["head"] ); 
     }
 });

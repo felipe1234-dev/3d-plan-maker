@@ -15,7 +15,7 @@ jQuery(document).ready(function ($) {
                 value = eval(`parse${dataType}(value)`);
             }
 
-            window.ThreeDModelEditor.selected.object.set(
+            PlanMaker.editor.selected.object.set(
                 option,
                 value,
                 feedHistory
@@ -23,7 +23,7 @@ jQuery(document).ready(function ($) {
         });
 
     $objectTabPanel.on("sync", function () {
-        if (!window.ThreeDModelEditor.selected.hasScope("object")) {
+        if (!PlanMaker.editor.selected.hasScope("object")) {
             $objectBtn.hide();
             $objectTabPanel.find('div[id*="-row"]').hide();
             return;
@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
 
         $objectTabPanel.find('div[id*="-row"]').hide();
 
-        const objectType = window.ThreeDModelEditor.selected.object.get("type");
+        const objectType = PlanMaker.editor.selected.object.get("type");
         const selectedRows = JSON.parse($(`#${objectType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
@@ -43,7 +43,7 @@ jQuery(document).ready(function ($) {
                 const dataOpt = $(this).data("option");
                 const dataType = $(this).data("type");
                 const optValue =
-                    window.ThreeDModelEditor.selected.object.get(dataOpt);
+                    PlanMaker.editor.selected.object.get(dataOpt);
 
                 switch (true) {
                     case this.tagName == "INPUT":
@@ -61,12 +61,12 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $objectTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $objectTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $objectTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("editSelected", () =>
+    PlanMaker.editor.on("select", () => $objectTabPanel.trigger("sync"));
+    PlanMaker.editor.on("unselect", () => $objectTabPanel.trigger("sync"));
+    PlanMaker.editor.on("editSelected", () =>
         $objectTabPanel.trigger("sync")
     );
 });

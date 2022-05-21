@@ -25,7 +25,7 @@ jQuery(document).ready(function ($) {
             params.color = $fogColor.val();
         }
 
-        window.ThreeDModelEditor.scene.set("fog", params, feedHistory);
+        PlanMaker.editor.scene.set("fog", params, feedHistory);
     });
 
     $fogSelector.change(function () {
@@ -38,7 +38,7 @@ jQuery(document).ready(function ($) {
 
     $sceneTabPanel.on("sync", function () {
         const { type: fogType, ...rest } =
-            window.ThreeDModelEditor.scene.get("fog");
+            PlanMaker.editor.scene.get("fog");
 
         $fogSelector.val(fogType);
         $fogColor.val("color" in rest ? rest.color : "#000");
@@ -49,7 +49,7 @@ jQuery(document).ready(function ($) {
         $fogSelector.trigger("syncSelectTagHelper");
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $sceneTabPanel.trigger("sync")
     );
 });

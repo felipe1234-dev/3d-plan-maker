@@ -8,45 +8,45 @@ jQuery(document).ready(function ($) {
     const $renderOrder = $("#scene-render-order");
 
     $ctxSelector.change(function () {
-        if (!(this.value in window.ThreeDModelEditor.contexts)) return;
-        window.ThreeDModelEditor.contexts[this.value].select();
+        if (!(this.value in PlanMaker.editor.contexts)) return;
+        PlanMaker.editor.contexts[this.value].select();
         $sceneTabPanel.trigger("sync");
     });
 
     $deleteSceneBtn.click(function () {
-        window.ThreeDModelEditor.contexts.current.delete();
+        PlanMaker.editor.contexts.current.delete();
     });
 
     $addSceneBtn.click(function () {
-        window.ThreeDModelEditor.contexts.create("Nova cena");
-        if ("Nova cena" in window.ThreeDModelEditor.contexts) {
-            window.ThreeDModelEditor.contexts["Nova cena"].select();
+        PlanMaker.editor.contexts.create("Nova cena");
+        if ("Nova cena" in PlanMaker.editor.contexts) {
+            PlanMaker.editor.contexts["Nova cena"].select();
         }
     });
 
     $ctxName.change(function () {
-        window.ThreeDModelEditor.contexts.current.setContextName(this.value);
+        PlanMaker.editor.contexts.current.setContextName(this.value);
     });
 
     $opacityFactor.change(function () {
-        window.ThreeDModelEditor.contexts.current.setOpacityFactor(
+        PlanMaker.editor.contexts.current.setOpacityFactor(
             parseFloat(this.value)
         );
     });
 
     $renderOrder.change(function () {
-        window.ThreeDModelEditor.contexts.current.setRenderOrder(
+        PlanMaker.editor.contexts.current.setRenderOrder(
             parseFloat(this.value)
         );
     });
 
     $sceneTabPanel.on("sync", function () {
-        const sceneNames = Object.keys(window.ThreeDModelEditor.model.scenes);
+        const sceneNames = Object.keys(PlanMaker.editor.model.scenes);
 
         $ctxSelector.html("");
         sceneNames.forEach((sceneName) => {
             const isSelected =
-                sceneName == window.ThreeDModelEditor.contexts.current.name
+                sceneName == PlanMaker.editor.contexts.current.name
                     ? " selected"
                     : "";
             const isDisabled = sceneName == "Editor" ? " disabled" : "";
@@ -59,21 +59,21 @@ jQuery(document).ready(function ($) {
         });
 
         $ctxSelector.val(
-            window.ThreeDModelEditor.contexts.current.name
+            PlanMaker.editor.contexts.current.name
         );
         $ctxName.val(
-            window.ThreeDModelEditor.contexts.current.name
+            PlanMaker.editor.contexts.current.name
         );
         $opacityFactor.val(
-            window.ThreeDModelEditor.contexts.current.opacityFactor
+            PlanMaker.editor.contexts.current.opacityFactor
         );
         $renderOrder.val(
-            window.ThreeDModelEditor.contexts.current.renderOrder
+            PlanMaker.editor.contexts.current.renderOrder
         );
         $renderOrder.attr("max", sceneNames.length - 1);
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $sceneTabPanel.trigger("sync")
     );
 });

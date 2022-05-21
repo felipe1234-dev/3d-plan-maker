@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
             params.url = bgImage;
         }
 
-        window.ThreeDModelEditor.scene.set("background", params, feedHistory);
+        PlanMaker.editor.scene.set("background", params, feedHistory);
     });
 
     $bgImageBox.click(function () {
@@ -60,7 +60,7 @@ jQuery(document).ready(function ($) {
             type: bgType,
             object: bgObject,
             ...rest
-        } = window.ThreeDModelEditor.scene.get("background");
+        } = PlanMaker.editor.scene.get("background");
         $bgSelectBox.val(bgType.replace(/mapping/i, "Texture"));
 
         if (bgObject) {
@@ -75,7 +75,7 @@ jQuery(document).ready(function ($) {
         $bgSelectBox.trigger("syncSelectTagHelper");
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $sceneTabPanel.trigger("sync")
     );
 });

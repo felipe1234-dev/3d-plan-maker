@@ -7,19 +7,19 @@ jQuery(document).ready(function ($) {
 
     $toggleGrids
         .change(function () {
-            window.ThreeDModelEditor.viewport.set("showGrids", this.checked);
+            PlanMaker.editor.viewport.set("showGrids", this.checked);
         })
         .change();
 
     $showHelpers
         .change(function () {
-            window.ThreeDModelEditor.viewport.set("showHelpers", this.checked);
+            PlanMaker.editor.viewport.set("showHelpers", this.checked);
         })
         .change();
 
     $gridSize
         .on("change input", function (event) {
-            window.ThreeDModelEditor.viewport.set(
+            PlanMaker.editor.viewport.set(
                 "gridSize",
                 parseFloat(this.value),
                 event.type == "change"
@@ -29,7 +29,7 @@ jQuery(document).ready(function ($) {
 
     $zoomSpeed
         .on("change input", function (event) {
-            window.ThreeDModelEditor.controls.set(
+            PlanMaker.editor.controls.set(
                 "zoomSpeed",
                 parseFloat(this.value),
                 event.type == "change"
@@ -60,14 +60,14 @@ jQuery(document).ready(function ($) {
 
     $settingsTabPanel.on("sync", function () {
         $toggleGrids[0].checked =
-            window.ThreeDModelEditor.viewport.get("showGrids");
+            PlanMaker.editor.viewport.get("showGrids");
         $showHelpers[0].checked =
-            window.ThreeDModelEditor.viewport.get("showHelpers");
-        $gridSize.val(window.ThreeDModelEditor.viewport.get("gridSize"));
-        $zoomSpeed.val(window.ThreeDModelEditor.controls.get("zoomSpeed"));
+            PlanMaker.editor.viewport.get("showHelpers");
+        $gridSize.val(PlanMaker.editor.viewport.get("gridSize"));
+        $zoomSpeed.val(PlanMaker.editor.controls.get("zoomSpeed"));
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $settingsTabPanel.trigger("sync")
     );
 });

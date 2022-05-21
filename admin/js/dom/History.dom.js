@@ -7,20 +7,20 @@ jQuery(document).ready(function ($) {
 
         const $removeAllBtn = $("<div>", { class: "Outliner-item" });
         $removeAllBtn.text("Apagar todas as mudanças");
-        $removeAllBtn.click(() => window.ThreeDModelEditor.history.rewind(-1));
+        $removeAllBtn.click(() => PlanMaker.editor.history.rewind(-1));
 
         $history.append($removeAllBtn[0]);
 
-        window.ThreeDModelEditor.history.timeline.forEach(
+        PlanMaker.editor.history.timeline.forEach(
             ({ description }, i) => {
                 const $item = $("<div>", { class: "Outliner-item" });
 
                 $item.text(description);
-                $item.click(() => window.ThreeDModelEditor.history.rewind(i));
+                $item.click(() => PlanMaker.editor.history.rewind(i));
 
-                if (i == window.ThreeDModelEditor.history.now) {
+                if (i == PlanMaker.editor.history.now) {
                     $item.addClass("Outliner-item--is-active");
-                } else if (i > window.ThreeDModelEditor.history.now) {
+                } else if (i > PlanMaker.editor.history.now) {
                     $item.addClass("Outliner-item--is-inactive");
                 }
 
@@ -29,7 +29,7 @@ jQuery(document).ready(function ($) {
         );
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $history.trigger("sync")
     );
 });

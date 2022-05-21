@@ -68,7 +68,7 @@ jQuery(document).ready(function ($) {
 
             $(this).val(JSON.stringify(params));
 
-            window.ThreeDModelEditor.selected.material.set(option, params);
+            PlanMaker.editor.selected.material.set(option, params);
             $(this).trigger("syncUI", [params]);
         });
 
@@ -96,7 +96,7 @@ jQuery(document).ready(function ($) {
     });
 
     $materialTabPanel.on("sync", function () {
-        if (!window.ThreeDModelEditor.selected.hasScope("material")) {
+        if (!PlanMaker.editor.selected.hasScope("material")) {
             $materialBtn.hide();
             $materialTabPanel.find('div[id*="-row"]').hide();
             return;
@@ -107,7 +107,7 @@ jQuery(document).ready(function ($) {
         $materialTabPanel.find('div[id*="-row"]').hide();
 
         const materialType =
-            window.ThreeDModelEditor.selected.material.get("type");
+            PlanMaker.editor.selected.material.get("type");
         const selectedRows = JSON.parse($(`#${materialType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
             $row.find("[data-option]").each(function () {
                 const dataOpt = $(this).data("option");
                 const optValue =
-                    window.ThreeDModelEditor.selected.material.get(dataOpt);
+                    PlanMaker.editor.selected.material.get(dataOpt);
                 const dataType = $(this).data("type");
 
                 switch (true) {
@@ -153,7 +153,7 @@ jQuery(document).ready(function ($) {
 
             switch (true) {
                 case this.id == "material-type-selector":
-                    window.ThreeDModelEditor.selected.material.set(
+                    PlanMaker.editor.selected.material.set(
                         "type",
                         this.value,
                         feedHistory
@@ -162,7 +162,7 @@ jQuery(document).ready(function ($) {
                     break;
 
                 case this.tagName == "SELECT":
-                    window.ThreeDModelEditor.selected.material.set(
+                    PlanMaker.editor.selected.material.set(
                         option,
                         this.value,
                         feedHistory
@@ -176,7 +176,7 @@ jQuery(document).ready(function ($) {
                         value = eval(`parse${dataType}(value)`);
                     }
 
-                    window.ThreeDModelEditor.selected.material.set(
+                    PlanMaker.editor.selected.material.set(
                         option,
                         value,
                         feedHistory
@@ -208,12 +208,12 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $materialTabPanel.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () => $materialTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("unselect", () => $materialTabPanel.trigger("sync"));
-    window.ThreeDModelEditor.on("editSelected", () =>
+    PlanMaker.editor.on("select", () => $materialTabPanel.trigger("sync"));
+    PlanMaker.editor.on("unselect", () => $materialTabPanel.trigger("sync"));
+    PlanMaker.editor.on("editSelected", () =>
         $materialTabPanel.trigger("sync")
     );
 });

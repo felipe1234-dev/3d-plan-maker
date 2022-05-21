@@ -23,7 +23,7 @@ jQuery(document).ready(function ($) {
         $(document).trigger("mousehold", [
             {
                 elem: this,
-                callback: () => window.ThreeDModelEditor.viewport.zoomIn(),
+                callback: () => PlanMaker.editor.viewport.zoomIn(),
                 delay: 70,
             },
         ]);
@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
         $(document).trigger("mousehold", [
             {
                 elem: this,
-                callback: () => window.ThreeDModelEditor.viewport.zoomOut(),
+                callback: () => PlanMaker.editor.viewport.zoomOut(),
                 delay: 70,
             },
         ]);
@@ -47,12 +47,12 @@ jQuery(document).ready(function ($) {
             .removeClass("Viewport-toolbar-button--is-selected");
         $(this).addClass("Viewport-toolbar-button--is-selected");
 
-        window.ThreeDModelEditor.controls.set("transformMode", newMode, false);
+        PlanMaker.editor.controls.set("transformMode", newMode, false);
     });
 
     ["x", "y", "z"].forEach((axis) => {
         $(`[data-stat="coord-${axis}"]`).on("input", function () {
-            window.ThreeDModelEditor.model.camera.position[axis] = this.value;
+            PlanMaker.editor.model.camera.position[axis] = this.value;
         });
     });
 
@@ -61,10 +61,10 @@ jQuery(document).ready(function ($) {
             const $field = $(this);
             const stat = $field.data("stat");
             const value = /coord/i.test(stat)
-                ? window.ThreeDModelEditor.stats.position[
+                ? PlanMaker.editor.stats.position[
                         stat.replace(/coord-/i, "")
                   ]
-                : window.ThreeDModelEditor.stats[stat];
+                : PlanMaker.editor.stats[stat];
 
             if (!/coord/i.test(stat)) {
                 $field.text(value);
@@ -74,5 +74,5 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    window.ThreeDModelEditor.on("statUpdate", () => $stats.trigger("sync"));
+    PlanMaker.editor.on("statUpdate", () => $stats.trigger("sync"));
 });
