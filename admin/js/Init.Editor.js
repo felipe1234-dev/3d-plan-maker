@@ -22,5 +22,5 @@ jQuery(document).ready(function ($) {
 
     modelEditor.init();
     
-    window.ThreeDModelEditor = modelEditor;
+    PlanMaker.editor = modelEditor;
 });

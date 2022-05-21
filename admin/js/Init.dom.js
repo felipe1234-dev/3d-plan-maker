@@ -63,5 +63,5 @@ jQuery(document).ready(function ($) {
     });
     $("#wpfooter").hide();
 
-    window.ThreeDModelEditor.history.clear();
+    PlanMaker.editor.history.clear();
 });
