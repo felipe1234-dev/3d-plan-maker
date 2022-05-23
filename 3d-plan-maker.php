@@ -61,11 +61,11 @@ $plugin = new PluginCore(array(
 
 // HEAD
 
-add_action( "wp_head", function() use ( $plugin, $dependencies ) : void { 
+add_action("wp_head", function() use ( $plugin, $dependencies ) : void { 
     $plugin->loadDeps( $dependencies["public"]["head"] ); 
 });
 
-add_action( "admin_head", function() use ( $plugin, $dependencies ) : void {
+add_action("admin_head", function() use ( $plugin, $dependencies ) : void {
     if ($plugin->isAdmin()) {
         // Global
         echo '
@@ -83,7 +83,7 @@ add_action( "admin_head", function() use ( $plugin, $dependencies ) : void {
     }
 });
 
-add_action( "admin_enqueue_scripts", function() use ( $plugin ) : void {
+add_action("admin_enqueue_scripts", function() use ( $plugin ) : void {
     if ($plugin->isAdmin()) { 
         wp_enqueue_media();
         wp_enqueue_script( "jquery" );
@@ -95,17 +95,17 @@ add_action( "admin_enqueue_scripts", function() use ( $plugin ) : void {
     }
 });
 
-add_action( "wp_enqueue_scripts", function() use ( $plugin ) : void {
+add_action("wp_enqueue_scripts", function() use ( $plugin ) : void {
     wp_enqueue_script( "jquery" );
 });
 
 // FOOTER
 
-add_action( "wp_footer", function() use ( $plugin, $dependencies ) : void {
+add_action("wp_footer", function() use ( $plugin, $dependencies ) : void {
     $plugin->loadDeps( $dependencies["public"]["footer"] ); 
 });
 
-add_action( "admin_footer", function() use ( $plugin, $dependencies ) : void {
+add_action("admin_footer", function() use ( $plugin, $dependencies ) : void {
     if ($plugin->isAdmin()) {
         $plugin->loadDeps( $dependencies["admin"]["footer"] ); 
     }
@@ -113,16 +113,16 @@ add_action( "admin_footer", function() use ( $plugin, $dependencies ) : void {
 
 // EDITOR
 
-add_action( "add_meta_boxes", function() use ( $plugin ) : void {
+add_action("add_meta_boxes", function() use ( $plugin ) : void {
     $plugin->startEditor();
 });
 
-add_action( "save_post", function( int $post_ID ) use ( $plugin ) : void {
+add_action("save_post", function( int $post_ID ) use ( $plugin ) : void {
     $plugin->post_editor->setPost( $post_ID );
     $plugin->post_editor->savePost();
 });
 
-add_action( "admin_menu", function() : void {
+add_action("admin_menu", function() : void {
 	// Featured image
 	remove_meta_box( "postimagediv", "page", "normal" );
 	// Page attributes
@@ -145,15 +145,15 @@ add_shortcode("modelo-3d", function( array $atts ) use ( $plugin ) : string {
 
 // (DE)ACTIVATION
 
-add_action( "init", function() use ( $plugin ) : void {
+add_action("init", function() use ( $plugin ) : void {
     $plugin->activate();
 });
 
-register_activation_hook( __FILE__, function() use ( $plugin ) : void {
+register_activation_hook(__FILE__, function() use ( $plugin ) : void {
     $plugin->activate();
 });
 
-register_deactivation_hook( __FILE__, function() use ( $plugin ) : void {
+register_deactivation_hook(__FILE__, function() use ( $plugin ) : void {
     $plugin->deactivate();
 });
 
