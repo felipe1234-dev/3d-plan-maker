@@ -71,11 +71,10 @@ add_action( "admin_head", function() use ( $plugin, $dependencies ) : void {
         echo '
             <script id="3d-plan-maker-globals" type="text/javascript">
                 const PlanMaker = '.json_encode(array(
-                    "editor" => null,
-                    "ajax"   => array(
-                        "url" => admin_url( "admin-ajax.php" ),
-                    ),
-                    "upload" => wp_get_upload_dir(),
+                    "postType" => $plugin->post_type,
+                    "editor"   => null,
+                    "ajaxURL"  => admin_url( "admin-ajax.php" ),
+                    "upload"   => wp_get_upload_dir(),
                 )).';
             </script>
         ';
