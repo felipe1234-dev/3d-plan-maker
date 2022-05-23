@@ -1,4 +1,12 @@
 {
+    "BufferGeometry": {
+        "label": "Geometria Buffer",
+        "rows": [
+            "type",
+            "name",
+            "uuid"
+        ]
+    },
     "BoxGeometry": {
         "label": "Cubo",
         "rows": [
