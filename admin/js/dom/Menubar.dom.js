@@ -1,14 +1,22 @@
 jQuery(document).ready(function ($) {
     const $editor = $("#editor");
     const $menubar = $("#menubar");
+
+    const $fullscreenBtn = $("#toggle-fullscreen-btn");
+    const $themeBtn = $("#toggle-theme-btn");
+    const $addHotSpotBtn = $("#add-hotspot-btn");
+
     const $inputFile = $menubar.find('input[type="file"]');
+    const $importBtn = $("#import-btn");
+    
     const $deleteBtn = $("#delete-btn");
+    
     const $undoBtn = $("#undo-btn");
     const $redoBtn = $("#redo-btn");
     const $clearBtn = $("#clear-btn");
     
     
-    $("#toggle-fullscreen-btn").click(function() {
+    $fullscreenBtn.click(function() {
         const $button = $(this);
         const editor = $editor[0];
         const isFullscreen =
@@ -43,7 +51,7 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    $("#toggle-theme-btn").click(function() {
+    $themeBtn.click(function() {
         const theme = $editor.attr("data-theme");
         const oldHtml = this.innerHTML;
         
@@ -56,7 +64,7 @@ jQuery(document).ready(function ($) {
         }
     });
     
-    $("#add-hotspot-btn").click(function() {
+    $addHotSpotBtn.click(function() {
         const material = new THREE.HotSpotMaterial({
             text: "H"
         });
@@ -65,28 +73,69 @@ jQuery(document).ready(function ($) {
         const element3D = new THREE.HotSpot(material);
         element3D.name  = "HotSpot";
         
-        window.ThreeDModelEditor.scene.add(element3D, {
+        PlanMaker.editor.scene.add(element3D, {
             position: [0, 0.5, 0],
             checkForCollision: true
         });
     });
 
     $inputFile.change(function(event) {
-        const action = $(this).data("action");
-        const file = event.target.files[0];
+        const files  = event.target.files;
+        let model    = null;
+        const data   = new FormData();
         
-        switch (action) {
-            case "import-scene":
-                window.ThreeDModelEditor.fileManager.importScene(file);
-                break;
-        
-            default:
-                break;
+        data.append("action", `${PlanMaker.postType}_file_upload`);
+          
+        [ ...files ]
+            .filter((file) => {
+                if (/image\//.test(file.type)) {
+                    return true;
+                } else {
+                    model = file;
+                    return false;
+                }
+            })
+            .forEach((file, index) => (
+      		    data.append(`${PlanMaker.postType}_file_upload_${index}`, file)
+            ));
+            
+        if (!model) {
+            alert("Você precisa selecionar um modelo!");
+            return;
         }
+
+    	$.ajax({
+    		url: PlanMaker.ajaxURL,
+	        type: "POST",
+	        data: data,
+	        cache: false,
+	        dataType: "json",
+	        processData: false, // Don't process the files
+	        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+	        success: (resp) => {
+                resp = resp.filter((file) => file.status === "ERROR");
+                
+                if (resp.length > 0) {
+                    resp.forEach((file) => alert(file.message));
+                    return;
+                }
+    
+                alert(
+                    "Atenção: O sistema tentará colocar os mapas no lugar, porém, não é um " +
+                    "algoritmo perfeito e pode falhar. Não criemos pânico! Tente selecionar o " +
+                    "item, ir em \"Elemento 3D\" > \"Material\" e enviar os mapas você mesmo(a)! :)"
+                );           
+                
+                PlanMaker.editor.fileManager.import(
+                    model, 
+                    `${PlanMaker.upload.baseurl}/${PlanMaker.postType}/`
+                );
+	        }
+	    });
     });
     
-    $("#import-scene-btn").click(function() {
-        $inputFile.attr("data-action", "import-scene");
+    $importBtn.click(function() {
+        $inputFile.val("");
         $inputFile.click();
     });
     
@@ -104,7 +153,7 @@ jQuery(document).ready(function ($) {
         const element3D = new THREE.Mesh(geometry, material);
         element3D.name  = "Mesh";
         
-        window.ThreeDModelEditor.scene.add(element3D, {
+        PlanMaker.editor.scene.add(element3D, {
             position: [0, 0.5, 0], // x, y, z
             checkForCollision: true,
         });
@@ -115,7 +164,7 @@ jQuery(document).ready(function ($) {
         const light = new THREE[type]();
         light.name  = type;
         
-        window.ThreeDModelEditor.scene.add(light, {
+        PlanMaker.editor.scene.add(light, {
             position: [0, 10, 0],
             checkForCollision: true
         });
@@ -123,55 +172,55 @@ jQuery(document).ready(function ($) {
 
     $deleteBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
-            window.ThreeDModelEditor.selected.remove();
+            PlanMaker.editor.selected.remove();
         }
     });
 
     $undoBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
-            window.ThreeDModelEditor.history.undo();
+            PlanMaker.editor.history.undo();
         }
     });
 
     $redoBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
-            window.ThreeDModelEditor.history.redo();
+            PlanMaker.editor.history.redo();
         }
     });
 
     $clearBtn.click(function() {
         if (!$(this).hasClass("is-inactive")) {
-            window.ThreeDModelEditor.history.clear();
+            PlanMaker.editor.history.clear();
         }
     });
 
     $menubar.on("sync", function() {
-        if (window.ThreeDModelEditor.history.undoIsDisabled()) {
+        if (PlanMaker.editor.history.undoIsDisabled()) {
             $undoBtn.removeClass("is-inactive");
         } else {
             $undoBtn.addClass("is-inactive");
         }
 
-        if (window.ThreeDModelEditor.history.redoIsDisabled()) {
+        if (PlanMaker.editor.history.redoIsDisabled()) {
             $redoBtn.addClass("is-inactive");
         } else {
             $redoBtn.removeClass("is-inactive");
         }
 
-        if (window.ThreeDModelEditor.history.clearIsDisabled()) {
+        if (PlanMaker.editor.history.clearIsDisabled()) {
             $clearBtn.addClass("is-inactive");
         } else {
             $clearBtn.removeClass("is-inactive");
         }
     });
 
-    window.ThreeDModelEditor.on("historyChange", () =>
+    PlanMaker.editor.on("historyChange", () =>
         $menubar.trigger("sync")
     );
-    window.ThreeDModelEditor.on("select", () =>
+    PlanMaker.editor.on("select", () =>
         $deleteBtn.removeClass("is-inactive")
     );
-    window.ThreeDModelEditor.on("unselect", () =>
+    PlanMaker.editor.on("unselect", () =>
         $deleteBtn.addClass("is-inactive")
     );
 });
