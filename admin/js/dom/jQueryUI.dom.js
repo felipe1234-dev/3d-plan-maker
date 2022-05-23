@@ -29,7 +29,7 @@ jQuery(document).ready(function ($) {
         tooltipClass: "custom-tooltip-styling",
     });
 
-    window.ThreeDModelEditor.on("select", () => {
+    PlanMaker.editor.on("select", () => {
         const isSelected = $elementTabItem.attr("aria-selected") === "true";
         if (isSelected) {
             return;
@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
         
         $elementTabItem.click();
     });
-    window.ThreeDModelEditor.on("unselect", () => {
+    PlanMaker.editor.on("unselect", () => {
         const isSelected = $projectTabItem.attr("aria-selected") === "true";
         if (isSelected) {
             return;
