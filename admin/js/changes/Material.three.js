@@ -20,7 +20,7 @@ THREE.Material.prototype.setMap = function(mapType, props) {
         texture.mapping = mapping;
         texture.encoding = THREE.sRGBEncoding;
         
-        this.material.setValues({ [mapType]: texture });
+        this.setValues({ [mapType]: texture });
     };
 
     switch (true) {
@@ -68,7 +68,7 @@ THREE.Material.prototype.setMap = function(mapType, props) {
             break;
 
         default:
-            this.material.setValues({ [mapType]: null });
+            this.setValues({ [mapType]: null });
             break;
     }
 };
