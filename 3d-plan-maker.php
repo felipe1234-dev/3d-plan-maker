@@ -44,6 +44,7 @@ if (
     
 require_once "inc/php/PluginCore.class.php";
 require_once "inc/php/loadJSON.function.php";
+require_once "inc/php/uploadFile.function.php";
 require_once "inc/php/UI.class.php";
 require_once "inc/php/PostEditor.class.php";
 require_once "inc/php/PostWidget.class.php";
@@ -58,6 +59,31 @@ $plugin = new PluginCore(array(
     "post_settings"   => $post_settings, 
     "editor_settings" => $editor_settings 
 ));
+
+// AJAX
+
+add_action("wp_ajax_{$plugin->post_type}_file_upload", function() use ( $plugin ) : void {
+    $resp = array();
+    $subdir = wp_get_upload_dir()["subdir"]."/";
+    $continue = true;
+    $i = 0;
+    
+    while ($continue) {
+        $field_name = "{$plugin->post_type}_file_upload_$i";
+        
+        if (isset($_FILES[$field_name])) {
+            $resp[] = uploadFile($field_name, $subdir);
+        } else {
+            $continue = false;
+        }
+        
+        $i++;
+    }
+    
+    echo json_encode($resp);
+    
+    die();
+});
 
 // HEAD
 
