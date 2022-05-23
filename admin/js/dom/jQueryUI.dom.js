@@ -38,11 +38,11 @@ jQuery(document).ready(function ($) {
         $elementTabItem.click();
     });
     PlanMaker.editor.on("unselect", () => {
+        $projectTabItem.click();
+        
         const isSelected = $projectTabItem.attr("aria-selected") === "true";
         if (isSelected) {
-            return;
+            $projectTabItem.click();
         }
-        
-        $projectTabItem.click();
     });
 });
