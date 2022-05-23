@@ -15,6 +15,10 @@ jQuery(document).ready(function ($) {
         const $image = $panel.find(`#material-${option}-uploader`);
 
         $(this).on("syncUI", function (event, params) {
+            if (!params) {
+                params = { type: "None" };
+            }
+            
             const { type: mapType, ...rest } = params;
 
             $enable[0].disabled = mapType == "None";
@@ -115,8 +119,7 @@ jQuery(document).ready(function ($) {
 
             $row.find("[data-option]").each(function () {
                 const dataOpt = $(this).data("option");
-                const optValue =
-                    PlanMaker.editor.selected.material.get(dataOpt);
+                const optValue = PlanMaker.editor.selected.material.get(dataOpt);
                 const dataType = $(this).data("type");
 
                 switch (true) {
@@ -211,8 +214,12 @@ jQuery(document).ready(function ($) {
     PlanMaker.editor.on("historyChange", () =>
         $materialTabPanel.trigger("sync")
     );
-    PlanMaker.editor.on("select", () => $materialTabPanel.trigger("sync"));
-    PlanMaker.editor.on("unselect", () => $materialTabPanel.trigger("sync"));
+    PlanMaker.editor.on("select", () => 
+        $materialTabPanel.trigger("sync")
+    );
+    PlanMaker.editor.on("unselect", () => 
+        $materialTabPanel.trigger("sync")
+    );
     PlanMaker.editor.on("editSelected", () =>
         $materialTabPanel.trigger("sync")
     );
