@@ -1,9 +1,9 @@
 <textarea id="post-model" name="post_model" style="display: none;">
-    <?php echo wp_unslash($post->post_model); ?>
+    <?php echo wp_unslash(json_encode($post->post_model)); ?>
 </textarea> 
 
 <textarea id="post-renderer" name="post_renderer" style="display: none;">
-    <?php echo wp_unslash($post->post_renderer); ?>
+    <?php echo wp_unslash(json_encode($post->post_renderer)); ?>
 </textarea> 
 
 <?php foreach ( $geometries as $geom_name => $geom ) : ?>

@@ -3,40 +3,62 @@ namespace ThreeDPlanMaker;
 
 class PostEditor extends UI {
     public function savePost() : void {
-        $post_ID = (string)$this->post->ID;
         $fields = $this->default_settings;
+        $result = array();
         
-        foreach ( $fields as $key => $default ) {
+        foreach ($fields as $key => $default) {
             $key_exists = array_key_exists($key, $_POST);
-            $value = "";
+            $final_value = "";
+            $post_value = $_POST[ $key ];
             
-            switch ( gettype($default) ) { 
+            switch (gettype($default)) { 
                 case "integer":
-                    $value = !$key_exists ? $default : $_POST[ $key ];
+                    $final_value = !$key_exists || gettype($post_value) != "integer" ? $default : $post_value;
                     break;
                     
                 case "string":
-                    $value = !$key_exists ? $default : $_POST[ $key ];
+                    $final_value = !$key_exists || !$post_value ? $default : $post_value;
                     break;
                 
                 case "boolean":
-                    $value = !$key_exists ? "0" : "1";
+                    $final_value = !$key_exists ? "0" : "1";
                     break;
                 
                 case "array": 
-                    $value = !$key_exists ? wp_json_encode($default) : wp_slash($_POST[ $key ]);
+                    $final_value = !$key_exists || !$post_value ? $default : json_decode(wp_unslash($post_value), true);
                     break;
                     
                 default:
                     break;
             }
             
-            update_post_meta($post_ID, $key, $value);
+            $result[ $key ] = $final_value;
         }
+        
+        $post_ID = (string)$this->post->ID;
+        $upload_dir = wp_get_upload_dir();
+        $target_path = "{$upload_dir["basedir"]}/models";
+        
+        if (!file_exists("$target_path/")) {
+            mkdir("$target_path/");
+        }
+        
+        file_put_contents("$target_path/$post_ID.json", json_encode($result));
     }
     
-    public function render() : void { 
-        $post = $this->post;
+    public function render() : void {
+        $post_ID = (string)$this->post->ID;
+        $upload_dir = wp_get_upload_dir();
+        $target_path = "{$upload_dir["basedir"]}/models";
+        $model_path = "$target_path/$post_ID.json";
+        
+        $post = json_decode(
+            file_exists($model_path) 
+                ? file_get_contents($model_path) 
+                : json_encode($this->default_settings)
+        );
+        
+        $post = (object) array_merge((array) $this->post, (array) $post);
         
         $consts = array();
         foreach ( glob( $this->ui_folder."/consts/*.json") as $filename ) {
