@@ -46,6 +46,11 @@ jQuery(document).ready(function ($) {
 
         $(this).on("update", function () {
             if (!$enable[0].checked) {
+                const params = { type: "None" };
+                
+                $(this).val(JSON.stringify(params));
+
+                PlanMaker.editor.selected.material.set(option, params);
                 return;
             }
 
