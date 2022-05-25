@@ -1,8 +1,19 @@
 class Editor3DElement {
+    /**
+     * @private
+     * @type {Editor} 
+     */
     #editor;
-
+    /**
+     * @param {Editor} editor 
+     */
     constructor(editor) {
         this.#editor = editor;
+        /**
+         * Armazena uma referência ao objeto que está sendo editado da cena.
+         * @public
+         * @type {THREE.Object3D | null}
+         */
         this.ref     = null;
 
         this.object   = new ObjectScope(editor, this);
@@ -59,7 +70,8 @@ class Editor3DElement {
     }
     
     /**
-     * 
+     * Verifica se o elemento possui o escopo.
+     * @public
      * @param {"object" | "geometry" | "material"} scope 
      * @returns {boolean}
      */
@@ -67,6 +79,12 @@ class Editor3DElement {
         return this.ref && (scope in this.ref || scope === "object");
     }
 
+    /**
+     * Seleciona armazenando o objeto em Editor3DElement.ref.
+     * @public
+     * @param {THREE.Object3D} element3D 
+     * @returns {void}
+     */
     select(element3D) {
         this.ref = element3D;
         
@@ -81,6 +99,11 @@ class Editor3DElement {
         this.#editor.trigger("select", this.#editor);
     }
 
+    /**
+     * Desseleciona limpando Editor3DElement.ref.
+     * @public
+     * @returns {void}
+     */
     unselect() {
         if (!/light/i.test(this.ref.constructor.name))
             this.#editor.viewport.getHelper(this.ref).visible = false;
@@ -93,17 +116,41 @@ class Editor3DElement {
         this.#editor.trigger("unselect", this.#editor);
     }
 
+    /**
+     * Apenas chama EditorScene.remove internamente para o elemento armazenado em Editor3DElement.ref.
+     * @public
+     * @returns {void}
+     */
     remove() {
         this.#editor.scene.remove(this.ref);
     }
 }
 
 class Scope {
+    /**
+     * @param {Editor}          editor 
+     * @param {Editor3DElement} parent 
+     */
     constructor(editor, parent) {
+        /**
+         * Uma instância do editor.
+         * @protected
+         * @type {Editor}
+         */
         this._editor = editor;
+        /**
+         * Uma instância da classe editor de elementos.
+         * @protected
+         * @type {Editor3DElement}
+         */
         this._parent = parent;
     }
     
+    /**
+     * Retorna o elemento 3D sendo selecionado no editor.
+     * @protected
+     * @returns {THREE.Object3D | null}
+     */
     get _elem3D() {
         return this._parent.ref;
     }
