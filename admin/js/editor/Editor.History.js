@@ -125,7 +125,7 @@ class EditorHistory {
      *     description: string,
      *     redo: (...any) => void,
      *     undo: (...any) => void,
-     *     always: (...any) => void
+     *     always?: (...any) => void
      * }} props 
      * @returns {void}
      */
