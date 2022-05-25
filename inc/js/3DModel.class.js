@@ -128,7 +128,7 @@ class ThreeDModel {
     } 
 
     /**
-     * Carrega um modelo
+     * Carrega um modelo.
      * @public
      * @param {{
      *     [sceneName: string]: Object
@@ -138,8 +138,15 @@ class ThreeDModel {
      * obtido pelo método ```toJSON```, como em: 
      * 
      * ```js
-     * const scene = new THREE.Scene();
-     * const sceneJSON = scene.toJSON();
+     * const model = new ThreeDModel(myHTMLContainer);
+     * 
+     * const scene1 = new THREE.Scene();
+     * const scene1JSON = scene1.toJSON();
+     * 
+     * const scene2 = new THREE.Scene();
+     * const scene2JSON = scene2.toJSON();
+     * 
+     * model.loadModel({ scene1Name: scene1JSON, scene2Name: scene2JSON });
      * ```
      * @returns {void}
      */
