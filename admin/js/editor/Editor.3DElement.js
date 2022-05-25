@@ -60,13 +60,9 @@ class Editor3DElement {
             });
         });
     }
- 
+    
     getSelected() {
         return this.ref;
-    }
-    
-    hasSelected() {
-        return !!this.ref;
     }
     
     /**
@@ -125,6 +121,7 @@ class Editor3DElement {
         this.#editor.scene.remove(this.ref);
     }
 }
+
 
 class Scope {
     /**
@@ -261,20 +258,22 @@ class ObjectScope extends Scope {
      * @override
      */
     get(option) {
+        if (!this.ref) {
+            return;
+        }
+        
         if (/(\w+\.)+/.test(option)) {
             /* O usuário/programador pode enviar um "caminho" de objeto
              * em pontos: "prop1.prop2.prop3...".
              */
-            return eval(`this._elem3D.${option}`);
+            return eval(`this.ref.${option}`);
         } else if (/shadow[-\s]*\w+/i.test(option)) {
             option = option.replace(/(shadow|[-\s]+)/gi, "");
-            option =
-                option[0].toLowerCase() +
-                option.slice(1, option.length);
+            option = option[0].toLowerCase() + option.slice(1, option.length);
 
-            return this._elem3D.shadow[option];
+            return this.ref.shadow[option];
         } else if (/color/i.test(option)) {
-            const { r, g, b } = this._elem3D[option];
+            const { r, g, b } = this.ref[option];
             const color = new THREE.Color(r, g, b);
 
             return color.getHexString();
@@ -282,16 +281,16 @@ class ObjectScope extends Scope {
             const prop = option.match(/(\w+)[XYZ]/i)[1].toLowerCase();
             const axis = option.match(/[XYZ]/i)[0].toLowerCase();
 
-            if (prop in this._elem3D) {
-                if (axis in this._elem3D[prop]) {
-                    return eval(`this._elem3D.${prop}.${axis}`);
+            if (prop in this.ref) {
+                if (axis in this.ref[prop]) {
+                    return eval(`this.ref.${prop}.${axis}`);
                 }
             }
         } else if (/^type$/i.test(option)) {
-            return this._elem3D.constructor.name;
+            return this.ref.constructor.name;
         } else {
             option = option.replace(/[\s-]+([A-Z])/g, "$1");
-            return this._elem3D[option];
+            return this.ref[option];
         }
     }
 
@@ -299,19 +298,21 @@ class ObjectScope extends Scope {
      * @override
      */
     set(option, value, feedHistory = true) {
+        if (!this.ref) {
+            return;
+        }
+        
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
             // em pontos: "prop1.prop2.prop3..."
-            return eval(`this._elem3D.${option}`);
+            return eval(`this.ref.${option}`);
         } else if (/shadow[-\s]*\w+/i.test(option)) {
             option = option.replace(/(shadow|[-\s]+)/gi, "");
-            option =
-                option[0].toLowerCase() +
-                option.slice(1, option.length);
+            option = option[0].toLowerCase() + option.slice(1, option.length);
 
-            this._elem3D.shadow[option] = value;
+            this.ref.shadow[option] = value;
         } else if (/color/i.test(option)) {
-            this._elem3D[option] = new THREE.Color(value);
+            this.ref[option] = new THREE.Color(value);
         } else if (/(position|scale|rotation)[XYZ]/i.test(option)) {
             const prop = option
                 .match(/(\w+)[\s-]*[XYZ]/i)[1]
@@ -320,16 +321,16 @@ class ObjectScope extends Scope {
                 .match(/[XYZ]/i)[0]
                 .toLowerCase();
 
-            if (prop in this._elem3D) {
-                if (axis in this._elem3D[prop]) {
-                    this._elem3D[prop][axis] = value;
+            if (prop in this.ref) {
+                if (axis in this.ref[prop]) {
+                    this.ref[prop][axis] = value;
                 }
             }
         } else {
-            this._elem3D[option] = value;
+            this.ref[option] = value;
         }
 
-        this._editor.viewport.getHelper(this._elem3D).update();
+        this._editor.viewport.getHelper(this.ref).update();
     }
 }
 
@@ -346,7 +347,9 @@ class GeometryScope extends Scope {
         let geom;
 
         if (this._elem3D) {
-            if ("geometry" in this._elem3D) geom = this._elem3D.geometry;
+            if ("geometry" in this._elem3D) {
+                geom = this._elem3D.geometry;
+            }
         }
 
         if (!geom) return;
@@ -370,20 +373,24 @@ class GeometryScope extends Scope {
      * @override
      */
     set(option, value, feedHistory = true) {
+        if (!this.ref) {
+            return;
+        }
+        
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
             // em pontos: "prop1.prop2.prop3..."
-            return eval(`this._elem3D.geometry.${option}`);
+            return eval(`this.ref.${option}`);
         } else if (
-            "parameters" in this._elem3D.geometry &&
-            option in this._elem3D.geometry.parameters
+            "parameters" in this.ref &&
+            option in this.ref.parameters
         ) {
-            this._elem3D.geometry.setParam(option, value);
+            this.ref.setParam(option, value);
         } else {
-            this._elem3D.geometry[option] = value;
+            this.ref[option] = value;
         }
 
-        this._editor.viewport.getHelper(this._elem3D).update();
+        this._editor.viewport.getHelper(this.ref).update();
     }
 }
 
@@ -400,19 +407,18 @@ class MaterialScope extends Scope {
         let mat;
 
         if (this._elem3D) {
-            if ("material" in this._elem3D) mat = this._elem3D.material;
+            if ("material" in this._elem3D) mat = this.ref;
         }
 
         if (!mat) return;
 
+        mat.needsUpdate = true;
+        
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
             // em pontos: "prop1.prop2.prop3..."
             return eval(`mat.${option}`);
-        } else if (
-            /color$/i.test(option) ||
-            /^emissive$/i.test(option)
-        ) {
+        } else if (/color$|^emissive$/i.test(option)) {
             const { r, g, b } = mat[option];
             const color = new THREE.Color(r, g, b);
 
@@ -471,25 +477,39 @@ class MaterialScope extends Scope {
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
             // em pontos: "prop1.prop2.prop3..."
-            eval(`this._elem3D.material.${option} = value`);
+            eval(`this.ref.${option} = value`);
         } else if (/^type$/i.test(option)) {
             let material = new THREE[value]();
-            this._elem3D.material = material;
-        } else if (
-            /color$/i.test(option) ||
-            /^emissive$/i.test(option)
-        ) {
-            this._elem3D.material.setValues({
+            this.ref = material;
+        } else if (/color$|^emissive$/i.test(option)) {
+            this.ref.setValues({
                 [option]: new THREE.Color(value),
             }); 
         } else if (/map$/i.test(option)) {
-            this._elem3D.material.setMap(option, value);
+            this.ref.setMap(option, value);
         } else if (/^(side|blending)$/i.test(option)) {
-            this._elem3D.material[option] = THREE[value];
+            this.ref[option] = THREE[value];
         } else {
-            this._elem3D.material.setValues({ [option]: value });
+            this.ref.setValues({ [option]: value });
         }
+        
+        // ---
+        
+        const mapNames = Object.keys(this.ref).filter((mapName) => /map/i.test(mapName))
+        mapNames.forEach((mapName) => {
+            const material = this.ref;
+            const map = material[mapName];
+                
+            if (map && typeof map === "object") {
+                if ("encoding" in map) {
+                    map.encoding = THREE.sRGBEncoding;
+                    this.ref.needsUpdate = true;
+                }
+            }
+        });
 
-        this._elem3D.material.needsUpdate = true;
+        this.ref.needsUpdate = true;
+        
+        // Serve para corrigir todos os mapas que acabam não atualizando.
     }
 }
