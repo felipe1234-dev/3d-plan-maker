@@ -144,6 +144,18 @@ class Scope {
          * @type {Editor3DElement}
          */
         this._parent = parent;
+        /**
+         * Quando o elemento possui diversos objetos/geometrias/materiais (e é possível), 
+         * esta variável armazena qual delas está selecionada.
+         * @protected
+         * @type {Number}
+         */
+        this._index = 0;
+        /**
+         * @protected
+         * @type {"object" | "geometry" | "material"}
+         */
+        this._scopeName = "";
     }
     
     /**
@@ -154,9 +166,100 @@ class Scope {
     get _elem3D() {
         return this._parent.ref;
     }
+    
+    /**
+     * Retorna algum valor de propriedade do item do escopo.
+     * @public
+     * @abstract
+     * @param {String} option - O nome da propriedade que quer mudar.
+     * @returns {Any}
+     */
+    get(option) {
+        
+    }
+    
+    /**
+     * Seta algum valor de propriedade do item do escopo.
+     * @public
+     * @abstract
+     * @param {String}   option - O nome da propriedade que quer mudar. 
+     * @param {Any}      value - O novo valor da propriedade.
+     * @param {Boolean?} feedHistory - Booleano para decidir se deve adicionar ao histórico.
+     * @returns {Void}
+     */
+    set(option, value, feedHistory = true) {
+        
+    }
+    
+    /**
+     * Retorna o objeto do escopo do elemento 3D sendo selecionado no editor.
+     * @public
+     * @returns {THREE.Object3D | THREE.BufferGeometry | THREE.Material | null}
+     */
+    get ref() {
+        if (!this._elem3D) {
+            return null;
+        }
+        
+        if (this._scopeName === "object") {
+            return this._elem3D;
+        }
+        
+        const scopeItems = Array.isArray(this._elem3D[this._scopeName])
+            ? this._elem3D[this._scopeName]
+            : [ this._elem3D[this._scopeName] ];
+        
+        return scopeItems[this._index];
+    }
+    
+    /**
+     * Seta o objeto do escopo do elemento 3D sendo selecionado no editor.
+     * @public
+     * @param {THREE.Object3D | THREE.BufferGeometry | THREE.Material | null} value
+     */
+    set ref(value) {
+        if (!this._elem3D) {
+            return;
+        }
+        
+        if (!this._elem3D[this._scopeName]) {
+            return;
+        }
+        
+        this._elem3D[this._scopeName] = value;
+    }
+    
+    /**
+     * Seleciona o item do escopo.
+     * Quando o elemento possui diversos objetos/geometrias/materiais (e é possível), 
+     * esta variável armazena qual delas está selecionada.
+     * @public
+     * @param {Number} index
+     */
+    select(index) {
+        const scopeItems = this._list;
+        
+        if (index > scopeItems.length - 1) {
+            index = scopeItems.length - 1;
+        }
+        
+        if (index < 0) {
+            index = 0;
+        }
+        
+        this._index = index;
+    }
 }
 
 class ObjectScope extends Scope {
+    constructor(editor, parent) {
+        super(editor, parent);
+        this._scopeName = "object";
+    }
+    
+    /**
+     * @override
+     */
     get(option) {
         if (/(\w+\.)+/.test(option)) {
             /* O usuário/programador pode enviar um "caminho" de objeto
@@ -192,6 +295,9 @@ class ObjectScope extends Scope {
         }
     }
 
+    /**
+     * @override
+     */
     set(option, value, feedHistory = true) {
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
@@ -228,6 +334,14 @@ class ObjectScope extends Scope {
 }
 
 class GeometryScope extends Scope {
+    constructor(editor, parent) {
+        super(editor, parent);
+        this._scopeName = "geometry";
+    }
+    
+    /**
+     * @override
+     */
     get(option) {
         let geom;
 
@@ -252,6 +366,9 @@ class GeometryScope extends Scope {
         }
     }
 
+    /**
+     * @override
+     */
     set(option, value, feedHistory = true) {
         if (/(\w+\.)+/.test(option)) {
             // o usuário/programador pode enviar um "caminho" de objeto
@@ -271,6 +388,14 @@ class GeometryScope extends Scope {
 }
 
 class MaterialScope extends Scope {
+    constructor(editor, parent) {
+        super(editor, parent);
+        this._scopeName = "material";
+    }
+    
+    /**
+     * @override
+     */
     get(option) {
         let mat;
 
@@ -337,6 +462,9 @@ class MaterialScope extends Scope {
         }
     }
 
+    /**
+     * @override
+     */
     set(option, value, feedHistory = true) {
         if (!this._elem3D) return;
 
