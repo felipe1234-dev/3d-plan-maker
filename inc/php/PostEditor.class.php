@@ -9,7 +9,7 @@ class PostEditor extends UI {
         foreach ($fields as $key => $default) {
             $key_exists = array_key_exists($key, $_POST);
             $final_value = "";
-            $post_value = $_POST[ $key ];
+            $post_value = $key_exists ? $_POST[ $key ] : null;
             
             switch (gettype($default)) { 
                 case "integer":
@@ -21,7 +21,7 @@ class PostEditor extends UI {
                     break;
                 
                 case "boolean":
-                    $final_value = !$key_exists ? "0" : "1";
+                    $final_value = !$key_exists ? false : true;
                     break;
                 
                 case "array": 
