@@ -1,6 +1,28 @@
 class EditorFileManager {
+    /**
+     * @private
+     * @type {Editor}
+     */
     #editor;
+    /**
+     * @private
+     * @type {{
+     *     [extension: string]: {
+     *         module: string,
+     *         readAs: "ArrayBuffer" | "text",
+     *         onParse: (props: {
+     *             loader: THREE.Loader, 
+     *             data: ArrayBuffer | string, 
+     *             file: File,
+     *             resourceUrl: string 
+     *         }) => void
+     *     }
+     * }}
+     */
     #loaders;
+    /**
+     * @param {Editor} editor 
+     */
     constructor(editor) {
         this.#editor = editor;
         
