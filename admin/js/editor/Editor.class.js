@@ -312,8 +312,7 @@ class Editor {
                             elem3D.scale[axis] = oldScale[axis];
                             elem3D.rotation[axis] = oldRotation["_" + axis];
                         });
-                    },
-                    always: () => this.save()
+                    }
                 });
                 
                 localStorage.removeItem("transformed");

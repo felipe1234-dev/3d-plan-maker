@@ -1,8 +1,9 @@
 jQuery(document).ready(function ($) {
     const $form = $("form#post");
+    const $savePost = $("#save-post");
     const $projectTabPanel = $("#project-tab-panel");
     const $titleDiv = $("#titlediv");
-
+    
     $("#submitpost").appendTo(
         $projectTabPanel.find(".Panel:nth-child(2) .Panel-row")
     );
@@ -15,7 +16,7 @@ jQuery(document).ready(function ($) {
     $titleDiv.find("#titlewrap").remove();
 
     $("#edit-slug-box").css("padding", "0");
-    $("#save-post").hover(
+    $savePost.hover(
         function () {
             $(this).css({
                 background: "#f0f0f1",
@@ -51,7 +52,7 @@ jQuery(document).ready(function ($) {
         padding: "0 10px",
         color: "#fff",
     });
-    $("#save-post").css({
+    $savePost.css({
         padding: "0 10px",
         color: "#2271b1",
         borderColor: "#2271b1",
@@ -64,4 +65,22 @@ jQuery(document).ready(function ($) {
     $("#wpfooter").hide();
 
     PlanMaker.editor.history.clear();
+    
+    
+    $savePost.click((event) => {
+        event.preventDefault(); // Previne que o formulário seja submetido.
+        
+        $("#minor-publishing-actions").addClass("loading-content");
+        
+        $savePost
+            .prop("disabled", true)
+            .parent()
+            .find(".spinner")
+            .addClass("is-active")
+            .css("margin", "4px 8px 0");
+        
+        PlanMaker.editor.save(); // Salva o modelo.
+        
+        $form.submit(); // Agora sim pode submeter.
+    });
 });

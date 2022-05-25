@@ -42,8 +42,7 @@ class Editor3DElement {
                                         : newVal
                                 }`,
                             undo: () => set.call(scope, option, oldVal, false),
-                            redo: () => set.call(scope, option, newVal, false),
-                            always: () => editor.save()
+                            redo: () => set.call(scope, option, newVal, false)
                         });
                     }
                 }

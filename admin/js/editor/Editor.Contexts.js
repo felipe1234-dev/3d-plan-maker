@@ -51,8 +51,7 @@ class Context {
                                     : newVal
                             }`,
                             undo: () => func.call(scope, oldVal, false),
-                            redo: () => func.call(scope, newVal, false),
-                            always: () => editor.save()
+                            redo: () => func.call(scope, newVal, false)
                         });
                     }
                 }
@@ -235,8 +234,7 @@ class EditorContexts {
                     editor.history.add({
                         description: `Criou "${ctxName}"`,
                         undo: () => scope[ctxName].delete(false),
-                        redo: () => create.call(scope, ctxName, false, ctxScene),
-                        always: () => editor.save()
+                        redo: () => create.call(scope, ctxName, false, ctxScene)
                     });
                 }
             }

@@ -13,11 +13,9 @@ jQuery(document).ready(function ($) {
     modelEditor.on("saveModel", (json) =>
         $("#post-model").val(JSON.stringify(json))
     );
+    
     modelEditor.on("saveRenderer", (json) =>
         $("#post-renderer").val(JSON.stringify(json))
-    );
-    modelEditor.on("historyChange", () => 
-        modelEditor.save()
     );
 
     modelEditor.init();

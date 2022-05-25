@@ -42,8 +42,7 @@ class EditorScene {
                                 : newVal
                         }`,
                         undo: () => set.call(scope, option, oldVal, false),
-                        redo: () => set.call(scope, option, newVal, false),
-                        always: () => editor.save()
+                        redo: () => set.call(scope, option, newVal, false)
                     });
                 }
             }
@@ -71,8 +70,7 @@ class EditorScene {
                         redo: () => add.call(scope, elem3D, {
                             position: [...elem3D.position], // Mantendo a posição (escolhida aleatoriamente ou não)
                             checkForCollision: true
-                        }, false),
-                        always: () => editor.save(),
+                        }, false)
                     });
                 }
             }
@@ -97,8 +95,7 @@ class EditorScene {
                             position: [...elem3D.position], // Mantendo a posição que o objeto estava
                             checkForCollision: true
                         }, false),
-                        redo: () => remove.call(scope, elem3D, false),
-                        always: () => editor.save()
+                        redo: () => remove.call(scope, elem3D, false)
                     });
                 }
             }
