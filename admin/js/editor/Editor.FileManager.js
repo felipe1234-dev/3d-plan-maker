@@ -25,15 +25,26 @@ class EditorFileManager {
      */
     constructor(editor) {
         this.#editor = editor;
-        
         this.#loaders = {
             "3dm": {
-                "module": "Rhino3dmLoader",
-                "readAs": "ArrayBuffer"
+                module: "Rhino3dmLoader",
+                readAs: "ArrayBuffer",
+                onParse: (props) => {
+                    const { loader, data, file } = props;
+                    
+                    loader.parse(data, (result) => onAdd(result, file));
+                }
             },
             "3ds": {
-                "module": "TDSLoader",
-                "readAs": "ArrayBuffer"
+                module: "TDSLoader",
+                readAs: "ArrayBuffer",
+                onParse: (props) => {
+                    const { loader, data, resourceUrl, file } = props;
+                    
+                    const result = loader.parse(data, resourceUrl);
+                    
+                    onAdd(result, file);
+                }
             },
             "3mf": {
                 module: "ThreeMFLoader",
@@ -89,19 +100,6 @@ class EditorFileManager {
                     
                     onAdd(result, file);
                 }
-
-            case "3mf": {
-                reader.addEventListener(
-                    "load",
-                    async function (event) {
-                        const { ThreeMFLoader } = await import(
-                            "../../examples/jsm/loaders/3MFLoader.js"
-                        );
-
-                        const loader = new ThreeMFLoader();
-                        const object = loader.parse(event.target.result);
-
-                        editor.execute(new AddObjectCommand(editor, object));
             },
             obj: {
                 module: "OBJLoader",
@@ -123,7 +121,6 @@ class EditorFileManager {
                 case elem.isScene:
                     editor.contexts.create(file.name, false, elem);
                     break;
-            }
                     
                 case elem.isMesh: 
                     editor.scene.add(elem, {
@@ -135,7 +132,6 @@ class EditorFileManager {
                 case elem.isGroup: 
                     elem.children.forEach((child) => onAdd(child, file));
                     break;
-            }
                     
                 default:
                     break;
@@ -143,13 +139,11 @@ class EditorFileManager {
         }
     }
 
-            case "js":
-            case "json": {
-                reader.addEventListener(
-                    "load",
-                    function (event) {
-                        const contents = event.target.result;
-
+    /**
+     * @public
+     * @param {File}   file - O objeto representando o arquivo (retornado pelo input type="file").
+     * @param {String} resourceUrl - A URL da pasta que conterá arquivos externos como imagens.
+     */
     import(file, resourceUrl) {
         const filename = file.name;
         const extension = filename
@@ -179,7 +173,6 @@ class EditorFileManager {
         switch (loaderInfo.readAs) {
             case "text":
                 reader.readAsText(file);
-
                 break;
             case "ArrayBuffer": 
                 reader.readAsArrayBuffer(file);
@@ -189,8 +182,3 @@ class EditorFileManager {
         }
     }
 }
-            default:
-                console.error(`Unsupported file format (${extension}).`);
-                break;
-        }*/
-}};
