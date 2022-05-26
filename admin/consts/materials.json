@@ -1,11 +1,17 @@
 {
     "HotSpotMaterial": {
         "label": "Material de HotSpot",
-        "rows": ["type", "name", "uuid"]
+        "rows": [
+            "list",
+            "type", 
+            "name", 
+            "uuid"
+        ]
     },
     "MeshStandardMaterial": {
         "label": "Material 3D Padão",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -42,6 +48,7 @@
     "MeshPhysicalMaterial": {
         "label": "Material Físico",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -95,6 +102,7 @@
     "MeshBasicMaterial": {
         "label": "Material B\u00e1sico",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -124,6 +132,7 @@
     "MeshLambertMaterial": {
         "label": "Material Lambertiano",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -152,6 +161,7 @@
     "MeshMatcapMaterial": {
         "label": "Material Matcap",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -180,6 +190,7 @@
     "MeshPhongMaterial": {
         "label": "Material de Blinn-Phong",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",
@@ -217,6 +228,7 @@
     "MeshToonMaterial": {
         "label": "Material Cartoonizado",
         "rows": [
+            "list",
             "type",
             "name",
             "uuid",

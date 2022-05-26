@@ -1,10 +1,52 @@
 jQuery(document).ready(function ($) {
     const $materialTabPanel = $("#material-tab-panel");
     const $materialBtn = $('a[href="#material-tab"]');
+    const $materialSelector = $("#material-list-selector");
     const $opacity = $("#field-opacity");
     const $alphaTest = $("#field-alphaTest");
     const $textareas = $materialTabPanel.find('textarea[data-type="JSON"]');
 
+    $alphaTest.change(function () {
+        const opacityValue = parseFloat($opacity.val());
+        const alphaValue = parseFloat(this.value);
+        const step = parseFloat($(this).attr("step"));
+
+        if (alphaValue + step > opacityValue) {
+            $opacity.val(alphaValue + step);
+        }
+    });
+
+    $opacity.change(function () {
+        const alphaValue = parseFloat($alphaTest.val());
+        const opacityValue = parseFloat(this.value);
+        const step = parseFloat($(this).attr("step"));
+
+        if (opacityValue < alphaValue + step) {
+            $alphaTest.val(opacityValue - step);
+        }
+    });
+    
+    $materialSelector.on("syncUI", function () {
+        const $this = $(this);
+        $this.html("");
+
+        let materials = PlanMaker.editor.selected.ref.material;
+        materials = Array.isArray(materials) ? materials : [ materials ];
+        
+        materials.forEach((material, i) => {
+            const isSelected =
+                material === PlanMaker.editor.selected.material.ref
+                    ? " selected"
+                    : "";
+
+            $this.append(`
+                <option value="${i}"${isSelected}>
+                    ${material.name ?? `Material Sem Nome ${i + 1}`}
+                </option>
+            `);
+        });
+    });
+    
     $textareas.each(function () {
         const option = $(this).data("option");
 
@@ -115,22 +157,28 @@ jQuery(document).ready(function ($) {
 
         $materialTabPanel.find('div[id*="-row"]').hide();
 
-        const materialType =
-            PlanMaker.editor.selected.material.get("type");
+        const materialType = PlanMaker.editor.selected.material.get("type");
         const selectedRows = JSON.parse($(`#${materialType}-rows`).val());
 
         selectedRows.forEach((attribute) => {
             const $row = $materialTabPanel.find(`#material-${attribute}-row`);
 
-            $row.find("[data-option]").each(function () {
-                const dataOpt = $(this).data("option");
+            $row.find("[data-option]").each(function() {
+                const dataOpt  = $(this).data("option");
                 const optValue = PlanMaker.editor.selected.material.get(dataOpt);
                 const dataType = $(this).data("type");
 
                 switch (true) {
+                    case this.id == "material-list-selector":
+                        $materialSelector.trigger("syncUI");
+                        break;
+            
+                    case this.id == "material-selector":
+                        $(this).trigger("syncUI");
+                        break;
+                    
                     case this.tagName == "INPUT":
-                        this[dataType == "Bool" ? "checked" : "value"] =
-                            optValue;
+                        this[dataType == "Bool" ? "checked" : "value"] = optValue;
                         break;
 
                     case this.tagName == "SELECT":
@@ -152,67 +200,50 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $materialTabPanel
-        .find('[data-scope="material"]')
-        .on("change input", function (event) {
-            const feedHistory = event.type == "change";
-            const option = $(this).data("option");
-            const dataType = $(this).data("type");
+    $materialTabPanel.find('[data-scope="material"]').on("change input", function (event) {
+        const feedHistory = event.type == "change";
+        const option = $(this).data("option");
+        const dataType = $(this).data("type");
 
-            switch (true) {
-                case this.id == "material-type-selector":
-                    PlanMaker.editor.selected.material.set(
-                        "type",
-                        this.value,
-                        feedHistory
-                    );
-                    $materialTabPanel.trigger("sync");
-                    break;
+        switch (true) {
+            case this.id == "material-list-selector":
+                PlanMaker.editor.selected.material.select(parseInt(this.value));
+                $materialTabPanel.trigger("sync");
+                break;
+            
+            case this.id == "material-type-selector":
+                PlanMaker.editor.selected.material.set(
+                    "type",
+                    this.value,
+                    feedHistory
+                );
+                $materialTabPanel.trigger("sync");
+                break;
 
-                case this.tagName == "SELECT":
-                    PlanMaker.editor.selected.material.set(
-                        option,
-                        this.value,
-                        feedHistory
-                    );
-                    break;
+            case this.tagName == "SELECT":
+                PlanMaker.editor.selected.material.set(
+                    option,
+                    this.value,
+                    feedHistory
+                );
+                break;
 
-                case this.tagName == "INPUT":
-                    let value = this[dataType == "Bool" ? "checked" : "value"];
+            case this.tagName == "INPUT":
+                let value = this[dataType == "Bool" ? "checked" : "value"];
 
-                    if (dataType == "Float" || dataType == "Int") {
-                        value = eval(`parse${dataType}(value)`);
-                    }
+                if (dataType == "Float" || dataType == "Int") {
+                    value = eval(`parse${dataType}(value)`);
+                }
 
-                    PlanMaker.editor.selected.material.set(
-                        option,
-                        value,
-                        feedHistory
-                    );
-                    break;
+                PlanMaker.editor.selected.material.set(
+                    option,
+                    value,
+                    feedHistory
+                );
+                break;
 
-                default:
-                    break;
-            }
-        });
-
-    $alphaTest.change(function () {
-        const opacityValue = parseFloat($opacity.val());
-        const alphaValue = parseFloat(this.value);
-        const step = parseFloat($(this).attr("step"));
-
-        if (alphaValue + step > opacityValue) {
-            $opacity.val(alphaValue + step);
-        }
-    });
-
-    $opacity.change(function () {
-        const alphaValue = parseFloat($alphaTest.val());
-        const opacityValue = parseFloat(this.value);
-        const step = parseFloat($(this).attr("step"));
-
-        if (opacityValue < alphaValue + step) {
-            $alphaTest.val(opacityValue - step);
+            default:
+                break;
         }
     });
 

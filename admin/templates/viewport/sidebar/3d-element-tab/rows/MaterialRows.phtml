@@ -1,6 +1,23 @@
 <?php $scope = "material"; ?>
 
-<div class="Panel-row js-field" id="<?php echo "$scope-type-row" ?>" style="display: none;">
+<div class="Panel-row" id="<?php echo "$scope-list-row" ?>" style="display: none;">
+    <label for="material-list-selector" class="Panel-text Panel-item--is30">
+        Selecionar material
+    </label>  
+    <select 
+        id="material-list-selector"
+        class="Panel-item--is66" 
+        autocomplete="off"
+        data-scope="<?php echo $scope ?>" 
+        data-type="String" 
+        data-option=""
+    >
+    </select>
+</div>
+
+<hr />
+
+<div class="Panel-row" id="<?php echo "$scope-type-row" ?>" style="display: none;">
     <label for="material-type-selector" class="Panel-text Panel-item--is30">
         Tipo
     </label>  
@@ -20,7 +37,7 @@
     </select>
 </div>
 
-<div class="Panel-row js-field" id="<?php echo "$scope-uuid-row" ?>" style="display: none;">
+<div class="Panel-row" id="<?php echo "$scope-uuid-row" ?>" style="display: none;">
     <span class="Panel-text">
         UUID
     </span>
@@ -34,7 +51,7 @@
     />
 </div>
 
-<div class="Panel-row js-field" id="<?php echo "$scope-name-row" ?>" style="display: none;">
+<div class="Panel-row" id="<?php echo "$scope-name-row" ?>" style="display: none;">
     <label for="<?php echo "$scope-name-field" ?>" class="Panel-text">
         Nome
     </label>
