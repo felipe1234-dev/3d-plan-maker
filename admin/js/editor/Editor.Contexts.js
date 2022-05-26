@@ -254,16 +254,6 @@ class EditorContexts {
             this.#editor._scenes[ctxName] = ctxScene ? ctxScene : new THREE.Scene();
         }
         
-        
-        const pmremGenerator = new THREE.PMREMGenerator(this.#editor.model.renderer);
-        const defaultEnvironment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
-        const prevEnvironment = this.#editor._scenes[ctxName].environment;
-            
-        if (!prevEnvironment) {
-            this.#editor._scenes[ctxName].environment = defaultEnvironment;
-            // Serve para corrigir a luz, mas é praticamente imperceptível.
-        }
-        
         /* Cada cena criada já contém o seu fator de opacidade (determinado pelo 
          * usuário no último save).
          * Logo, nós temos que pegar esses fatores já definidos.
