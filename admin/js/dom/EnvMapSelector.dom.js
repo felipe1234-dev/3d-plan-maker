@@ -15,6 +15,10 @@ jQuery(document).ready(function ($) {
         const mapProj = $mapSelectBox.val();
         const hasRefr = $mapHasRefr[0].checked;
 
+        if (mapProj === "None") {
+            PlanMaker.editor.scene.set("environment", { type: "None" });
+        }
+        
         if (
             mapProj !== "None" &&
             (["none", "undefined"].includes(mapImage) || !mapImage)
