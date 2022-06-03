@@ -1,7 +1,7 @@
 <?php
 namespace ThreeDPlanMaker;
 
-function loadJSON(string $path, string $format = "array") : array|object {
+function loadJSON(string $path, string $format = "array") {
     if ( !file_exists($path) ) {
         die("Incapaz de converter o JSON de configuração: O caminho ($path) não existe!
             Contate o programador para verificar o que está havendo.");

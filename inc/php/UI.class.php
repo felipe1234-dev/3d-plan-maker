@@ -11,7 +11,7 @@ class UI {
         $this->default_settings = $settings;
     } 
     
-    private function getPostMeta( string $key, string $single = "single" ) : mixed {
+    private function getPostMeta( string $key, string $single = "single" ) {
         return get_post_meta( $this->post->ID, $key, $single == "single" );
     }
     
