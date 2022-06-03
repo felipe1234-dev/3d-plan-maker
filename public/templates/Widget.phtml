@@ -41,7 +41,7 @@
             
             const $contextSelect  = $widgetContainer.find(".ThreeDModel-ContextSelector");
             const contextSelector = new ContextSelector(model);
-            console.log(contextSelector)
+            
             $contextSelect.on("change", function () {
                 contextSelector.select(this.value);
             });
