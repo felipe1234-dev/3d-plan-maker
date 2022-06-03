@@ -13,7 +13,7 @@
                     id="toggle-grids-input" 
                     type="checkbox" 
                     name="show_grids"
-                    <?php echo (bool)$post->show_grids ? "checked" : "" ?>
+                    <?php echo $post->show_grids ? "checked" : "" ?>
                 />
             </div>
             <div class="Panel-row">
@@ -37,7 +37,7 @@
                     id="show-helpers-input" 
                     type="checkbox" 
                     name="show_helpers"
-                    <?php echo (bool)$post->show_helpers ? "checked" : "" ?>
+                    <?php echo $post->show_helpers ? "checked" : "" ?>
                 />
             </div>
             <div class="Panel-row">
