@@ -8,9 +8,8 @@ jQuery(document).ready(function ($) {
             case event.ctrlKey && event.key == $("#redo_shortcut").val():
                 $("#redo-btn").click();
                 break;
-
-            case event.key == "Escape":
-                event.preventDefault();
+				
+            case event.ctrlKey && event.key == "f":
                 $("#toggle-fullscreen-btn").click();
                 break;
 
@@ -49,21 +48,21 @@ jQuery(document).ready(function ($) {
                 $('[data-mode="scale"]').click();
                 break;
 
-            case /^x$/i.test(key):
+            case !event.ctrlKey && /^x$/i.test(key):
                 PlanMaker.editor.controls.set(
                     "showX",
                     !PlanMaker.editor.controls.get("showX")
                 );
                 break;
 
-            case /^y$/i.test(key):
+            case !event.ctrlKey && /^y$/i.test(key):
                 PlanMaker.editor.controls.set(
                     "showY",
                     !PlanMaker.editor.controls.get("showY")
                 );
                 break;
 
-            case /^z$/i.test(key):
+            case !event.ctrlKey && /^z$/i.test(key):
                 PlanMaker.editor.controls.set(
                     "showZ",
                     !PlanMaker.editor.controls.get("showZ")

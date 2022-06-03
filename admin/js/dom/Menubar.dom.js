@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
                 editor.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
             }
 
-            $button.text("em tela pequena");
+            $button.text("em tela pequena (Esc)");
 
             editor.classList.add("is-fullscreen");
         } else {
@@ -45,7 +45,7 @@ jQuery(document).ready(function ($) {
                 document.webkitCancelFullScreen();
             }
 
-            $button.text("em tela cheia");
+            $button.text("em tela cheia (Ctrl+f)");
 
             editor.classList.remove("is-fullscreen");
         }
