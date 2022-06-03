@@ -3,6 +3,10 @@ namespace ThreeDPlanMaker;
 
 class PostEditor extends UI {
     public function savePost() : void {
+		$post_ID = (string)$this->post->ID;
+        $upload_dir = wp_get_upload_dir();
+        $target_path = "{$upload_dir["basedir"]}/models";
+		
         $fields = $this->default_settings;
         $result = array();
         
@@ -21,7 +25,7 @@ class PostEditor extends UI {
                     break;
                 
                 case "boolean":
-                    $final_value = !$key_exists ? false : true;
+                    $final_value = !file_exists("$target_path/$post_ID.json") ? $default : $key_exists;
                     break;
                 
                 case "array": 
@@ -34,10 +38,6 @@ class PostEditor extends UI {
             
             $result[ $key ] = $final_value;
         }
-        
-        $post_ID = (string)$this->post->ID;
-        $upload_dir = wp_get_upload_dir();
-        $target_path = "{$upload_dir["basedir"]}/models";
         
         if (!file_exists("$target_path/")) {
             mkdir("$target_path/");
