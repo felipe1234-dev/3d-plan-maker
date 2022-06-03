@@ -1,4 +1,13 @@
 jQuery(document).ready(function ($) {
+    // Segunda camada de proteção contra arquivos indesejáveis de outros plugins
+	$("link[href], script[src]").each(function() {
+		const url = $(this).attr(this.tagName === "LINK" ? "href" : "src");
+		
+		if (url.search("/wp-content/plugins/") > 0 && url.search(PlanMaker.postType) < 0) {
+			$(this).remove();
+		}
+	});
+    
     const $form = $("form#post");
     const $savePost = $("#save-post");
     const $projectTabPanel = $("#project-tab-panel");

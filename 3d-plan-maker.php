@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin name: Criador de Plantas 3D
- * Description: test
+ * Description: Sistema de modelagem 3D para plantas arquitetônicas no WordPress. Tarefas pendentes: Tema escuro, algoritmo de exportação, botão de clonar objeto, botão fullscreen para IOS, verificar os atalhos do teclado.
  * Version: 10.0.0
  * Author: felipe-alves-dev
- * Author URI: https://felipe1234-dev.github.io/felipe-portfolio/
+ * Author URI: https://github.com/felipe1234-dev
  */
 declare( strict_types = 1 ); 
 
@@ -83,6 +83,29 @@ add_action("wp_ajax_{$plugin->post_type}_file_upload", function() use ( $plugin 
     echo json_encode($resp);
     
     die();
+});
+
+/* Removendo os arquivos de estilo e Javascropt de outros plugins, porque normalmente os criadores
+ * dos outros plugins não verificam se estão na própria página de edição antes de mandar
+ * carregar os seus arquivos. Ao meu ver, não faz sentido, além de atrapalhar a vida dos 
+ * outros, deixa o WordPress mais lento. Fica aqui minha indignação. 
+ * Eu, quando iniciei no WordPress, também fazia isso.
+ **/
+function removeUnwantedFiles(string $src, PluginCore $plugin) {
+	if ($plugin->isAdmin()) {
+		if (strpos($src, "/wp-content/plugins/") && !strpos($src, $plugin->post_type)) {
+			return false;
+		}
+	}
+
+	return $src;
+}
+
+add_filter("style_loader_src", function (string $src) use ( $plugin ) {
+	return removeUnwantedFiles($src, $plugin);
+});
+add_filter("script_loader_src", function (string $src) use ( $plugin ) {
+	return removeUnwantedFiles($src, $plugin);
 });
 
 // HEAD
