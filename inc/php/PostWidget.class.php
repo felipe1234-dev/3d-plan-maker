@@ -3,7 +3,18 @@ namespace ThreeDPlanMaker;
 
 class PostWidget extends UI {
     public function render( array $atts ) : void {
-        $post = $this->post;
+        $post_ID = (string)$this->post->ID;
+        $upload_dir = wp_get_upload_dir();
+        $target_path = "{$upload_dir["basedir"]}/models";
+        $model_path = "$target_path/$post_ID.json";
+        
+        $post = json_decode(
+            file_exists($model_path) 
+                ? file_get_contents($model_path) 
+                : json_encode($this->default_settings)
+        );
+        
+        $post = (object) array_merge((array) $this->post, (array) $post);
         
         $context_names = array_keys( 
             json_decode( 
