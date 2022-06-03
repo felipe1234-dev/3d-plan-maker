@@ -1,4 +1,4 @@
-jQuery(document).ready(function ($) {
+jQuery(document).ready(function($) {
     const $materialTabPanel = $("#material-tab-panel");
     const $materialBtn = $('a[href="#material-tab"]');
     const $materialSelector = $("#material-list-selector");
@@ -41,7 +41,7 @@ jQuery(document).ready(function ($) {
 
             $this.append(`
                 <option value="${i}"${isSelected}>
-                    ${material.name ?? `Material Sem Nome ${i + 1}`}
+                    ${material.name ? material.name : `Material Sem Nome ${i + 1}`}
                 </option>
             `);
         });
@@ -50,13 +50,14 @@ jQuery(document).ready(function ($) {
     $textareas.each(function () {
         const option = $(this).data("option");
 
-        const $panel = $(this).parent();
+		const $textArea = $(this);
+        const $panel = $textArea.parent();
         const $enable = $panel.find(`#material-${option}-enable`);
         const $mapping = $panel.find(`#material-${option}-mappingSelector`);
         const $hasRefr = $panel.find(`#material-${option}-enableRefraction`);
         const $image = $panel.find(`#material-${option}-uploader`);
 
-        $(this).on("syncUI", function (event, params) {
+        $textArea.on("syncUI", function (event, params) {
             if (!params) {
                 params = { type: "None" };
             }
@@ -68,6 +69,7 @@ jQuery(document).ready(function ($) {
 
             if ($mapping.length) {
                 $mapping[0].value = mapType;
+				$mapping.trigger("syncSelectTagHelper");
             }
 
             if ("urls" in rest) {
@@ -86,7 +88,7 @@ jQuery(document).ready(function ($) {
             }
         });
 
-        $(this).on("update", function () {
+        $textArea.on("update", function () {
             if (!$enable[0].checked) {
                 const params = { type: "None" };
                 
@@ -123,13 +125,30 @@ jQuery(document).ready(function ($) {
             $(this).trigger("syncUI", [params]);
         });
 
-        $enable.change(() => $(this).trigger("update"));
+        $enable.change(() => {
+			$textArea.trigger("update");
+		});
+	
         if ($mapping.length) {
-            $mapping.change(() => $(this).trigger("update"));
+            $mapping.change(() => {
+				if (!$enable[0].checked) {
+					return;
+				}
+				
+				$textArea.trigger("update");
+			});
         }
+	
         if ($hasRefr.length) {
-            $hasRefr.change(() => $(this).trigger("update"));
+            $hasRefr.change(() => {
+				if (!$enable[0].checked) {
+					return;
+				}
+				
+				$textArea.trigger("update");
+			});
         }
+	
         $image.click(function () {
             textureUploader.createUploader({
                 imageBox: this,
@@ -170,7 +189,7 @@ jQuery(document).ready(function ($) {
 
                 switch (true) {
                     case this.id == "material-list-selector":
-                        $materialSelector.trigger("syncUI");
+                        $(this).trigger("syncUI");
                         break;
             
                     case this.id == "material-selector":
